@@ -6,16 +6,16 @@ import { AppComponent } from "./app.component";
 import { AngularFireModule } from "@angular/fire/compat";
 import { AngularFireAuthModule } from "@angular/fire/compat/auth";
 import { environment } from "../environments/environment";
-import { GoogleSsoDirective } from './directives/google-sso.directive';
 import { LoginComponent } from "./pages/login/login.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    GoogleSsoDirective,
-    NavbarComponent
+    NavbarComponent,
+    HomeComponent
   ],
   imports: [
     AngularFireAuthModule,

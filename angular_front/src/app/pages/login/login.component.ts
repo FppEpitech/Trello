@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 // signin.component.ts
 import { Component } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
@@ -7,8 +8,5 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
   styleUrl: "./login.component.scss",
 })
 export class LoginComponent {
-  constructor(public angularFireAuth: AngularFireAuth) {}
-  logOut() {
-    this.angularFireAuth.signOut();
-  }
+    constructor(public _auth:AuthService) {}
 }
