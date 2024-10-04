@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+
+    constructor(public router:Router) {}
 
 }
