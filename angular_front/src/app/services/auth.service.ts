@@ -41,6 +41,18 @@ export class AuthService {
         ));
     }
 
+    // Returns false if user is logged in, true otherwise
+    isNotLogged(): Observable<boolean> {
+        return this.authState$.pipe(
+          map(user => {
+            if (user != null) {
+                return false;
+            } else {
+                return true;
+            }}
+        ));
+    }
+
     // AuthLogin(provider : any) {
     //   return signInWithPopup(provider).then((result) => {
     //     console.log("User logged in.");

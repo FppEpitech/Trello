@@ -10,3 +10,9 @@ export const authGuard: CanActivateFn = (route, state) => {
 
     return authService.isLogged();
 };
+
+export const notAuthGuard: CanActivateFn = (route, state) => {
+    const authService = inject(AuthService);
+
+    return authService.isNotLogged();
+};
