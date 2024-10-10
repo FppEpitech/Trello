@@ -1,2 +1,69 @@
-<button class="btn btn-primary" (click)="this._auth.logout()">Log out</button>
-<p>home works!</p>
+<!-- <button class="btn btn-primary" (click)="this._auth.logout()">Log out</button>
+
+<div>
+    <button>Boards</button>
+    <button>Templates</button>
+    <button>Home</button>
+    <hr>
+    <h6>Workspaces</h6>
+    <button>Trello Workspace</button>
+</div> -->
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar Menu -->
+        <div class="col-md-3">
+            <div class="menu-links">
+                <button class="btn btn-light d-block w-100 text-start"><i class="bi bi-trello"></i> Boards</button>
+                <button class="btn btn-light d-block w-100 text-start"><i class="bi bi-kanban-fill"></i> Templates</button>
+                <button class="btn btn-light d-block w-100 text-start"><i class="bi bi-activity"></i> Home</button>
+            </div>
+            <hr>
+            <div>
+                <h6>Workspaces</h6>
+                <div>
+                    <button class="btn btn-light d-block w-100 text-start">Trello Workspace</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Recently Viewed Section -->
+            <div>
+                <h5 class="fw-bold"><i class="bi bi-clock"></i> Recently viewed</h5>
+                <img src="https://via.placeholder.com/195x100" alt="Trello Board Thumbnail">
+            </div>
+
+            <!-- Your Workspaces Section -->
+            <div class="mt-5">
+                <h5 class="fst-italic">Your Workspaces</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold">Trello Workspace</h6>
+
+                    <!-- Button group -->
+                    <div>
+                        <button class="btn btn-light"><i class="bi bi-trello"></i> Boards</button>
+                        <button class="btn btn-light"><i class="bi bi-columns-gap"></i> Views</button>
+                        <button class="btn btn-light"><i class="bi bi-person"></i> Members (1)</button>
+                        <button class="btn btn-light"><i class="bi bi-gear-wide"></i> Settings</button>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                <!-- Workspace 1 -->
+                    <img src="https://via.placeholder.com/195x100" alt="Trello Board Thumbnail">
+
+                    <!-- Create New Board -->
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button class="btn btn-light d-block w-195 h-100 text-start">Create new board</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Closed Boards Button -->
+            <div class="mt-3">
+                <button class="btn btn-light w-195">View all closed boards</button>
+            </div>
+        </div>
+    </div>
+</div>
