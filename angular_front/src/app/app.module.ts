@@ -11,6 +11,7 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
 import { HomeComponent } from './pages/home/home.component';
 import { BoardComponent } from './pages/board/board.component';
 import { BoardSidebarComponent } from './components/board-sidebar/board-sidebar.component';
+import { BoardNavbarComponent } from './components/board-navbar/board-navbar.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { BoardSidebarComponent } from './components/board-sidebar/board-sidebar.
     NavbarComponent,
     HomeComponent,
     BoardComponent,
-    BoardSidebarComponent
+    BoardSidebarComponent,
+    BoardNavbarComponent
   ],
   imports: [
     AngularFireAuthModule,
