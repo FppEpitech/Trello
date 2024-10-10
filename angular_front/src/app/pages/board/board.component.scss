@@ -1,0 +1,21 @@
+.sidebar {
+    background-color: #fff;
+    min-height: 93.7vh;
+    padding-top: 1rem;
+    border: 1px solid lightgrey; /* Add a 1px solid border with a grayish color */
+    border-radius: 5px; /* Optional: Round the corners */
+    .nav-link {
+        color: #0d1117;
+        &:hover {
+            color: #0d1117;
+            background-color: #fff;
+        }
+    }
+    .btn {
+        background-color: #fff;
+        color: #0d1117;
+        &:hover {
+            background-color: lightgrey;
+        }
+    }
+}
