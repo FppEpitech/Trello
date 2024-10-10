@@ -10,6 +10,7 @@ import { LoginComponent } from "./pages/login/login.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { HomeComponent } from './pages/home/home.component';
 import { BoardComponent } from './pages/board/board.component';
+import { BoardSidebarComponent } from './components/board-sidebar/board-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { BoardComponent } from './pages/board/board.component';
     LoginComponent,
     NavbarComponent,
     HomeComponent,
-    BoardComponent
+    BoardComponent,
+    BoardSidebarComponent
   ],
   imports: [
     AngularFireAuthModule,
