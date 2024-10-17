@@ -14,8 +14,7 @@ export class BoardComponent {
     isCreatingList: boolean = false;
     listNameToAdd: string = ""
 
-    openCreationListPanel(){
-        console.log(this.lists);
+    openCreationListPanel() {
         this.isCreatingList = !this.isCreatingList;
     }
 
@@ -24,7 +23,7 @@ export class BoardComponent {
         this.listNameToAdd = "";
     }
 
-    createList(){
+    createList() {
         if (this.listNameToAdd.trim()) {
             this.cardsSv.addList(this.listNameToAdd).then((data)=>{
                 this.closeCreationListPanel();

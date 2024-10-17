@@ -5,7 +5,14 @@
             <button class="btn btn-light btn-outline-secondary w-100 text-start m-1">{{card.name}}</button>
         </div>
         <div class="m-1">
-            <button class="btn"><i class="bi bi-plus"></i> Add a card</button>
+            <button *ngIf="!this.isCreatingCard" class="btn" (click)="this.openCreationCardPanel()"><i class="bi bi-plus"></i> Add a card</button>
+            <div *ngIf="this.isCreatingCard">
+                <input type="text" class="form-control me-2" placeholder="Enter a title" [(ngModel)]="this.cardNameToAdd">
+                <div class="m-2">
+                    <button class="btn btn-primary" (click)="this.createCard()">Add Card</button>
+                    <button class="btn" (click)="this.closeCreationCardPanel()"><i class="bi bi-x"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
