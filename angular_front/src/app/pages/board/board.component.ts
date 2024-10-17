@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class BoardComponent {
 
+    createCard(){
+        console.log("create card");
+    }
+
 }

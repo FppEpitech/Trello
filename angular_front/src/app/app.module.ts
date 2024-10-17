@@ -10,8 +10,9 @@ import { LoginComponent } from "./pages/login/login.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { HomeComponent } from './pages/home/home.component';
 import { BoardComponent } from './pages/board/board.component';
-import { BoardSidebarComponent } from './components/board-sidebar/board-sidebar.component';
-import { BoardNavbarComponent } from './components/board-navbar/board-navbar.component';
+import { BoardSidebarComponent } from './components/board/board-sidebar/board-sidebar.component';
+import { BoardNavbarComponent } from './components/board/board-navbar/board-navbar.component';
+import { CardComponent } from './components/board/card/card.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { BoardNavbarComponent } from './components/board-navbar/board-navbar.com
     HomeComponent,
     BoardComponent,
     BoardSidebarComponent,
-    BoardNavbarComponent
+    BoardNavbarComponent,
+    CardComponent
   ],
   imports: [
     AngularFireAuthModule,

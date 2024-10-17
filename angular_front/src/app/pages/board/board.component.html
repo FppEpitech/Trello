@@ -12,8 +12,15 @@
             <!-- Board navbar -->
             <app-board-navbar></app-board-navbar>
 
-            <div class="board-content m-3">
-                <button class="btn btn-light add-list">+ Add a list</button>
+            <div class="board-content">
+                <div class="mt-3">
+                    <div class="row">
+                        <div class="col-md-2" *ngFor="let a of [0, 1, 2]">
+                            <app-card></app-card>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-light add-list" (click)="this.createCard()">+ Add a list</button>
             </div>
         </main>
     </div>
