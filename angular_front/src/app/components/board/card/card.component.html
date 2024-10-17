@@ -1,4 +1,4 @@
-<div class="card">
+<!-- <div class="card">
     <div class="card-body">
         <input type="text" class="form-control me-2" placeholder="Enter list name...">
         <div class="m-2">
@@ -6,15 +6,14 @@
             <button class="btn"><i class="bi bi-x"></i></button>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="card">
     <div class="card-body">
-        <h6>Hello</h6>
-        <div *ngFor="let a of [0, 1, 2]">
+        <h6>{{this.card.name}}</h6>
+        <!-- <div *ngFor="let a of [0, 1, 2]">
             <button class="btn btn-light btn-outline-secondary w-100 text-start m-1">Hello</button>
-
-        </div>
+        </div> -->
         <div class="m-1">
             <button class="btn"><i class="bi bi-plus"></i> Add a card</button>
         </div>

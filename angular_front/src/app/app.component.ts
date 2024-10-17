@@ -1,5 +1,5 @@
 import { map, Observable, of } from 'rxjs';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 
