@@ -1,15 +1,22 @@
-<!-- <div class="mt-3 card w-100">
+<div class="card">
     <div class="card-body">
-        <h5 class="card-title">Card Title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a class="btn btn-primary">Go somewhere</a>
+        <input type="text" class="form-control me-2" placeholder="Enter list name...">
+        <div class="m-2">
+            <button class="btn btn-primary">Add List</button>
+            <button class="btn"><i class="bi bi-x"></i></button>
+        </div>
     </div>
-</div> -->
-
+</div>
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Card 1</h5>
-        <p class="card-text">Contenu de la carte 1.</p>
+        <h6>Hello</h6>
+        <div *ngFor="let a of [0, 1, 2]">
+            <button class="btn btn-light btn-outline-secondary w-100 text-start m-1">Hello</button>
+
+        </div>
+        <div class="m-1">
+            <button class="btn"><i class="bi bi-plus"></i> Add a card</button>
+        </div>
     </div>
 </div>
