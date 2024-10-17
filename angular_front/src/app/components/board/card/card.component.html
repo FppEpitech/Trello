@@ -1,19 +1,9 @@
-<!-- <div class="card">
+<div class="card shadow">
     <div class="card-body">
-        <input type="text" class="form-control me-2" placeholder="Enter list name...">
-        <div class="m-2">
-            <button class="btn btn-primary">Add List</button>
-            <button class="btn"><i class="bi bi-x"></i></button>
+        <h6>{{this.list.name}}</h6>
+        <div *ngFor="let card of this.cards | async">
+            <button class="btn btn-light btn-outline-secondary w-100 text-start m-1">{{card.name}}</button>
         </div>
-    </div>
-</div> -->
-
-<div class="card">
-    <div class="card-body">
-        <h6>{{this.card.name}}</h6>
-        <!-- <div *ngFor="let a of [0, 1, 2]">
-            <button class="btn btn-light btn-outline-secondary w-100 text-start m-1">Hello</button>
-        </div> -->
         <div class="m-1">
             <button class="btn"><i class="bi bi-plus"></i> Add a card</button>
         </div>

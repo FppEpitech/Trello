@@ -16,7 +16,7 @@
                 <div class="mt-3">
                     <div class="row">
                         <div class="col-md-2" *ngFor="let list of this.lists">
-                            <app-card [card]="list"></app-card>
+                            <app-card [list]="list" [cards]="this.list.cards"></app-card>
                         </div>
                         <button class="col-md-2 btn btn-light add-list" (click)="this.openCreationListPanel()" *ngIf="!this.isCreatingList">+ Add a list</button>
 

@@ -7,5 +7,8 @@ import { Component, Input } from '@angular/core';
 })
 export class CardComponent {
 
-    @Input() card:any;
+    @Input() list:any;
+    @Input() cards:any;
+
+    
 }

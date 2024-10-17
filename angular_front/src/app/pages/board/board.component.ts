@@ -15,6 +15,7 @@ export class BoardComponent {
     listNameToAdd: string = ""
 
     openCreationListPanel(){
+        console.log(this.lists);
         this.isCreatingList = !this.isCreatingList;
     }
 
