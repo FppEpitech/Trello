@@ -9,13 +9,19 @@ import { environment } from "../environments/environment";
 import { LoginComponent } from "./pages/login/login.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { HomeComponent } from './pages/home/home.component';
+import { BoardComponent } from './pages/board/board.component';
+import { BoardSidebarComponent } from './components/board-sidebar/board-sidebar.component';
+import { BoardNavbarComponent } from './components/board-navbar/board-navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NavbarComponent,
-    HomeComponent
+    HomeComponent,
+    BoardComponent,
+    BoardSidebarComponent,
+    BoardNavbarComponent
   ],
   imports: [
     AngularFireAuthModule,
