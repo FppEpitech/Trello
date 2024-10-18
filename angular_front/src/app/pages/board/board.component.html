@@ -12,8 +12,27 @@
             <!-- Board navbar -->
             <app-board-navbar></app-board-navbar>
 
-            <div class="board-content m-3">
-                <button class="btn btn-light add-list">+ Add a list</button>
+            <div class="board-content">
+                <div class="mt-3">
+                    <div class="row">
+                        <div class="col-md-2" *ngFor="let list of this.lists">
+                            <app-card [list]="list"></app-card>
+                        </div>
+                        <button class="col-md-2 btn btn-light add-list" style="height: 3rem;" (click)="this.openCreationListPanel()" *ngIf="!this.isCreatingList">+ Add a list</button>
+
+                        <div class="col-md-2" *ngIf="this.isCreatingList">
+                            <div class="card">
+                                <div class="card-body">
+                                    <input type="text" class="form-control me-2" placeholder="Enter list name..." [(ngModel)]="this.listNameToAdd">
+                                    <div class="m-2">
+                                        <button class="btn btn-primary" (click)="this.createList()">Add List</button>
+                                        <button class="btn" (click)="this.closeCreationListPanel()"><i class="bi bi-x"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>

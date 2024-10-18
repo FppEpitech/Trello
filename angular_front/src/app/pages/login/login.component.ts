@@ -1,4 +1,4 @@
-import { AuthService } from './../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 // signin.component.ts
 import { Component } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
