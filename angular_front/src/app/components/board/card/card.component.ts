@@ -9,12 +9,12 @@ import { FirebaseCardsService } from '../../../services/firebase-cards.service';
 export class CardComponent {
 
     @Input() list:any;
-    @Input() cards:any;
 
     constructor(private cardsSv:FirebaseCardsService) { }
 
     isCreatingCard: boolean = false;
     cardNameToAdd: string = "";
+    cards: any;
 
     openCreationCardPanel() {
         this.isCreatingCard = !this.isCreatingCard
@@ -35,5 +35,14 @@ export class CardComponent {
 
     deleteList() {
         this.cardsSv.deleteList(this.list.id);
+    }
+
+    deleteCard(card: any) {
+        console.log(card)
+        this.cardsSv.deleteCardFromList(this.list.id, card.id)
+    }
+
+    ngOnInit() {
+        this.cards = this.cardsSv.getCards(this.list.id)
     }
 }

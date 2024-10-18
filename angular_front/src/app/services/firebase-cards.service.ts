@@ -19,6 +19,15 @@ export class FirebaseCardsService {
         );
     }
 
+    getCards(listId: string): Observable<any[]> {
+        return this.fs.collection(`lists/${listId}/cards`).snapshotChanges().pipe(
+        map(actions => actions.map(card => ({
+            id: card.payload.doc.id,
+            ...card.payload.doc.data() as object
+        })))
+        );
+    }
+
     addList(name:string) {
         return this.fs.collection('lists').add({name:name});
     }

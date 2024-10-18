@@ -32,6 +32,10 @@ export class BoardComponent {
         }
     }
 
+    getCardsFormList(list: any) {
+        return this.cardsSv.getCards(list.id);
+    }
+
     refreshLists() {
         this.cardsSv.getLists().subscribe((data)=>{
             this.lists = data;
