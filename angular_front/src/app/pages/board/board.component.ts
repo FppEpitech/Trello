@@ -1,5 +1,6 @@
-import { FirebaseCardsService } from '../../services/firebase-cards/firebase-cards.service';
+import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
+import { FirebaseListsService } from '../../services/firebase-lists/firebase-lists.service';
 
 @Component({
   selector: 'app-board',
@@ -8,8 +9,12 @@ import { Component } from '@angular/core';
 })
 export class BoardComponent {
 
-    constructor(private cardsSv:FirebaseCardsService) { }
+    constructor(
+        private svLists:FirebaseListsService,
+        private route: ActivatedRoute
+    ) { }
 
+    boardId: string | null = null;
     lists: any[] = [];
     isCreatingList: boolean = false;
     listNameToAdd: string = ""
@@ -24,25 +29,24 @@ export class BoardComponent {
     }
 
     createList() {
-        if (this.listNameToAdd.trim()) {
-            this.cardsSv.addList(this.listNameToAdd).then((data)=>{
+        if (this.listNameToAdd.trim() && this.boardId) {
+            this.svLists.addList(this.boardId, this.listNameToAdd).then((data)=>{
                 this.closeCreationListPanel();
                 this.refreshLists();
             })
         }
     }
 
-    getCardsFormList(list: any) {
-        return this.cardsSv.getCards(list.id);
-    }
-
     refreshLists() {
-        this.cardsSv.getLists().subscribe((data)=>{
-            this.lists = data;
-        })
+        if (this.boardId) {
+            this.svLists.getLists(this.boardId).subscribe((data)=>{
+                this.lists = data;
+            })
+        }
     }
 
     ngOnInit() {
+        this.boardId = this.route.snapshot.paramMap.get('id')
         this.refreshLists();
     }
 }

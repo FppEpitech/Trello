@@ -9,18 +9,8 @@ export class FirebaseCardsService {
 
     constructor(private fs:AngularFirestore) { }
 
-    getLists(): Observable<any[]> {
-        return this.fs.collection('lists').snapshotChanges().pipe(
-        map(lists => lists.map(list => ({
-            id: list.payload.doc.id,
-            ...list.payload.doc.data() as object,
-            cards: this.fs.collection(`lists/${list.payload.doc.id}/cards`).valueChanges()
-        })))
-        );
-    }
-
-    getCards(listId: string): Observable<any[]> {
-        return this.fs.collection(`lists/${listId}/cards`).snapshotChanges().pipe(
+    getCards(boardId: string, listId: string): Observable<any[]> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).snapshotChanges().pipe(
         map(actions => actions.map(card => ({
             id: card.payload.doc.id,
             ...card.payload.doc.data() as object
@@ -28,19 +18,11 @@ export class FirebaseCardsService {
         );
     }
 
-    addList(name:string) {
-        return this.fs.collection('lists').add({name:name});
+    addCardToList(boardId: string, listId: string, name: string) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).add({name:name});
     }
 
-    deleteList(cardId: string) {
-        return this.fs.collection('lists').doc(cardId).delete();
-    }
-
-    addCardToList(listId: string, card: { name: string }) {
-        return this.fs.collection(`lists/${listId}/cards`).add(card);
-    }
-
-    deleteCardFromList(listId: string, cardId: string) {
-        return this.fs.collection(`lists/${listId}/cards`).doc(cardId).delete();
+    deleteCardFromList(boardId: string, listId: string, cardId: string) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).delete();
     }
 }

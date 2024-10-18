@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent, canActivate: [notAuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
-  { path: 'board', component: BoardComponent, canActivate: [authGuard] },
+  { path: 'board/:id', component: BoardComponent, canActivate: [authGuard] },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
