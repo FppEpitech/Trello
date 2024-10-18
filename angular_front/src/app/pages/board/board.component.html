@@ -18,7 +18,7 @@
                         <div class="col-md-2" *ngFor="let list of this.lists">
                             <app-card [list]="list" [cards]="this.list.cards"></app-card>
                         </div>
-                        <button class="col-md-2 btn btn-light add-list" (click)="this.openCreationListPanel()" *ngIf="!this.isCreatingList">+ Add a list</button>
+                        <button class="col-md-2 btn btn-light add-list" style="height: 3rem;" (click)="this.openCreationListPanel()" *ngIf="!this.isCreatingList">+ Add a list</button>
 
                         <div class="col-md-2" *ngIf="this.isCreatingList">
                             <div class="card">
@@ -31,7 +31,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

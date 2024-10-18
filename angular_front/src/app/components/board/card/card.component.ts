@@ -32,4 +32,8 @@ export class CardComponent {
             })
         }
     }
+
+    deleteList() {
+        this.cardsSv.deleteList(this.list.id);
+    }
 }
