@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FirebaseCardsService } from '../../../services/firebase-cards.service';
+import { FirebaseCardsService } from '../../../services/firebase-cards/firebase-cards.service';
 
 @Component({
   selector: 'app-card',

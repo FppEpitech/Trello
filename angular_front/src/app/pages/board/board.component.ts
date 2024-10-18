@@ -1,4 +1,4 @@
-import { FirebaseCardsService } from './../../services/firebase-cards.service';
+import { FirebaseCardsService } from '../../services/firebase-cards/firebase-cards.service';
 import { Component } from '@angular/core';
 
 @Component({
