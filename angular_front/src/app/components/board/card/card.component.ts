@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { FirebaseCardsService } from '../../../services/firebase-cards.service';
+import { FirebaseCardsService } from '../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseListsService } from '../../../services/firebase-lists/firebase-lists.service';
 
 @Component({
   selector: 'app-card',
@@ -9,8 +10,12 @@ import { FirebaseCardsService } from '../../../services/firebase-cards.service';
 export class CardComponent {
 
     @Input() list:any;
+    @Input() boardId:string | null = null;
 
-    constructor(private cardsSv:FirebaseCardsService) { }
+    constructor(
+        private svCards:FirebaseCardsService,
+        private svLists:FirebaseListsService
+    ) { }
 
     isCreatingCard: boolean = false;
     cardNameToAdd: string = "";
@@ -26,23 +31,25 @@ export class CardComponent {
     }
 
     createCard() {
-        if (this.cardNameToAdd.trim()) {
-            this.cardsSv.addCardToList(this.list.id, {name:this.cardNameToAdd}).then((data)=>{
+        if (this.cardNameToAdd.trim() && this.boardId) {
+            this.svCards.addCardToList(this.boardId, this.list.id, this.cardNameToAdd).then((data)=>{
                 this.closeCreationCardPanel();
             })
         }
     }
 
     deleteList() {
-        this.cardsSv.deleteList(this.list.id);
+        if (this.boardId)
+            this.svLists.deleteList(this.boardId, this.list.id);
     }
 
     deleteCard(card: any) {
-        console.log(card)
-        this.cardsSv.deleteCardFromList(this.list.id, card.id)
+        if (this.boardId)
+            this.svCards.deleteCardFromList(this.boardId, this.list.id, card.id)
     }
 
     ngOnInit() {
-        this.cards = this.cardsSv.getCards(this.list.id)
+        if (this.boardId)
+            this.cards = this.svCards.getCards(this.boardId, this.list.id)
     }
 }
