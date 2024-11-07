@@ -5,7 +5,7 @@
             <button class="btn" (click)="this.deleteList()"><i class="bi bi-trash text-danger"></i></button>
         </div>
 
-        <div class="example-container">
+        <div class="example-container w-100">
             <div
                 cdkDropList
                 [id]="'list-' + list.id"
@@ -14,7 +14,7 @@
                 class="example-list"
                 (cdkDropListDropped)="drop($event)">
                 @for (item of this.cards; track item) {
-                    <div class="example-box" cdkDrag>{{item.name}}</div>
+                    <button cdkDrag class="btn btn-light text-start m-1 shadow-sm bg-body-tertiary roundedshadow-sm bg-body-tertiary rounded">{{item.name}}</button>
                 }
             </div>
         </div>
