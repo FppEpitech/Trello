@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FirebaseCardsService } from '../../../services/firebase-cards/firebase-cards.service';
 import { FirebaseListsService } from '../../../services/firebase-lists/firebase-lists.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { OpenCardService } from '../../../services/open-card/open-card.service';
 
 interface Card {
     id: string;
@@ -21,7 +22,8 @@ export class CardComponent {
 
     constructor(
         private svCards:FirebaseCardsService,
-        private svLists:FirebaseListsService
+        private svLists:FirebaseListsService,
+        private svOpenCard: OpenCardService
     ) { }
 
     isCreatingCard: boolean = false;
@@ -82,5 +84,9 @@ export class CardComponent {
                 this.svCards.addCardToList(this.boardId, event.container.id.substring(5), movedCard.name)
             }
         }
+    }
+
+    openCardPanel(card: any) {
+        this.svOpenCard.toggleOpenCard();
     }
 }

@@ -3,7 +3,7 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
 
     <!-- Card with buttons on the right side inside -->
-    <div class="card shadow-lg w-50 position-relative">
+    <div #cardElement class="card shadow-lg w-50 position-relative">
       <div class="card-body">
         <div class="d-flex justify-content-start">
           <!-- Main card content on the left -->
@@ -22,7 +22,7 @@
 
           <!-- Button section -->
           <div class="d-flex flex-column ms-3 w-25">
-            <button class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
+            <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person"></i> Members</button>
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-tag"></i> Labels</button>
