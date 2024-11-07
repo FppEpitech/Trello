@@ -18,6 +18,9 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DragDropModule } from '@angular/cdk/drag-drop'
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { OpenCardComponent } from './components/board/open-card/open-card.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,8 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
     BoardComponent,
     BoardSidebarComponent,
     BoardNavbarComponent,
-    CardComponent
+    CardComponent,
+    OpenCardComponent
   ],
   imports: [
     FormsModule,
@@ -40,6 +44,8 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
     DragDropModule,
     CdkDrag,
     CdkDropList,
+    MatInputModule,
+    MatFormFieldModule
   ],
   providers: [
     provideAnimationsAsync()
