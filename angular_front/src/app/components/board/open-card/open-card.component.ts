@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class OpenCardComponent {
     isOpenCard: boolean = false;
 
     constructor (
-        private svOpenCard: OpenCardService
+        public svOpenCard: OpenCardService
     ) {}
 
     closeOpenCard() {

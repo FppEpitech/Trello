@@ -88,5 +88,7 @@ export class CardComponent {
 
     openCardPanel(card: any) {
         this.svOpenCard.toggleOpenCard();
+        this.svOpenCard.setCard(card);
+        this.svOpenCard.setList(this.list);
     }
 }

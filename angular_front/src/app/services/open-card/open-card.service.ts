@@ -8,6 +8,8 @@ export class OpenCardService {
 
     private _isOpenCard = new BehaviorSubject<boolean>(false);
     isOpenCard$: Observable<boolean>;
+    _card: any;
+    _list: any;
 
     constructor() {
         this.isOpenCard$ = this._isOpenCard.asObservable();
@@ -15,5 +17,13 @@ export class OpenCardService {
 
     toggleOpenCard(): void {
         this._isOpenCard.next(!this._isOpenCard.getValue());
+    }
+
+    setCard(card: any) {
+        this._card = card;
+    }
+
+    setList(list: any) {
+        this._list = list;
     }
 }
