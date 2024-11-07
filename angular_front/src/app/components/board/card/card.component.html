@@ -1,12 +1,24 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="d-flex align-items-center justify-content-between">
-            <h6>{{this.list.name}}</h6>
+            <h3>{{this.list.name}}</h3>
             <button class="btn" (click)="this.deleteList()"><i class="bi bi-trash text-danger"></i></button>
         </div>
-        <div *ngFor="let card of this.cards | async">
-            <button (click)="this.deleteCard(card)"  class="btn btn-light w-100 text-start m-1 shadow-sm bg-body-tertiary roundedshadow-sm bg-body-tertiary rounded">{{card.name}}</button>
+
+        <div class="example-container">
+            <div
+                cdkDropList
+                [id]="'list-' + list.id"
+                [cdkDropListData]="this.cards"
+                [cdkDropListConnectedTo]="connectedLists"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                @for (item of this.cards; track item) {
+                    <div class="example-box" cdkDrag>{{item.name}}</div>
+                }
+            </div>
         </div>
+
         <div class="m-1">
             <button *ngIf="!this.isCreatingCard" class="btn" (click)="this.openCreationCardPanel()"><i class="bi bi-plus"></i> Add a card</button>
             <div *ngIf="this.isCreatingCard">

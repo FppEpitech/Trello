@@ -18,6 +18,7 @@ export class BoardComponent {
     lists: any[] = [];
     isCreatingList: boolean = false;
     listNameToAdd: string = ""
+    connectedLists: string[] = [];
 
     openCreationListPanel() {
         this.isCreatingList = !this.isCreatingList;
@@ -41,6 +42,7 @@ export class BoardComponent {
         if (this.boardId) {
             this.svLists.getLists(this.boardId).subscribe((data)=>{
                 this.lists = data;
+                this.connectedLists = this.lists.map(list => `list-${list.id}`);
             })
         }
     }

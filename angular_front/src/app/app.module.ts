@@ -15,6 +15,9 @@ import { BoardNavbarComponent } from './components/board/board-navbar/board-navb
 import { CardComponent } from './components/board/card/card.component';
 import { AngularFirestoreModule } from "@angular/fire/compat/firestore";
 import { FormsModule } from '@angular/forms';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { DragDropModule } from '@angular/cdk/drag-drop'
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -34,8 +37,13 @@ import { FormsModule } from '@angular/forms';
     AngularFirestoreModule,
     BrowserModule,
     AppRoutingModule,
+    DragDropModule,
+    CdkDrag,
+    CdkDropList,
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
