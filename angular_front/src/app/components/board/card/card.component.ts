@@ -1,6 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FirebaseCardsService } from '../../../services/firebase-cards/firebase-cards.service';
 import { FirebaseListsService } from '../../../services/firebase-lists/firebase-lists.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+
+interface Card {
+    id: string;
+    name: string;
+}
 
 @Component({
   selector: 'app-card',
@@ -11,6 +17,7 @@ export class CardComponent {
 
     @Input() list:any;
     @Input() boardId:string | null = null;
+    @Input() connectedLists: string[] = [];
 
     constructor(
         private svCards:FirebaseCardsService,
@@ -19,7 +26,7 @@ export class CardComponent {
 
     isCreatingCard: boolean = false;
     cardNameToAdd: string = "";
-    cards: any;
+    cards: any[] = [];
 
     openCreationCardPanel() {
         this.isCreatingCard = !this.isCreatingCard
@@ -49,7 +56,31 @@ export class CardComponent {
     }
 
     ngOnInit() {
-        if (this.boardId)
-            this.cards = this.svCards.getCards(this.boardId, this.list.id)
+        if (this.boardId) {
+            this.svCards.getCards(this.boardId, this.list.id).subscribe(
+                cards => this.cards = cards,
+                error => console.error('Error fetching cards:', error)
+            );
+        }
+    }
+
+    drop(event: CdkDragDrop<Card[]>) {
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+            const movedCard = event.previousContainer.data[event.previousIndex];
+
+            transferArrayItem(
+                event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex,
+            );
+
+            if (this.boardId) {
+                this.svCards.deleteCardFromList(this.boardId, event.previousContainer.id.substring(5), movedCard.id)
+                this.svCards.addCardToList(this.boardId, event.container.id.substring(5), movedCard.name)
+            }
+        }
     }
 }
