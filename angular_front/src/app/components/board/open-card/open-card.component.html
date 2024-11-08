@@ -15,9 +15,11 @@
                 <h3 class="card-title fw-bolder"><i class="bi bi-justify-left"></i> Description</h3>
                 <mat-form-field class="example-full-width w-100">
                 <mat-label>Description</mat-label>
-                <textarea matInput placeholder=""></textarea>
+                <input matInput [(ngModel)]="this.description">
                 </mat-form-field>
-                <h3 class="card-title fw-bolder"><i class="bi bi-list-task"></i> Activity</h3>
+                <button *ngIf="this.description !== this.initialDescription" (click)="this.saveDescription()" class="btn btn-primary text-start">Save</button>
+                <button *ngIf="this.description !== this.initialDescription" (click)="this.cancelDescription()" class="btn btn-light m-2 text-start">Cancel</button>
+                <h3 class="card-title fw-bolder m-2"><i class="bi bi-list-task"></i> Activity</h3>
           </div>
 
           <!-- Button section -->
@@ -34,7 +36,7 @@
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-arrow-right"></i> Move</button>
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-copy"></i> Copy</button>
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-trash"></i> Delete</button>
+            <button (click)="this.delete()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-trash"></i> Delete</button>
             <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-share"></i> Share</button>
           </div>
         </div>

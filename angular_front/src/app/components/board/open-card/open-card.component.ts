@@ -1,3 +1,4 @@
+import { FirebaseCardsService } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 
@@ -9,10 +10,15 @@ import { OpenCardService } from '../../../services/open-card/open-card.service';
 export class OpenCardComponent {
 
     @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
+    @Input() boardId:string | null = null;
     isOpenCard: boolean = false;
 
+    description: string = "";
+    initialDescription: string = "";
+
     constructor (
-        public svOpenCard: OpenCardService
+        public svOpenCard: OpenCardService,
+        private svCard: FirebaseCardsService
     ) {}
 
     closeOpenCard() {
@@ -26,5 +32,81 @@ export class OpenCardComponent {
             this.closeOpenCard();
         }
         this.isOpenCard = !this.isOpenCard;
+    }
+
+    ngOnInit() {
+        if (this.boardId)
+            this.svCard.getDescription(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe((data)=>{
+                if (data) {
+                    this.initialDescription = data;
+                    this.description = data;
+                }
+            });
+    }
+
+    saveDescription() {
+        if (this.boardId) {
+            this.svCard.addDescription(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.description);
+            this.initialDescription = this.description;
+        }
+    }
+
+    cancelDescription() {
+        this.description = this.initialDescription
+    }
+
+    join() {
+
+    }
+
+    members() {
+
+    }
+
+    labels() {
+
+    }
+
+    checklist() {
+
+    }
+
+    dates() {
+
+    }
+
+    attachment() {
+
+    }
+
+    cover() {
+
+    }
+
+    customFields() {
+
+    }
+
+    move() {
+
+    }
+
+    copy() {
+
+    }
+
+    makeTemplate() {
+
+    }
+
+    delete() {
+        if (this.boardId) {
+            this.svCard.deleteCardFromList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
+            this.closeOpenCard();
+        }
+    }
+
+    share() {
+
     }
 }

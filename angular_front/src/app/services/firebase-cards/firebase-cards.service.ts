@@ -25,4 +25,17 @@ export class FirebaseCardsService {
     deleteCardFromList(boardId: string, listId: string, cardId: string) {
         return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).delete();
     }
+
+    addDescription(boardId: string, listId: string, cardId: string, description: string) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ description });
+    }
+
+    getDescription(boardId: string, listId: string, cardId: string): Observable<string | null> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as { description?: string };
+                return data ? data.description ?? null : null;
+            })
+        );
+    }
 }
