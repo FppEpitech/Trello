@@ -4,6 +4,19 @@ import { FirebaseListsService } from '../../../services/firebase-lists/firebase-
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 
+const newCard: Card = {
+    id: '',
+    name: '',
+    description: '',
+    members: [],
+    notifications: [],
+    labels: [],
+    checklists: [],
+    date: null,
+    attachment: [],
+    cover: '',
+};
+
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
@@ -36,7 +49,8 @@ export class CardComponent {
 
     createCard() {
         if (this.cardNameToAdd.trim() && this.boardId) {
-            this.svCards.addCardToList(this.boardId, this.list.id, {name:this.cardNameToAdd, description:"", id:""}).then((data)=>{
+            newCard.name = this.cardNameToAdd;
+            this.svCards.addCardToList(this.boardId, this.list.id, newCard).then((data)=>{
                 this.closeCreationCardPanel();
             })
         }

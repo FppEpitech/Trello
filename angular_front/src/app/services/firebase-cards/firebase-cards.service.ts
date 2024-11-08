@@ -2,10 +2,35 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
 
+export interface Label {
+    id: string;
+    name: string;
+    color: string;
+}
+
+export interface Check {
+    id: string;
+    name: string;
+    state: boolean;
+}
+
+export interface Checklists {
+    id: string;
+    name: string;
+    checks: [Check];
+}
+
 export interface Card {
     id: string;
     name: string;
     description: string;
+    members: string[];
+    notifications: string[];
+    labels: Label[];
+    checklists: Checklists[];
+    date: Date | null;
+    attachment: string[];
+    cover: string;
 }
 
 @Injectable({

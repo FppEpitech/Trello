@@ -27,19 +27,19 @@
           <!-- Button section -->
           <div class="d-flex flex-column ms-3 w-25">
             <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person"></i> Members</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-tag"></i> Labels</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-check2-square"></i> Checklist</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-clock"></i> Dates</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-paperclip"></i> Attachment</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-card-image"></i> Cover</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-input-cursor-text"></i> Custom Fields</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-arrow-right"></i> Move</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-copy"></i> Copy</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
+            <button (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
+            <button (click)="this.members()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person"></i> Members</button>
+            <button (click)="this.labels()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-tag"></i> Labels</button>
+            <button (click)="this.checklist()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-check2-square"></i> Checklist</button>
+            <button (click)="this.dates()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-clock"></i> Dates</button>
+            <button (click)="this.attachment()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-paperclip"></i> Attachment</button>
+            <button (click)="this.cover()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-card-image"></i> Cover</button>
+            <button (click)="this.customFields()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-input-cursor-text"></i> Custom Fields</button>
+            <button (click)="this.move()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-arrow-right"></i> Move</button>
+            <button (click)="this.copy()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-copy"></i> Copy</button>
+            <button (click)="this.makeTemplate()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
             <button (click)="this.delete()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-trash"></i> Delete</button>
-            <button class="btn btn-light mb-2 text-start w-100"><i class="bi bi-share"></i> Share</button>
+            <button (click)="this.share()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-share"></i> Share</button>
           </div>
         </div>
       </div>
