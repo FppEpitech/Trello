@@ -26,6 +26,10 @@ export class FirebaseCardsService {
         return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).delete();
     }
 
+    addName(boardId: string, listId: string, cardId: string, name: string) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ name });
+    }
+
     addDescription(boardId: string, listId: string, cardId: string, description: string) {
         return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ description });
     }

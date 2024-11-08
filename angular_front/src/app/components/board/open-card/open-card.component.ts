@@ -15,6 +15,8 @@ export class OpenCardComponent {
 
     description: string = "";
     initialDescription: string = "";
+    isEditingCardName: boolean = false;
+    cardName: string = "";
 
     constructor (
         public svOpenCard: OpenCardService,
@@ -35,6 +37,7 @@ export class OpenCardComponent {
     }
 
     ngOnInit() {
+        this.cardName = this.svOpenCard._card.name;
         if (this.boardId)
             this.svCard.getDescription(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe((data)=>{
                 if (data) {
@@ -42,6 +45,18 @@ export class OpenCardComponent {
                     this.description = data;
                 }
             });
+    }
+
+    toggleEditCardName() {
+        this.isEditingCardName = true;
+    }
+
+    saveNameCard() {
+        if (this.cardName != this.svOpenCard._card.name && this.cardName != "" && this.boardId) {
+            this.svCard.addName(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.cardName);
+            this.svOpenCard._card.name = this.cardName;
+        }
+        this.isEditingCardName = false;
     }
 
     saveDescription() {
