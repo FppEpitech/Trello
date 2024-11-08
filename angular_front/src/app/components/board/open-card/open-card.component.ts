@@ -1,6 +1,7 @@
-import { FirebaseCardsService } from './../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseCardsService, Member } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-open-card',
@@ -11,40 +12,51 @@ export class OpenCardComponent {
 
     @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
     @Input() boardId:string | null = null;
-    isOpenCard: boolean = false;
 
     description: string = "";
     initialDescription: string = "";
     isEditingCardName: boolean = false;
     cardName: string = "";
 
+    userEmail: string | null = null;
+    userProfile: string | null = null;
+
+    memberslist: Member[] | null = null;
+    isMember: boolean = false;
+
     constructor (
         public svOpenCard: OpenCardService,
-        private svCard: FirebaseCardsService
+        private svCard: FirebaseCardsService,
+        private svAuth: AuthService,
     ) {}
 
     closeOpenCard() {
         this.svOpenCard.toggleOpenCard();
     }
 
-    @HostListener('document:click', ['$event'])
-    onClickOutside(event: MouseEvent): void {
-        const clickedInside = this.cardElement.nativeElement.contains(event.target);
-        if (!clickedInside && this.isOpenCard) {
-            this.closeOpenCard();
-        }
-        this.isOpenCard = !this.isOpenCard;
-    }
-
     ngOnInit() {
         this.cardName = this.svOpenCard._card.name;
-        if (this.boardId)
+
+        this.svAuth.getUserEmail().subscribe(email => {
+            this.userEmail = email;
+        });
+
+        this.svAuth.getUserProfileImage().subscribe(profile => {
+            this.userProfile = profile;
+        });
+
+        if (this.boardId) {
             this.svCard.getDescription(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe((data)=>{
                 if (data) {
                     this.initialDescription = data;
                     this.description = data;
                 }
             });
+            this.svCard.getCardMembers(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(members => {
+                this.memberslist = members;
+                this.isMember = this.memberslist.some(member => member.name === this.userEmail);
+            });
+        }
     }
 
     toggleEditCardName() {
@@ -71,7 +83,15 @@ export class OpenCardComponent {
     }
 
     join() {
+        if (this.boardId && this.userEmail && this.userProfile) {
+            this.svCard.addMemberToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+        }
+    }
 
+    leave() {
+        if (this.boardId && this.userEmail && this.userProfile) {
+            this.svCard.deleteMemberFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+        }
     }
 
     members() {

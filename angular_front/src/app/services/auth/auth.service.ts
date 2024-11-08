@@ -53,10 +53,15 @@ export class AuthService {
         ));
     }
 
-    // AuthLogin(provider : any) {
-    //   return signInWithPopup(provider).then((result) => {
-    //     console.log("User logged in.");
-    //     this.router.navigate(['/home']);
-    //   });
-    // }
+    getUserEmail(): Observable<string | null> {
+        return this.authState$.pipe(
+            map(user => user ? user.email : null)
+        );
+    }
+
+    getUserProfileImage(): Observable<string | null> {
+        return this.angularFireAuth.authState.pipe(
+          map(user => user?.photoURL || null)
+        );
+    }
 }

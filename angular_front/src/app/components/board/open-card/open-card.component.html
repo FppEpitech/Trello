@@ -14,6 +14,8 @@
                 <h4 class="card-title">in list {{ this.svOpenCard._list.name }}</h4>
                 <h4 class="card-title fw-bolder">Notifications</h4>
                 <button class="btn btn-light"><i class="bi bi-eye"></i> Watch</button>
+                <h4 *ngIf="this.memberslist?.length != 0" class="card-title fw-bolder">Members</h4>
+                <img *ngFor="let member of memberslist" [src]="member.profile" alt="Member profile image" class="profile-image m-1">
                 <h3 class="card-title fw-bolder"><i class="bi bi-justify-left"></i> Description</h3>
                 <mat-form-field class="example-full-width w-100">
                 <mat-label>Description</mat-label>
@@ -27,7 +29,8 @@
           <!-- Button section -->
           <div class="d-flex flex-column ms-3 w-25">
             <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
-            <button (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
+            <button *ngIf="!this.isMember" (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
+            <button *ngIf="this.isMember" (click)="this.leave()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-dash"></i> Leave</button>
             <button (click)="this.members()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person"></i> Members</button>
             <button (click)="this.labels()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-tag"></i> Labels</button>
             <button (click)="this.checklist()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-check2-square"></i> Checklist</button>

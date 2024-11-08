@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
+import firebase from 'firebase/compat/app'; // Import from compat
 
 export interface Label {
     id: string;
@@ -20,11 +21,16 @@ export interface Checklists {
     checks: [Check];
 }
 
+export interface Member {
+    name: string;
+    profile: string;
+}
+
 export interface Card {
     id: string;
     name: string;
     description: string;
-    members: string[];
+    members: Member[];
     notifications: string[];
     labels: Label[];
     checklists: Checklists[];
@@ -73,6 +79,27 @@ export class FirebaseCardsService {
             map(action => {
                 const data = action.payload.data() as { description?: string };
                 return data ? data.description ?? null : null;
+            })
+        );
+    }
+
+    addMemberToCard(boardId: string, listId: string, cardId: string, newMember: Member) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            members: firebase.firestore.FieldValue.arrayUnion(newMember)
+        });
+    }
+
+    deleteMemberFromCard(boardId: string, listId: string, cardId: string, memberToRemove: Member) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            members: firebase.firestore.FieldValue.arrayRemove(memberToRemove)
+        });
+    }
+
+    getCardMembers(boardId: string, listId: string, cardId: string): Observable<Member[]> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                return data?.members || [];
             })
         );
     }
