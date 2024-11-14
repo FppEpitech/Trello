@@ -32,6 +32,31 @@
                         </div>
                     </div>
                 </div>
+                <div *ngFor="let checkList of this.checkLists">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title fw-bolder ms-2"><i class="bi bi-check2-square"></i> {{ checkList.name }}</h4>
+                        <button class="btn btn-light m-1" (click)="this.deleteCheckList(checkList)">Delete</button>
+                    </div>
+                    <div *ngFor="let item of checkList.checks" class="d-flex align-items-center p-1 rounded">
+                        <input type="checkbox" class="form-check-input me-2" [checked]="item.state" (click)="this.updateItemCheckList(checkList, item)">
+                        <span class="flex-grow-1">{{ item.name }}</span>
+                        <button class="btn btn-sm text-danger" (click)="this.deleteItemChecklist(checkList, item)"><i class="bi bi-trash"></i></button>
+                    </div>
+                    <div class="dropdown dropend">
+                        <button class="btn btn-light mb-2 text-start" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Add an Item
+                        </button>
+                        <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control me-2" placeholder="Enter item" [(ngModel)]="this.checklistItemName">
+                            </div>
+                            <button class="btn btn-primary m-1" (click)="this.addItemToCheckList(checkList)">Add</button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- <h4 class="card-title fw-bolder">Due Date</h4>
                 <mat-card class="demo-inline-calendar-card">
@@ -95,7 +120,24 @@
                 </div>
             </div>
 
-            <button (click)="this.checklist()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-check2-square"></i> Checklist</button>
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-check2-square"></i>
+                    Checklist
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Add checklist</h4>
+                        <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control me-2" placeholder="Enter checklist title" [(ngModel)]="this.checklistName">
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="this.createCheckList()">
+                        Add
+                    </button>
+                </div>
+            </div>
             <button (click)="this.dates()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-clock"></i> Dates</button>
             <button (click)="this.attachment()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-paperclip"></i> Attachment</button>
             <button (click)="this.cover()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-card-image"></i> Cover</button>

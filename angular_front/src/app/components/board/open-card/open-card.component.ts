@@ -1,7 +1,8 @@
-import { FirebaseCardsService, Label, Member } from './../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseCardsService, Label, Member, Checklists, Check } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { v4 as uuidv4 } from 'uuid';
 
 declare var bootstrap: any;
 
@@ -28,6 +29,10 @@ export class OpenCardComponent {
 
     labelsList: Label[] | null = null;
     labelsListChecked: Label[] | null = null;
+
+    checklistName: string = "";
+    checklistItemName: string = "";
+    checkLists: Checklists[] | null = null;
 
     selected = model<Date | null>(null);
 
@@ -66,6 +71,9 @@ export class OpenCardComponent {
             this.svCard.getCardLabels(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(labels => {
                 this.labelsList = labels;
                 this.labelsListChecked = this.labelsList.filter(label => label.isCheck);
+            });
+            this.svCard.getCardCheckLists(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(checkLists => {
+                this.checkLists = checkLists;
             });
         }
     }
@@ -120,19 +128,54 @@ export class OpenCardComponent {
     }
 
     updateLabel(labelItem: Label) {
-        if (this.boardId && this.userEmail && labelItem) {
+        if (this.boardId && labelItem) {
             this.svCard.updateLabelIsCheck(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id, !labelItem.isCheck);
         }
     }
 
     deleteLabel(labelItem: Label) {
-        if (this.boardId && this.userEmail && labelItem) {
+        if (this.boardId && labelItem) {
             this.svCard.deleteLabelFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id);
         }
     }
 
-    checklist() {
+    createCheckList() {
+        if (this.boardId && this.checklistName != "") {
+            const newId = uuidv4();
+            this.svCard.addCheckListToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {
+                id: newId,
+                name: this.checklistName,
+                checks: []
+            })
+        }
+    }
 
+    deleteCheckList(checklist: Checklists) {
+        if (this.boardId && checklist) {
+            this.svCard.deleteCheckListFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checklist.id);
+        }
+    }
+
+    addItemToCheckList(checklist: Checklists) {
+        if (this.boardId && this.checklistItemName != "") {
+            const newId = uuidv4();
+            const check: Check = {id: newId, name: this.checklistItemName, state: false};
+            this.svCard.addCheckToCheckList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checklist.id, check);
+            this.checklistItemName = "";
+        }
+    }
+
+    deleteItemChecklist(checkList: Checklists, item: Check) {
+        if (this.boardId && checkList && item) {
+            this.svCard.deleteCheckFromCheckList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checkList.id, item.id);
+        }
+    }
+
+    updateItemCheckList(checkList: Checklists, item: Check) {
+        if (this.boardId && checkList && item) {
+            item.state = !item.state;
+            this.svCard.updateCheckInCheckList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checkList.id, item);
+        }
     }
 
     dates() {

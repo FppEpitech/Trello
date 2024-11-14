@@ -19,7 +19,7 @@ export interface Check {
 export interface Checklists {
     id: string;
     name: string;
-    checks: [Check];
+    checks: Check[];
 }
 
 export interface Member {
@@ -156,6 +156,106 @@ export class FirebaseCardsService {
             return Promise.resolve();
         }).catch(error => {
             console.error("Error updating label's isCheck state: ", error);
+        });
+    }
+
+    addCheckListToCard(boardId: string, listId: string, cardId: string, newChecklist: Checklists) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            checklists: firebase.firestore.FieldValue.arrayUnion(newChecklist)
+        });
+    }
+
+    deleteCheckListFromCard(boardId: string, listId: string, cardId: string, checkListId: string) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.checklists) {
+                    const updatedChecklists = data.checklists.filter(checklists => checklists.id !== checkListId);
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        checklists: updatedChecklists
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error deleting checklists: ", error);
+        });
+    }
+
+    getCardCheckLists(boardId: string, listId: string, cardId: string): Observable<Checklists[]> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                return data?.checklists || [];
+            })
+        );
+    }
+
+    addCheckToCheckList(boardId: string, listId: string, cardId: string, checklistId: string, newCheck: Check) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.checklists) {
+                    const updatedChecklists = data.checklists.map(checklist => {
+                        if (checklist.id === checklistId) {
+                            checklist.checks.push(newCheck);
+                        }
+                        return checklist;
+                    });
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        checklists: updatedChecklists
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error adding check to checklist: ", error);
+        });
+    }
+
+    deleteCheckFromCheckList(boardId: string, listId: string, cardId: string, checklistId: string, checkId: string) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.checklists) {
+                    const updatedChecklists = data.checklists.map(checklist => {
+                        if (checklist.id === checklistId) {
+                            checklist.checks = checklist.checks.filter(check => check.id !== checkId);
+                        }
+                        return checklist;
+                    });
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        checklists: updatedChecklists
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error deleting check from checklist: ", error);
+        });
+    }
+
+    updateCheckInCheckList(boardId: string, listId: string, cardId: string, checklistId: string, updatedCheck: Check) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.checklists) {
+                    const updatedChecklists = data.checklists.map(checklist => {
+                        if (checklist.id === checklistId) {
+                            checklist.checks = checklist.checks.map(check =>
+                                check.id === updatedCheck.id ? { ...check, ...updatedCheck } : check
+                            );
+                        }
+                        return checklist;
+                    });
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        checklists: updatedChecklists
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error updating check in checklist: ", error);
         });
     }
 }
