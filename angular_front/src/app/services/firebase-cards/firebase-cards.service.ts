@@ -104,4 +104,58 @@ export class FirebaseCardsService {
             })
         );
     }
+
+    addLabelToCard(boardId: string, listId: string, cardId: string, newLabel: Label) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            labels: firebase.firestore.FieldValue.arrayUnion(newLabel)
+        });
+    }
+
+    deleteLabelFromCard(boardId: string, listId: string, cardId: string, labelId: string) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.labels) {
+                    const updatedLabels = data.labels.filter(label => label.id !== labelId);
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        labels: updatedLabels
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error deleting label: ", error);
+        });
+    }
+
+    getCardLabels(boardId: string, listId: string, cardId: string): Observable<Label[]> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                return data?.labels || [];
+            })
+        );
+    }
+
+    updateLabelIsCheck(boardId: string, listId: string, cardId: string, labelId: string, newIsCheckValue: boolean) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.labels) {
+                    const updatedLabels = data.labels.map(label => {
+                        if (label.id === labelId) {
+                            return { ...label, isCheck: newIsCheckValue };
+                        }
+                        return label;
+                    });
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        labels: updatedLabels
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error updating label's isCheck state: ", error);
+        });
+    }
 }

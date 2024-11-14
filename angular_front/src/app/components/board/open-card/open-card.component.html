@@ -20,6 +20,19 @@
                 <h4 *ngIf="this.memberslist?.length != 0" class="card-title fw-bolder">Members</h4>
                 <img *ngFor="let member of memberslist" [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
 
+                <h4 *ngIf="this.labelsListChecked?.length != 0" class="card-title fw-bolder">Labels</h4>
+                <div class="mb-3">
+                    <div class="d-flex flex-wrap">
+                        <div
+                            *ngFor="let label of this.labelsListChecked"
+                            class="btn rounded m-1"
+                            style="height: 30px; cursor: pointer; display: inline-block; padding: 0 10px;"
+                            [style.background-color]="label.color">
+                            {{ label.name }}
+                        </div>
+                    </div>
+                </div>
+
                 <!-- <h4 class="card-title fw-bolder">Due Date</h4>
                 <mat-card class="demo-inline-calendar-card">
                     <mat-calendar [(selected)]="selected"></mat-calendar>
@@ -36,7 +49,6 @@
                 <h3 class="card-title fw-bolder m-2"><i class="bi bi-list-task"></i> Activity</h3>
           </div>
 
-          <!-- Button section -->
           <div class="d-flex flex-column ms-3 w-25">
             <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
             <button *ngIf="!this.isMember" (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
@@ -56,30 +68,30 @@
             </div>
 
             <div class="dropdown dropend">
-                <button (click)="this.labels()" class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-tag"></i>
                      Labels
                 </button>
 
                 <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 class="mb-0">Labels</h4>
-                    <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
-                  </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Labels</h4>
+                        <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                    </div>
 
-                  <div class="d-flex align-items-center p-1 rounded mb-2">
-                    <input type="checkbox" class="form-check-input me-2">
-                    <div class="rounded" style="width: 50px; height: 20px; background-color: #28a745;"></div> <!-- Green color -->
-                    <span class="ms-2 flex-grow-1">Label 1</span>
-                    <button class="btn btn-sm"><i class="bi bi-pencil"></i></button>
-                  </div>
+                    <div *ngFor="let labelItem of this.labelsList" class="d-flex align-items-center p-1 rounded mb-2">
+                        <input type="checkbox" class="form-check-input me-2" [checked]="labelItem.isCheck" (click)="this.updateLabel(labelItem)">
+                        <div class="rounded" style="width: 50px; height: 20px;" [style.background-color]="labelItem.color"></div>
+                        <span class="ms-2 flex-grow-1">{{ labelItem.name }}</span>
+                        <button class="btn btn-sm text-danger" (click)="this.deleteLabel(labelItem)"><i class="bi bi-trash"></i></button>
+                    </div>
 
-                  <div class="dropdown">
-                      <button class="btn btn-light w-100 mt-3" type="button" id="createLabelDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                          Create a new label
-                      </button>
-                      <app-label-creation></app-label-creation>
-                </div>
+                    <div class="dropdown dropend">
+                        <button class="btn btn-light w-100 mt-3" type="button" id="createLabelDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Create a new label
+                        </button>
+                        <app-label-creation [boardId]="this.boardId" [cardId]="this.svOpenCard._card.id" [listId]="this.svOpenCard._list.id"></app-label-creation>
+                    </div>
                 </div>
             </div>
 

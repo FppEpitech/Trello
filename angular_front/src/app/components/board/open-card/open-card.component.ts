@@ -1,4 +1,4 @@
-import { FirebaseCardsService, Member } from './../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseCardsService, Label, Member } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -25,6 +25,9 @@ export class OpenCardComponent {
 
     memberslist: Member[] | null = null;
     isMember: boolean = false;
+
+    labelsList: Label[] | null = null;
+    labelsListChecked: Label[] | null = null;
 
     selected = model<Date | null>(null);
 
@@ -59,6 +62,10 @@ export class OpenCardComponent {
             this.svCard.getCardMembers(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(members => {
                 this.memberslist = members;
                 this.isMember = this.memberslist.some(member => member.name === this.userEmail);
+            });
+            this.svCard.getCardLabels(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(labels => {
+                this.labelsList = labels;
+                this.labelsListChecked = this.labelsList.filter(label => label.isCheck);
             });
         }
     }
@@ -104,15 +111,23 @@ export class OpenCardComponent {
         }
     }
 
-    labels() {
-
-    }
-
     closeDropdown() {
         const dropdownElement = document.getElementById('labelsDropdown');
         if (dropdownElement) {
           const dropdown = bootstrap.Dropdown.getInstance(dropdownElement);
           dropdown.hide();
+        }
+    }
+
+    updateLabel(labelItem: Label) {
+        if (this.boardId && this.userEmail && labelItem) {
+            this.svCard.updateLabelIsCheck(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id, !labelItem.isCheck);
+        }
+    }
+
+    deleteLabel(labelItem: Label) {
+        if (this.boardId && this.userEmail && labelItem) {
+            this.svCard.deleteLabelFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id);
         }
     }
 

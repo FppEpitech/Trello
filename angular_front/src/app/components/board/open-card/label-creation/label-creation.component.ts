@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FirebaseCardsService } from '../../../../services/firebase-cards/firebase-cards.service';
+import { v4 as uuidv4 } from 'uuid';
 
 declare var bootstrap: any;
 
@@ -10,8 +11,12 @@ declare var bootstrap: any;
 })
 export class LabelCreationComponent {
 
+    @Input() boardId:string | null = null;
+    @Input() listId:string | null = null;
+    @Input() cardId:string | null = null;
+
+
     title: string = "";
-    color: string = "";
     idxColor: number = 0;
 
     colors: string[] = [
@@ -38,5 +43,18 @@ export class LabelCreationComponent {
 
     chooseColor(colorLabel: string) {
         this.colorPreview = colorLabel;
+    }
+
+    createLabel() {
+        if (this.boardId && this.title !== "" && this.colorPreview !== "" && this.listId && this.cardId) {
+            const newId = uuidv4();
+            this.svCard.addLabelToCard(this.boardId, this.listId, this.cardId, {
+                id: newId,
+                name: this.title,
+                color: this.colorPreview,
+                isCheck: true
+            });
+        }
+        this.closeDropdown();
     }
 }
