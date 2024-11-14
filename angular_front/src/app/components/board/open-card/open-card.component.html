@@ -55,7 +55,34 @@
                 </div>
             </div>
 
-            <button (click)="this.labels()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-tag"></i> Labels</button>
+            <div class="dropdown dropend">
+                <button (click)="this.labels()" class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-tag"></i>
+                     Labels
+                </button>
+
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0">Labels</h4>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                  </div>
+
+                  <div class="d-flex align-items-center p-1 rounded mb-2">
+                    <input type="checkbox" class="form-check-input me-2">
+                    <div class="rounded" style="width: 50px; height: 20px; background-color: #28a745;"></div> <!-- Green color -->
+                    <span class="ms-2 flex-grow-1">Label 1</span>
+                    <button class="btn btn-sm"><i class="bi bi-pencil"></i></button>
+                  </div>
+
+                  <div class="dropdown">
+                      <button class="btn btn-light w-100 mt-3" type="button" id="createLabelDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                          Create a new label
+                      </button>
+                      <app-label-creation></app-label-creation>
+                </div>
+                </div>
+            </div>
+
             <button (click)="this.checklist()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-check2-square"></i> Checklist</button>
             <button (click)="this.dates()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-clock"></i> Dates</button>
             <button (click)="this.attachment()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-paperclip"></i> Attachment</button>

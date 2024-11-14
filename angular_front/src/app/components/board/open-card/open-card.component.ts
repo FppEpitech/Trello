@@ -3,6 +3,8 @@ import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@a
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-open-card',
   templateUrl: './open-card.component.html',
@@ -104,6 +106,14 @@ export class OpenCardComponent {
 
     labels() {
 
+    }
+
+    closeDropdown() {
+        const dropdownElement = document.getElementById('labelsDropdown');
+        if (dropdownElement) {
+          const dropdown = bootstrap.Dropdown.getInstance(dropdownElement);
+          dropdown.hide();
+        }
     }
 
     checklist() {

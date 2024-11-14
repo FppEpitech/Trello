@@ -1,0 +1,29 @@
+<div class="dropdown-menu p-3" aria-labelledby="createLabelDropdown" style="min-width: 350px; max-width: 350px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0">Create label</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+    </div>
+
+    <div class="mb-3">
+      <div class="w-100 rounded text-center" style="height: 40px;" [style.background-color]="colorPreview">{{ this.title }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="labelTitle" class="form-label">Title</label>
+      <input type="text" class="form-control me-2" placeholder="Enter label title" [(ngModel)]="this.title">
+    </div>
+
+    <div class="mb-3">
+        <label for="colorPicker" class="form-label">Select a color</label>
+        <div class="d-flex flex-wrap">
+            <button
+                *ngFor="let colorLabel of colors"
+                class="btn rounded m-1"
+                style="width: 55px; height: 30px; cursor: pointer;"
+                [style.background-color]="colorLabel"
+                (click)="this.chooseColor(colorLabel)">
+            </button>
+        </div>
+    </div>
+    <button class="btn btn-primary w-100">Create</button>
+</div>

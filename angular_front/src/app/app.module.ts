@@ -24,6 +24,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatCardModule} from '@angular/material/card';
 import { provideNativeDateAdapter } from "@angular/material/core";
+import { LabelCreationComponent } from './components/board/open-card/label-creation/label-creation.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { provideNativeDateAdapter } from "@angular/material/core";
     BoardSidebarComponent,
     BoardNavbarComponent,
     CardComponent,
-    OpenCardComponent
+    OpenCardComponent,
+    LabelCreationComponent
   ],
   imports: [
     FormsModule,
