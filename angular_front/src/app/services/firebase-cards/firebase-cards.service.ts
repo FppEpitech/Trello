@@ -258,4 +258,29 @@ export class FirebaseCardsService {
             console.error("Error updating check in checklist: ", error);
         });
     }
+
+    getDateOfCard(boardId: string, listId: string, cardId: string): Observable<Date | null> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                if (data?.date instanceof firebase.firestore.Timestamp) {
+                    return data.date.toDate();
+                }
+                return null;
+            })
+        );
+    }
+
+    addDateToCard(boardId: string, listId: string, cardId: string, date: Date | null) {
+        const firestoreDate = date ? firebase.firestore.Timestamp.fromDate(date) : null;
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            date: date
+        });
+    }
+
+    deleteDateFromCard(boardId: string, listId: string, cardId: string) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            date: null
+        });
+    }
 }

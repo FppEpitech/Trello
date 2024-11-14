@@ -17,6 +17,9 @@
                 <h4 class="card-title fw-bolder">Notifications</h4>
                 <button class="btn btn-light"><i class="bi bi-eye"></i> Watch</button>
 
+                <h4 *ngIf="this.date" class="card-title fw-bolder">Due Date</h4>
+                <p *ngIf="this.date">{{ this.stringDate }}</p>
+
                 <h4 *ngIf="this.memberslist?.length != 0" class="card-title fw-bolder">Members</h4>
                 <img *ngFor="let member of memberslist" [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
 
@@ -32,6 +35,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div *ngFor="let checkList of this.checkLists">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title fw-bolder ms-2"><i class="bi bi-check2-square"></i> {{ checkList.name }}</h4>
@@ -57,12 +61,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <h4 class="card-title fw-bolder">Due Date</h4>
-                <mat-card class="demo-inline-calendar-card">
-                    <mat-calendar [(selected)]="selected"></mat-calendar>
-                </mat-card>
-                <p>Selected date: {{selected()}}</p> -->
 
                 <h3 class="card-title fw-bolder"><i class="bi bi-justify-left"></i> Description</h3>
                 <mat-form-field class="example-full-width w-100">
@@ -138,7 +136,27 @@
                     </button>
                 </div>
             </div>
-            <button (click)="this.dates()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-clock"></i> Dates</button>
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-clock"></i>
+                    Dates
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Dates</h4>
+                    </div>
+                    <h4 class="card-title fw-bolder">Due Date</h4>
+                    <mat-card class="demo-inline-calendar-card mb-1">
+                        <mat-calendar [(selected)]="selected"></mat-calendar>
+                    </mat-card>
+                    <button *ngIf="this.date" class="btn btn-light w-100 m-1" (click)="this.removeDate()">
+                        Remove date
+                    </button>
+                    <button class="btn btn-primary w-100 m-1" (click)="this.saveDate()">
+                        Save
+                    </button>
+                </div>
+            </div>
             <button (click)="this.attachment()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-paperclip"></i> Attachment</button>
             <button (click)="this.cover()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-card-image"></i> Cover</button>
             <button (click)="this.customFields()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-input-cursor-text"></i> Custom Fields</button>

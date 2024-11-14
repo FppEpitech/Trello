@@ -35,6 +35,8 @@ export class OpenCardComponent {
     checkLists: Checklists[] | null = null;
 
     selected = model<Date | null>(null);
+    date: Date | null = null;
+    stringDate: string = "";
 
     constructor (
         public svOpenCard: OpenCardService,
@@ -74,6 +76,11 @@ export class OpenCardComponent {
             });
             this.svCard.getCardCheckLists(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(checkLists => {
                 this.checkLists = checkLists;
+            });
+            this.svCard.getDateOfCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(date => {
+                this.date = date;
+                if (this.date)
+                    this.stringDate = this.date.toLocaleDateString();
             });
         }
     }
@@ -178,8 +185,16 @@ export class OpenCardComponent {
         }
     }
 
-    dates() {
+    saveDate() {
+        if (this.boardId) {
+            this.svCard.addDateToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.selected());
+        }
+    }
 
+    removeDate() {
+        if (this.boardId) {
+            this.svCard.deleteDateFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
+        }
     }
 
     attachment() {
