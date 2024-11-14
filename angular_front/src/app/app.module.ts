@@ -21,6 +21,9 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { OpenCardComponent } from './components/board/open-card/open-card.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatCardModule} from '@angular/material/card';
+import { provideNativeDateAdapter } from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -45,10 +48,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     CdkDrag,
     CdkDropList,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCardModule,
+    MatDatepickerModule
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideNativeDateAdapter()
   ],
   bootstrap: [AppComponent],
 })

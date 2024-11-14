@@ -9,13 +9,23 @@
           <!-- Main card content on the left -->
           <div class="p-2 w-100">
                 <h2 class="card-title fw-bolder" (click)="this.toggleEditCardName()"><i class="bi bi-window"></i> {{this.svOpenCard._card.name}}</h2>
+
                 <input *ngIf="this.isEditingCardName" type="text" class="form-control" [(ngModel)]="this.cardName">
                 <button *ngIf="this.isEditingCardName" (click)="this.saveNameCard()" class="btn btn-primary mt-2">Save</button>
+
                 <h4 class="card-title">in list {{ this.svOpenCard._list.name }}</h4>
                 <h4 class="card-title fw-bolder">Notifications</h4>
                 <button class="btn btn-light"><i class="bi bi-eye"></i> Watch</button>
+
                 <h4 *ngIf="this.memberslist?.length != 0" class="card-title fw-bolder">Members</h4>
-                <img *ngFor="let member of memberslist" [src]="member.profile" alt="Member profile image" class="profile-image m-1">
+                <img *ngFor="let member of memberslist" [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
+
+                <!-- <h4 class="card-title fw-bolder">Due Date</h4>
+                <mat-card class="demo-inline-calendar-card">
+                    <mat-calendar [(selected)]="selected"></mat-calendar>
+                </mat-card>
+                <p>Selected date: {{selected()}}</p> -->
+
                 <h3 class="card-title fw-bolder"><i class="bi bi-justify-left"></i> Description</h3>
                 <mat-form-field class="example-full-width w-100">
                 <mat-label>Description</mat-label>
@@ -31,7 +41,20 @@
             <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
             <button *ngIf="!this.isMember" (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
             <button *ngIf="this.isMember" (click)="this.leave()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-dash"></i> Leave</button>
-            <button (click)="this.members()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person"></i> Members</button>
+
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="membersDropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person"></i> Members</button>
+                <div class="dropdown-menu p-3" aria-labelledby="membersDropdown" style="min-width: 250px;">
+                    <h4 class="mb-2">Members</h4>
+                    <h5 class="mb-2">Board members</h5>
+                    <div *ngFor="let member of memberslist" class="d-flex align-items-center p-2 border rounded">
+                        <img [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
+                        <span class="ms-2">{{member.name}}</span>
+                        <button (click)="this.removeMember(member)" class="btn btn-light mb-2 text-start w-100 text-danger" type="button" id="membersDropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+            </div>
+
             <button (click)="this.labels()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-tag"></i> Labels</button>
             <button (click)="this.checklist()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-check2-square"></i> Checklist</button>
             <button (click)="this.dates()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-clock"></i> Dates</button>

@@ -1,5 +1,5 @@
 import { FirebaseCardsService, Member } from './../../../services/firebase-cards/firebase-cards.service';
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
 
@@ -23,6 +23,8 @@ export class OpenCardComponent {
 
     memberslist: Member[] | null = null;
     isMember: boolean = false;
+
+    selected = model<Date | null>(null);
 
     constructor (
         public svOpenCard: OpenCardService,
@@ -94,8 +96,10 @@ export class OpenCardComponent {
         }
     }
 
-    members() {
-
+    removeMember(member : Member) {
+        if (this.boardId && this.userEmail && member) {
+            this.svCard.deleteMemberFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: member.name, profile: member.profile})
+        }
     }
 
     labels() {
