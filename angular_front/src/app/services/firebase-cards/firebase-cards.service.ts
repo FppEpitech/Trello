@@ -71,7 +71,17 @@ export class FirebaseCardsService {
     }
 
     addCardToList(boardId: string, listId: string, card: Card) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).add({name:card.name, description:card.description});
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).add({
+            name: card.name,
+            description: card.description,
+            members: card.members || [],
+            notifications: card.notifications || [],
+            labels: card.labels || [],
+            checklists: card.checklists || [],
+            date: card.date || null,
+            attachment: card.attachment || [],
+            cover: card.cover || null
+        });
     }
 
     deleteCardFromList(boardId: string, listId: string, cardId: string) {
