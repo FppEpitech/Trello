@@ -32,6 +32,12 @@ export interface Cover {
     color: string | null;
 }
 
+export interface Attachment {
+    id: string;
+    name: string;
+    content: string | null;
+}
+
 export interface Card {
     id: string;
     name: string;
@@ -41,7 +47,7 @@ export interface Card {
     labels: Label[];
     checklists: Checklists[];
     date: Date | null;
-    attachment: string[];
+    attachment: Attachment[];
     cover: Cover | null;
 }
 
@@ -308,5 +314,71 @@ export class FirebaseCardsService {
                 return data?.cover || null;
             })
         );
+    }
+
+    addAttachmentToCard(boardId: string, listId: string, cardId: string, newAttachment: Attachment) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            attachment: firebase.firestore.FieldValue.arrayUnion(newAttachment)
+        });
+    }
+
+    deleteAttachmentFromCard(boardId: string, listId: string, cardId: string, attachmentId: string) {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as Card;
+                if (data && data.attachment) {
+                    const updatedAttachments = data.attachment.filter(att => att.id !== attachmentId);
+                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                        attachment: updatedAttachments
+                    });
+                }
+            }
+            return Promise.resolve();
+        }).catch(error => {
+            console.error("Error deleting attachment: ", error);
+        });
+    }
+
+    getCardAttachments(boardId: string, listId: string, cardId: string): Observable<Attachment[]> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                return data?.attachment || [];
+            })
+        );
+    }
+
+    downloadAttachment(boardId: string, listId: string, cardId: string, attachmentId: string): void {
+        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+            if (doc && doc.exists) {
+                const data = doc.data() as { attachment: Attachment[] };
+                const attachment = data?.attachment?.find(att => att.id === attachmentId);
+
+                if (attachment && attachment.content) {
+                const fileBlob = this.base64ToBlob(attachment.content);
+                this.downloadBlob(fileBlob, attachment.name);
+                }
+            }
+        }).catch(error => {
+            console.error("Error downloading attachment: ", error);
+        });
+    }
+
+    private base64ToBlob(base64: string): Blob {
+        const byteCharacters = atob(base64.split(',')[1]);
+        const byteArrays = new Uint8Array(byteCharacters.length);
+
+        for (let offset = 0; offset < byteCharacters.length; offset++) {
+            byteArrays[offset] = byteCharacters.charCodeAt(offset);
+        }
+
+        return new Blob([byteArrays], { type: 'application/octet-stream' });
+    }
+
+    private downloadBlob(blob: Blob, fileName: string): void {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
     }
 }

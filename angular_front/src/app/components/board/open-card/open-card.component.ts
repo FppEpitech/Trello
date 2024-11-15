@@ -1,4 +1,4 @@
-import { FirebaseCardsService, Label, Member, Checklists, Check, Cover } from './../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseCardsService, Label, Member, Checklists, Check, Cover, Attachment } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -40,13 +40,14 @@ export class OpenCardComponent {
 
     selectedCover: File | null = null;
     imageCoverSrc: string | null = null;
-
     colorsCover: string[] = [
         "#4bce98", "#f5cd47", "#ffa362", "#f77168", "#9f90ef",
         "#579dff", "#6cc3df", "#94c748", "#e773ba", "#8590a2"
     ];
     colorCoverPreview: string | null = null;
     cover: Cover | null = null;
+
+    attachments: Attachment[] | null = null;
 
     constructor (
         public svOpenCard: OpenCardService,
@@ -94,6 +95,9 @@ export class OpenCardComponent {
             });
             this.svCard.getCardCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(cover => {
                 this.cover = cover;
+            });
+            this.svCard.getCardAttachments(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(attachment => {
+                this.attachments = attachment;
             });
         }
     }
@@ -208,6 +212,41 @@ export class OpenCardComponent {
         if (this.boardId) {
             this.svCard.deleteDateFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
         }
+    }
+
+    onAttachmentSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files) {
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const fileContent = reader.result as string;
+                    const newId = uuidv4();
+
+                    const attachment: Attachment = {
+                        id: newId,
+                        name: file.name,
+                        content: fileContent
+                    }
+
+                    if (this.boardId)
+                        this.svCard.addAttachmentToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+
+    deleteAttachment(attachment: Attachment) {
+        if (this.boardId)
+            this.svCard.deleteAttachmentFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment.id);
+    }
+
+    downloadAttachment(attachment: Attachment) {
+        if (this.boardId)
+            this.svCard.downloadAttachment(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment.id);
     }
 
     onCoverSelected(event: Event) {

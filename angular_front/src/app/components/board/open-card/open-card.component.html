@@ -81,14 +81,14 @@
                     </div>
                 </div>
 
-                <h3 class="card-title fw-bolder"><i class="bi bi-paperclip"></i> Attachments</h3>
-                <!-- <div *ngFor="let attachment of this.attachments" class="d-flex align-items-center p-1 rounded">
-                    <span class="flex-grow-1">attachment.name</span>
+                <h3 *ngIf="this.attachments?.length !== 0" class="card-title fw-bolder"><i class="bi bi-paperclip"></i> Attachments</h3>
+                <div *ngFor="let attachment of this.attachments" class="d-flex align-items-center p-1 rounded">
+                    <span class="flex-grow-1">{{ attachment.name }}</span>
                     <div>
-                        <button class="btn btn-sm text-light"><i class="bi bi-cloud-arrow-down"></i></button>
-                        <button class="btn btn-sm text-danger"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm"><i class="bi bi-cloud-arrow-down" (click)="downloadAttachment(attachment)"></i></button>
+                        <button class="btn btn-sm text-danger" (click)="this.deleteAttachment(attachment)"><i class="bi bi-trash"></i></button>
                     </div>
-                </div> -->
+                </div>
 
                 <h3 class="card-title fw-bolder m-2"><i class="bi bi-list-task"></i> Activity</h3>
           </div>
@@ -195,7 +195,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h4 class="mb-0">Attach</h4>
                     </div>
-                    <input class="mb-3 form-control" type="file" id="formFile" accept="image/png" (change)="onCoverSelected($event)">
+                    <input class="mb-3 form-control" type="file" id="formFile" (change)="onAttachmentSelected($event)">
                 </div>
             </div>
 
