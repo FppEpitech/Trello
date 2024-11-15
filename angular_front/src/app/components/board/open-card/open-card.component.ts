@@ -15,6 +15,7 @@ export class OpenCardComponent {
 
     @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
     @Input() boardId:string | null = null;
+    @Input() lists: any[] = [];
 
     description: string = "";
     initialDescription: string = "";
@@ -48,6 +49,8 @@ export class OpenCardComponent {
     cover: Cover | null = null;
 
     attachments: Attachment[] | null = null;
+
+    listToMoveTo: any | null = null;
 
     constructor (
         public svOpenCard: OpenCardService,
@@ -299,8 +302,15 @@ export class OpenCardComponent {
 
     }
 
-    move() {
+    moveCard() {
+        if (this.boardId && this.listToMoveTo) {
+            this.svCard.addCardToList(this.boardId, this.listToMoveTo.id, this.svOpenCard._card);
+            this.delete();
+        }
+    }
 
+    onRadioChangeMove(list: any) {
+        this.listToMoveTo = list;
     }
 
     copy() {

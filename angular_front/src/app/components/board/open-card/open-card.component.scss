@@ -6,7 +6,13 @@ img.profile-image {
 }
 
 .image-wrapper {
-    padding: 10px; /* Optional: creates a space between the image and its background */
-    display: inline-block; /* Ensures the wrapper fits the image */
-    border-radius: 8px; /* Optional: rounds the corners of the background */
-  }
+    padding: 10px;
+    display: inline-block;
+    border-radius: 8px;
+}
+
+.dropdown-scroll {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

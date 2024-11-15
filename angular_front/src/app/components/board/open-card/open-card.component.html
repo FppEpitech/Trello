@@ -96,7 +96,7 @@
           <div class="d-flex flex-column ms-3 w-25">
 
             <!-- Close button -->
-            <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
+            <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start text-danger w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
 
             <!-- Join / leave button -->
             <button *ngIf="!this.isMember" (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
@@ -227,22 +227,49 @@
             </div>
 
             <!-- CustomFields button  -->
-            <button (click)="this.customFields()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-input-cursor-text"></i> Custom Fields</button>
+            <button (click)="this.customFields()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-input-cursor-text"></i> Custom Fields</button>
 
             <!-- Move button  -->
-            <button (click)="this.move()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-arrow-right"></i> Move</button>
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-arrow-right"></i>
+                    Move
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <h4 class="mb-0">Move card</h4>
+
+                    <div class="dropdown">
+                        <button class="btn btn-light mb-2 text-start w-100 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          List
+                        </button>
+                        <ul class="dropdown-menu dropdown-scroll" aria-labelledby="dropdownMenuButton1">
+                            <li *ngFor="let list of this.lists" class="dropdown-item">
+                                <label class="form-check-label">
+                                <input type="radio" (click)="this.onRadioChangeMove(list)" class="form-check-input" />
+                                    {{ list.name }}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="this.moveCard()">
+                        Move
+                    </button>
+                </div>
+            </div>
+
 
             <!-- Copy button  -->
-            <button (click)="this.copy()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-copy"></i> Copy</button>
+            <button (click)="this.copy()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-copy"></i> Copy</button>
+
 
             <!-- makeTemplate button  -->
-            <button (click)="this.makeTemplate()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
+            <button (click)="this.makeTemplate()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
 
             <!-- Delete button  -->
             <button (click)="this.delete()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-trash"></i> Delete</button>
 
             <!-- Share button  -->
-            <button (click)="this.share()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-share"></i> Share</button>
+            <button (click)="this.share()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-share"></i> Share</button>
           </div>
         </div>
       </div>
