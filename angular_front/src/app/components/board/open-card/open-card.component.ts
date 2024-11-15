@@ -1,4 +1,4 @@
-import { FirebaseCardsService, Label, Member, Checklists, Check, Cover, Attachment } from './../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseCardsService, Label, Member, Checklists, Check, Cover, Attachment, Card } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -52,6 +52,9 @@ export class OpenCardComponent {
 
     listToMoveTo: any | null = null;
 
+    listToCopyTo: any | null = null;
+    copyName: string = "";
+
     constructor (
         public svOpenCard: OpenCardService,
         private svCard: FirebaseCardsService,
@@ -64,6 +67,7 @@ export class OpenCardComponent {
 
     ngOnInit() {
         this.cardName = this.svOpenCard._card.name;
+        this.copyName = this.cardName;
 
         this.svAuth.getUserEmail().subscribe(email => {
             this.userEmail = email;
@@ -313,8 +317,16 @@ export class OpenCardComponent {
         this.listToMoveTo = list;
     }
 
-    copy() {
+    copyCard() {
+        if (this.boardId && this.listToCopyTo && this.copyName !== "") {
+            const copyCard: Card = { ...this.svOpenCard._card };
+            copyCard.name = this.copyName;
+            this.svCard.addCardToList(this.boardId, this.listToCopyTo.id, copyCard);
+        }
+    }
 
+    onRadioChangeCopy(list: any) {
+        this.listToCopyTo = list;
     }
 
     makeTemplate() {

@@ -259,8 +259,32 @@
 
 
             <!-- Copy button  -->
-            <button (click)="this.copy()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-copy"></i> Copy</button>
-
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-copy"></i>
+                    Copy
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <h4 class="mb-0">Copy card</h4>
+                    <input type="text" class="form-control mb-2" [(ngModel)]="this.copyName">
+                    <div class="dropdown">
+                        <button class="btn btn-light mb-2 text-start w-100 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          List
+                        </button>
+                        <ul class="dropdown-menu dropdown-scroll" aria-labelledby="dropdownMenuButton1">
+                            <li *ngFor="let list of this.lists" class="dropdown-item">
+                                <label class="form-check-label">
+                                <input type="radio" (click)="this.onRadioChangeCopy(list)" class="form-check-input" />
+                                    {{ list.name }}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="this.copyCard()">
+                        Copy
+                    </button>
+                </div>
+            </div>
 
             <!-- makeTemplate button  -->
             <button (click)="this.makeTemplate()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
