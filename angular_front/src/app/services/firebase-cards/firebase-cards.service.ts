@@ -27,6 +27,11 @@ export interface Member {
     profile: string;
 }
 
+export interface Cover {
+    image: string | null;
+    color: string | null;
+}
+
 export interface Card {
     id: string;
     name: string;
@@ -37,7 +42,7 @@ export interface Card {
     checklists: Checklists[];
     date: Date | null;
     attachment: string[];
-    cover: string;
+    cover: Cover | null;
 }
 
 @Injectable({
@@ -282,5 +287,26 @@ export class FirebaseCardsService {
         return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             date: null
         });
+    }
+
+    addOrUpdateCover(boardId: string, listId: string, cardId: string, cover: Cover) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            cover: cover
+        });
+    }
+
+    deleteCoverFromCard(boardId: string, listId: string, cardId: string) {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            cover: null
+        });
+    }
+
+    getCardCover(boardId: string, listId: string, cardId: string): Observable<Cover | null> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                return data?.cover || null;
+            })
+        );
     }
 }

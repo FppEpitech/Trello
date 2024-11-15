@@ -25,6 +25,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatCardModule} from '@angular/material/card';
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { LabelCreationComponent } from './components/board/open-card/label-creation/label-creation.component';
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { LabelCreationComponent } from './components/board/open-card/label-creat
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    HttpClientModule
   ],
   providers: [
     provideAnimationsAsync(),

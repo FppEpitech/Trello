@@ -1,4 +1,4 @@
-import { FirebaseCardsService, Label, Member, Checklists, Check } from './../../../services/firebase-cards/firebase-cards.service';
+import { FirebaseCardsService, Label, Member, Checklists, Check, Cover } from './../../../services/firebase-cards/firebase-cards.service';
 import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@angular/core';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -38,10 +38,20 @@ export class OpenCardComponent {
     date: Date | null = null;
     stringDate: string = "";
 
+    selectedCover: File | null = null;
+    imageCoverSrc: string | null = null;
+
+    colorsCover: string[] = [
+        "#4bce98", "#f5cd47", "#ffa362", "#f77168", "#9f90ef",
+        "#579dff", "#6cc3df", "#94c748", "#e773ba", "#8590a2"
+    ];
+    colorCoverPreview: string | null = null;
+    cover: Cover | null = null;
+
     constructor (
         public svOpenCard: OpenCardService,
         private svCard: FirebaseCardsService,
-        private svAuth: AuthService,
+        private svAuth: AuthService
     ) {}
 
     closeOpenCard() {
@@ -81,6 +91,9 @@ export class OpenCardComponent {
                 this.date = date;
                 if (this.date)
                     this.stringDate = this.date.toLocaleDateString();
+            });
+            this.svCard.getCardCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(cover => {
+                this.cover = cover;
             });
         }
     }
@@ -197,12 +210,50 @@ export class OpenCardComponent {
         }
     }
 
-    attachment() {
+    onCoverSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
 
+            if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                this.selectedCover = file;
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    this.imageCoverSrc = reader.result as string;
+                    const cover: Cover = {
+                        image: this.imageCoverSrc,
+                        color: this.colorCoverPreview
+                    };
+
+                    if (this.boardId)
+                        this.svCard.addOrUpdateCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, cover)
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                alert('Only PNG and JPG files are allowed.');
+                this.selectedCover = null;
+                this.imageCoverSrc = null;
+            }
+        }
     }
 
-    cover() {
+    chooseCoverColor(colorLabel: string) {
+        this.colorCoverPreview = colorLabel;
+        const cover: Cover = {
+            image: this.imageCoverSrc,
+            color: this.colorCoverPreview
+        };
+        if (this.boardId)
+            this.svCard.addOrUpdateCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, cover)
+    }
 
+    removeCover() {
+        if (this.boardId)
+            this.svCard.deleteCoverFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
+        this.imageCoverSrc = null;
+        this.colorCoverPreview = null;
     }
 
     customFields() {

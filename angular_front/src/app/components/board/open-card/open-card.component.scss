@@ -4,3 +4,9 @@ img.profile-image {
     border-radius: 50%;
     object-fit: cover;
 }
+
+.image-wrapper {
+    padding: 10px; /* Optional: creates a space between the image and its background */
+    display: inline-block; /* Ensures the wrapper fits the image */
+    border-radius: 8px; /* Optional: rounds the corners of the background */
+  }

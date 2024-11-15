@@ -14,7 +14,7 @@ const newCard: Card = {
     checklists: [],
     date: null,
     attachment: [],
-    cover: '',
+    cover: null,
 };
 
 @Component({
