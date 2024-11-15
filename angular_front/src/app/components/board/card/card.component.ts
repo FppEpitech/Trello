@@ -1,12 +1,21 @@
 import { Component, Input } from '@angular/core';
-import { FirebaseCardsService } from '../../../services/firebase-cards/firebase-cards.service';
+import { Card, FirebaseCardsService } from '../../../services/firebase-cards/firebase-cards.service';
 import { FirebaseListsService } from '../../../services/firebase-lists/firebase-lists.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { OpenCardService } from '../../../services/open-card/open-card.service';
 
-interface Card {
-    id: string;
-    name: string;
-}
+const newCard: Card = {
+    id: '',
+    name: '',
+    description: '',
+    members: [],
+    notifications: [],
+    labels: [],
+    checklists: [],
+    date: null,
+    attachment: [],
+    cover: null,
+};
 
 @Component({
   selector: 'app-card',
@@ -21,7 +30,8 @@ export class CardComponent {
 
     constructor(
         private svCards:FirebaseCardsService,
-        private svLists:FirebaseListsService
+        private svLists:FirebaseListsService,
+        private svOpenCard: OpenCardService
     ) { }
 
     isCreatingCard: boolean = false;
@@ -39,7 +49,8 @@ export class CardComponent {
 
     createCard() {
         if (this.cardNameToAdd.trim() && this.boardId) {
-            this.svCards.addCardToList(this.boardId, this.list.id, this.cardNameToAdd).then((data)=>{
+            newCard.name = this.cardNameToAdd;
+            this.svCards.addCardToList(this.boardId, this.list.id, newCard).then((data)=>{
                 this.closeCreationCardPanel();
             })
         }
@@ -79,8 +90,14 @@ export class CardComponent {
 
             if (this.boardId) {
                 this.svCards.deleteCardFromList(this.boardId, event.previousContainer.id.substring(5), movedCard.id)
-                this.svCards.addCardToList(this.boardId, event.container.id.substring(5), movedCard.name)
+                this.svCards.addCardToList(this.boardId, event.container.id.substring(5), movedCard)
             }
         }
+    }
+
+    openCardPanel(card: any) {
+        this.svOpenCard.toggleOpenCard();
+        this.svOpenCard.setCard(card);
+        this.svOpenCard.setList(this.list);
     }
 }

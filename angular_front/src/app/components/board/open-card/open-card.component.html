@@ -1,0 +1,301 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <!-- Background overlay -->
+    <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+
+    <!-- Card with buttons on the right side inside -->
+    <div #cardElement class="card shadow-lg w-50 position-relative">
+        <div class="card-body">
+            <div *ngIf="this.cover" [style.background-color]="this.cover.color" class="image-wrapper d-flex justify-content-center"
+            style="height: 150px; margin-top: 10px;">
+                <img
+                  *ngIf="this.cover.image"
+                  class="d-flex justify-content-center"
+                  [src]="this.cover.image"
+                  alt="Selected image preview"
+                  style="max-width: 100%; max-height: 150px; margin-top: 10px; object-fit: contain;"
+                >
+            </div>
+        <div class="d-flex justify-content-start">
+
+          <!-- Main card content on the left -->
+          <div class="p-2 w-100">
+                <h2 class="card-title fw-bolder" (click)="this.toggleEditCardName()"><i class="bi bi-window"></i> {{this.svOpenCard._card.name}}</h2>
+
+                <input *ngIf="this.isEditingCardName" type="text" class="form-control" [(ngModel)]="this.cardName">
+                <button *ngIf="this.isEditingCardName" (click)="this.saveNameCard()" class="btn btn-primary mt-2">Save</button>
+
+                <h4 class="card-title">in list {{ this.svOpenCard._list.name }}</h4>
+                <h4 class="card-title fw-bolder">Notifications</h4>
+                <button class="btn btn-light"><i class="bi bi-eye"></i> Watch</button>
+
+                <h4 *ngIf="this.date" class="card-title fw-bolder">Due Date</h4>
+                <p *ngIf="this.date">{{ this.stringDate }}</p>
+
+                <h4 *ngIf="this.memberslist?.length != 0" class="card-title fw-bolder">Members</h4>
+                <img *ngFor="let member of memberslist" [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
+
+                <h4 *ngIf="this.labelsListChecked?.length != 0" class="card-title fw-bolder">Labels</h4>
+                <div class="mb-3">
+                    <div class="d-flex flex-wrap">
+                        <div
+                            *ngFor="let label of this.labelsListChecked"
+                            class="btn rounded m-1"
+                            style="height: 30px; cursor: pointer; display: inline-block; padding: 0 10px;"
+                            [style.background-color]="label.color">
+                            {{ label.name }}
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="card-title fw-bolder"><i class="bi bi-justify-left"></i> Description</h3>
+                <mat-form-field class="example-full-width w-100">
+                <mat-label>Description</mat-label>
+                <input matInput [(ngModel)]="this.description">
+                </mat-form-field>
+                <button *ngIf="this.description !== this.initialDescription" (click)="this.saveDescription()" class="btn btn-primary text-start">Save</button>
+                <button *ngIf="this.description !== this.initialDescription" (click)="this.cancelDescription()" class="btn btn-light m-2 text-start">Cancel</button>
+
+                <div *ngFor="let checkList of this.checkLists">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title fw-bolder ms-2"><i class="bi bi-check2-square"></i> {{ checkList.name }}</h4>
+                        <button class="btn btn-light m-1" (click)="this.deleteCheckList(checkList)">Delete</button>
+                    </div>
+                    <div *ngFor="let item of checkList.checks" class="d-flex align-items-center p-1 rounded">
+                        <input type="checkbox" class="form-check-input me-2" [checked]="item.state" (click)="this.updateItemCheckList(checkList, item)">
+                        <span class="flex-grow-1">{{ item.name }}</span>
+                        <button class="btn btn-sm text-danger" (click)="this.deleteItemChecklist(checkList, item)"><i class="bi bi-trash"></i></button>
+                    </div>
+                    <div class="dropdown dropend">
+                        <button class="btn btn-light mb-2 text-start" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Add an Item
+                        </button>
+                        <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control me-2" placeholder="Enter item" [(ngModel)]="this.checklistItemName">
+                            </div>
+                            <button class="btn btn-primary m-1" (click)="this.addItemToCheckList(checkList)">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 *ngIf="this.attachments?.length !== 0" class="card-title fw-bolder"><i class="bi bi-paperclip"></i> Attachments</h3>
+                <div *ngFor="let attachment of this.attachments" class="d-flex align-items-center p-1 rounded">
+                    <span class="flex-grow-1">{{ attachment.name }}</span>
+                    <div>
+                        <button class="btn btn-sm"><i class="bi bi-cloud-arrow-down" (click)="downloadAttachment(attachment)"></i></button>
+                        <button class="btn btn-sm text-danger" (click)="this.deleteAttachment(attachment)"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+
+                <h3 class="card-title fw-bolder m-2"><i class="bi bi-list-task"></i> Activity</h3>
+          </div>
+
+          <div class="d-flex flex-column ms-3 w-25">
+
+            <!-- Close button -->
+            <button (click)="this.closeOpenCard()" class="btn btn-light mb-2 text-start text-danger w-25 ms-auto"><i class="bi bi-x-lg"></i></button>
+
+            <!-- Join / leave button -->
+            <button *ngIf="!this.isMember" (click)="this.join()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-plus"></i> Join</button>
+            <button *ngIf="this.isMember" (click)="this.leave()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-person-dash"></i> Leave</button>
+
+            <!-- Member button -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="membersDropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person"></i> Members</button>
+                <div class="dropdown-menu p-3" aria-labelledby="membersDropdown" style="min-width: 250px;">
+                    <h4 class="mb-2">Members</h4>
+                    <h5 class="mb-2">Board members</h5>
+                    <div *ngFor="let member of memberslist" class="d-flex align-items-center p-2 border rounded">
+                        <img [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
+                        <span class="ms-2">{{member.name}}</span>
+                        <button (click)="this.removeMember(member)" class="btn btn-light mb-2 text-start w-100 text-danger" type="button" id="membersDropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Labels button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-tag"></i>
+                     Labels
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Labels</h4>
+                        <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                    </div>
+                    <div *ngFor="let labelItem of this.labelsList" class="d-flex align-items-center p-1 rounded mb-2">
+                        <input type="checkbox" class="form-check-input me-2" [checked]="labelItem.isCheck" (click)="this.updateLabel(labelItem)">
+                        <div class="rounded" style="width: 50px; height: 20px;" [style.background-color]="labelItem.color"></div>
+                        <span class="ms-2 flex-grow-1">{{ labelItem.name }}</span>
+                        <button class="btn btn-sm text-danger" (click)="this.deleteLabel(labelItem)"><i class="bi bi-trash"></i></button>
+                    </div>
+                    <div class="dropdown dropend">
+                        <button class="btn btn-light w-100 mt-3" type="button" id="createLabelDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Create a new label
+                        </button>
+                        <app-label-creation [boardId]="this.boardId" [cardId]="this.svOpenCard._card.id" [listId]="this.svOpenCard._list.id"></app-label-creation>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checklist button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-check2-square"></i>
+                    Checklist
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Add checklist</h4>
+                        <button type="button" class="btn-close" aria-label="Close" (click)="closeDropdown()"></button>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control me-2" placeholder="Enter checklist title" [(ngModel)]="this.checklistName">
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="this.createCheckList()">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <!-- Date button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-clock"></i>
+                    Dates
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Dates</h4>
+                    </div>
+                    <h4 class="card-title fw-bolder">Due Date</h4>
+                    <mat-card class="demo-inline-calendar-card mb-1">
+                        <mat-calendar [(selected)]="selected"></mat-calendar>
+                    </mat-card>
+                    <button *ngIf="this.date" class="btn btn-light w-100 m-1" (click)="this.removeDate()">
+                        Remove date
+                    </button>
+                    <button class="btn btn-primary w-100 m-1" (click)="this.saveDate()">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <!-- Attachment button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-paperclip"></i>
+                    Attachment
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Attach</h4>
+                    </div>
+                    <input class="mb-3 form-control" type="file" id="formFile" (change)="onAttachmentSelected($event)">
+                </div>
+            </div>
+
+            <!-- Cover button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-card-image"></i>
+                    Cover
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">Cover</h4>
+                    </div>
+                    <div class="mb-3">
+                        <label for="colorPicker" class="form-label">Select a color</label>
+                        <button *ngIf="this.cover" class="btn btn-light w-100 m-1" (click)="this.removeCover()">Remove cover</button>
+                        <div class="d-flex flex-wrap">
+                            <button
+                                *ngFor="let colorCover of colorsCover"
+                                class="btn rounded m-1"
+                                style="width: 45px; height: 30px; cursor: pointer;"
+                                [style.background-color]="colorCover"
+                                (click)="this.chooseCoverColor(colorCover)">
+                            </button>
+                        </div>
+                    </div>
+                    <input class="mb-3 form-control" type="file" id="formFile" accept="image/png" (change)="onCoverSelected($event)">
+                </div>
+            </div>
+
+            <!-- CustomFields button  -->
+            <button (click)="this.customFields()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-input-cursor-text"></i> Custom Fields</button>
+
+            <!-- Move button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-arrow-right"></i>
+                    Move
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <h4 class="mb-0">Move card</h4>
+
+                    <div class="dropdown">
+                        <button class="btn btn-light mb-2 text-start w-100 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          List
+                        </button>
+                        <ul class="dropdown-menu dropdown-scroll" aria-labelledby="dropdownMenuButton1">
+                            <li *ngFor="let list of this.lists" class="dropdown-item">
+                                <label class="form-check-label">
+                                <input type="radio" (click)="this.onRadioChangeMove(list)" class="form-check-input" />
+                                    {{ list.name }}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="this.moveCard()">
+                        Move
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Copy button  -->
+            <div class="dropdown dropend">
+                <button class="btn btn-light mb-2 text-start w-100" type="button" id="labelsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-copy"></i>
+                    Copy
+                </button>
+                <div class="dropdown-menu p-3" aria-labelledby="labelsDropdown" style="min-width: 300px;" (click)="$event.stopPropagation()">
+                    <h4 class="mb-0">Copy card</h4>
+                    <input type="text" class="form-control mb-2" [(ngModel)]="this.copyName">
+                    <div class="dropdown">
+                        <button class="btn btn-light mb-2 text-start w-100 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          List
+                        </button>
+                        <ul class="dropdown-menu dropdown-scroll" aria-labelledby="dropdownMenuButton1">
+                            <li *ngFor="let list of this.lists" class="dropdown-item">
+                                <label class="form-check-label">
+                                <input type="radio" (click)="this.onRadioChangeCopy(list)" class="form-check-input" />
+                                    {{ list.name }}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary w-100" (click)="this.copyCard()">
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- makeTemplate button  -->
+            <button (click)="this.makeTemplate()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-images"></i> Make template</button>
+
+            <!-- Delete button  -->
+            <button (click)="this.delete()" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-trash"></i> Delete</button>
+
+            <!-- Share button  -->
+            <button (click)="this.share()" [disabled]="true" class="btn btn-light mb-2 text-start w-100"><i class="bi bi-share"></i> Share</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

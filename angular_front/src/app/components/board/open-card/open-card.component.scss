@@ -1,0 +1,18 @@
+img.profile-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.image-wrapper {
+    padding: 10px;
+    display: inline-block;
+    border-radius: 8px;
+}
+
+.dropdown-scroll {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

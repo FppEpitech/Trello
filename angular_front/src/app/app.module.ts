@@ -18,6 +18,14 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DragDropModule } from '@angular/cdk/drag-drop'
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { OpenCardComponent } from './components/board/open-card/open-card.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatCardModule} from '@angular/material/card';
+import { provideNativeDateAdapter } from "@angular/material/core";
+import { LabelCreationComponent } from './components/board/open-card/label-creation/label-creation.component';
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -28,7 +36,9 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
     BoardComponent,
     BoardSidebarComponent,
     BoardNavbarComponent,
-    CardComponent
+    CardComponent,
+    OpenCardComponent,
+    LabelCreationComponent
   ],
   imports: [
     FormsModule,
@@ -40,9 +50,15 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
     DragDropModule,
     CdkDrag,
     CdkDropList,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCardModule,
+    MatDatepickerModule,
+    HttpClientModule
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideNativeDateAdapter()
   ],
   bootstrap: [AppComponent],
 })
