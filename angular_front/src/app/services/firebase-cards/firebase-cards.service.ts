@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map, Observable } from 'rxjs';
+import { firstValueFrom, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import firebase from 'firebase/compat/app'; // Import from compat
 
 export interface Label {
@@ -38,6 +38,12 @@ export interface Attachment {
     content: string | null;
 }
 
+interface DueDate {
+    date: firebase.firestore.Timestamp;
+    cardName: string;
+    listId: string;
+}
+
 export interface Card {
     id: string;
     name: string;
@@ -70,8 +76,20 @@ export class FirebaseCardsService {
         );
     }
 
-    addCardToList(boardId: string, listId: string, card: Card) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).add({
+    getCardById(boardId: string, listId: string, cardId: string): Observable<Card | null> {
+        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Omit<Card, 'id'> | undefined;
+                if (data) {
+                    return { ...data, id: cardId };
+                }
+                return null;
+            })
+        );
+    }
+
+    async addCardToList(boardId: string, listId: string, card: Card): Promise<void> {
+        const cardData = {
             name: card.name,
             description: card.description,
             members: card.members || [],
@@ -81,11 +99,44 @@ export class FirebaseCardsService {
             date: card.date || null,
             attachment: card.attachment || [],
             cover: card.cover || null
-        });
+        };
+        const docRef = await this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).add(cardData);
+        if (card.date) {
+            if (cardData?.date) {
+                let firestoreDate: firebase.firestore.Timestamp;
+
+                if (cardData.date instanceof firebase.firestore.Timestamp) {
+                    firestoreDate = cardData.date;
+                } else {
+                    const date = cardData.date instanceof Date ? cardData.date : new Date(cardData.date);
+                    firestoreDate = firebase.firestore.Timestamp.fromDate(date);
+                }
+                await this.fs.collection(`boards/${boardId}/dates`).doc(docRef.id).set({
+                    date: firestoreDate,
+                    cardName: card.name,
+                    listId: listId
+                });
+            }
+        }
     }
 
-    deleteCardFromList(boardId: string, listId: string, cardId: string) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).delete();
+    async deleteCardFromList(boardId: string, listId: string, cardId: string): Promise<void> {
+        try {
+            const cardRef = this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId);
+            const cardSnapshot = await firstValueFrom(cardRef.get());
+            if (cardSnapshot.exists) {
+                const cardData = cardSnapshot.data() as Card;
+                if (cardData?.date) {
+                    await this.fs.collection(`boards/${boardId}/dates`).doc(cardId).delete();
+                }
+                await cardRef.delete();
+            } else {
+                console.warn(`Card with ID ${cardId} does not exist in list ${listId}.`);
+            }
+        } catch (error) {
+            console.error("Error deleting card from list:", error);
+            throw error;
+        }
     }
 
     addName(boardId: string, listId: string, cardId: string, name: string) {
@@ -294,15 +345,51 @@ export class FirebaseCardsService {
 
     addDateToCard(boardId: string, listId: string, cardId: string, date: Date | null) {
         const firestoreDate = date ? firebase.firestore.Timestamp.fromDate(date) : null;
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
-            date: date
+        const cardRef = this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId);
+        const dateRef = this.fs.collection(`boards/${boardId}/dates`).doc(cardId);
+        return this.fs.firestore.runTransaction(async (transaction) => {
+            const cardDoc = await transaction.get(cardRef.ref);
+            if (!cardDoc.exists) {
+                throw new Error('Card not found');
+            }
+            const cardData = cardDoc.data() as Card;
+            const cardName = cardData?.name || 'Unnamed Card';
+            transaction.update(cardRef.ref, {
+                date: firestoreDate
+            });
+            transaction.set(dateRef.ref, {
+                date: firestoreDate,
+                cardName: cardName,
+                listId: listId
+            });
+            return Promise.resolve();
         });
     }
 
     deleteDateFromCard(boardId: string, listId: string, cardId: string) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
-            date: null
+        const cardRef = this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId);
+        const dateRef = this.fs.collection(`boards/${boardId}/dates`).doc(cardId);
+        return this.fs.firestore.runTransaction(async (transaction) => {
+            transaction.update(cardRef.ref, {
+                date: null
+            });
+            transaction.delete(dateRef.ref);
+            return Promise.resolve();
         });
+    }
+
+    getAllDueDates(boardId: string): Observable<{ cardId: string; listId: string; dueDate: Date | null; cardName: string }[]> {
+    return this.fs.collection(`boards/${boardId}/dates`).snapshotChanges().pipe(
+        map(snapshot =>
+            snapshot.map(doc => {
+                const data = doc.payload.doc.data() as DueDate;
+                const cardId = doc.payload.doc.id;
+                const dueDate = data.date ? data.date.toDate() : null;
+                const cardName = data.cardName || 'Unnamed Card';
+                const listId = data.listId;
+                return { cardId, listId, dueDate, cardName };
+            })
+        ));
     }
 
     addOrUpdateCover(boardId: string, listId: string, cardId: string, cover: Cover) {

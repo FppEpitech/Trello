@@ -26,6 +26,8 @@ import {MatCardModule} from '@angular/material/card';
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { LabelCreationComponent } from './components/board/open-card/label-creation/label-creation.component';
 import { HttpClientModule } from "@angular/common/http";
+import { CalendarComponent } from './pages/calendar/calendar.component';
+import { FullCalendarModule } from "@fullcalendar/angular";
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { HttpClientModule } from "@angular/common/http";
     BoardNavbarComponent,
     CardComponent,
     OpenCardComponent,
-    LabelCreationComponent
+    LabelCreationComponent,
+    CalendarComponent
   ],
   imports: [
     FormsModule,
@@ -54,7 +57,8 @@ import { HttpClientModule } from "@angular/common/http";
     MatFormFieldModule,
     MatCardModule,
     MatDatepickerModule,
-    HttpClientModule
+    HttpClientModule,
+    FullCalendarModule
   ],
   providers: [
     provideAnimationsAsync(),

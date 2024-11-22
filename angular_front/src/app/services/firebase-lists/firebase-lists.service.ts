@@ -18,6 +18,15 @@ export class FirebaseListsService {
         );
     }
 
+    getListById(boardId: string, listId: string): Observable<any> {
+        return this.fs.collection(`boards/${boardId}/lists`).doc(listId).snapshotChanges().pipe(
+            map(snapshot => {
+                const data = snapshot.payload.data();
+                return data ? { id: snapshot.payload.id, ...data as object } : null;
+            })
+        );
+    }
+
     addList(boardId: string, name:string) {
         return this.fs.collection(`boards/${boardId}/lists`).add({name:name});
     }
