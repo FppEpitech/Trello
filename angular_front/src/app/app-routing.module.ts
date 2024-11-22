@@ -4,12 +4,15 @@ import { authGuard, notAuthGuard } from "./guards/auth.guard";
 import { LoginComponent } from "./pages/login/login.component";
 import { HomeComponent } from "./pages/home/home.component";
 import { BoardComponent } from "./pages/board/board.component";
+import { CalendarComponent } from "./pages/calendar/calendar.component";
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, canActivate: [authGuard] },
+  { path: '', component: LoginComponent, canActivate: [notAuthGuard] },
   { path: 'login', component: LoginComponent, canActivate: [notAuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'board/:id', component: BoardComponent, canActivate: [authGuard] },
+  { path: 'calendar/:id', component: CalendarComponent, canActivate: [authGuard] }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

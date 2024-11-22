@@ -3,12 +3,13 @@ main {
     margin: 0;
 }
 
-.board-content {
-    margin: 0;
-}
-
 .app-board-navbar {
     width: 100%;
+}
+
+.board-content .row {
+    margin: 0;
+    padding: 1rem; /* Adjust as needed */
 }
 
 app-open-card {

@@ -1,0 +1,21 @@
+main {
+    padding: 0;
+    margin: 0;
+}
+
+.board-content {
+    margin: 0;
+}
+
+.app-board-navbar {
+    width: 100%;
+}
+
+app-open-card {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1050;
+    border-radius: 8px 8px 0 0;
+}

@@ -66,7 +66,7 @@ export class OpenCardComponent {
     }
 
     ngOnInit() {
-        this.cardName = this.svOpenCard._card.name;
+        this.cardName = this.svOpenCard._card?.name;
         this.copyName = this.cardName;
 
         this.svAuth.getUserEmail().subscribe(email => {
@@ -78,32 +78,32 @@ export class OpenCardComponent {
         });
 
         if (this.boardId) {
-            this.svCard.getDescription(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe((data)=>{
+            this.svCard.getDescription(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe((data)=>{
                 if (data) {
                     this.initialDescription = data;
                     this.description = data;
                 }
             });
-            this.svCard.getCardMembers(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(members => {
+            this.svCard.getCardMembers(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(members => {
                 this.memberslist = members;
                 this.isMember = this.memberslist.some(member => member.name === this.userEmail);
             });
-            this.svCard.getCardLabels(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(labels => {
+            this.svCard.getCardLabels(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(labels => {
                 this.labelsList = labels;
                 this.labelsListChecked = this.labelsList.filter(label => label.isCheck);
             });
-            this.svCard.getCardCheckLists(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(checkLists => {
+            this.svCard.getCardCheckLists(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(checkLists => {
                 this.checkLists = checkLists;
             });
-            this.svCard.getDateOfCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(date => {
+            this.svCard.getDateOfCard(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(date => {
                 this.date = date;
                 if (this.date)
                     this.stringDate = this.date.toLocaleDateString();
             });
-            this.svCard.getCardCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(cover => {
+            this.svCard.getCardCover(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(cover => {
                 this.cover = cover;
             });
-            this.svCard.getCardAttachments(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id).subscribe(attachment => {
+            this.svCard.getCardAttachments(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(attachment => {
                 this.attachments = attachment;
             });
         }

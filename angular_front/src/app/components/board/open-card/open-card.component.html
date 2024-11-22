@@ -19,12 +19,12 @@
 
           <!-- Main card content on the left -->
           <div class="p-2 w-100">
-                <h2 class="card-title fw-bolder" (click)="this.toggleEditCardName()"><i class="bi bi-window"></i> {{this.svOpenCard._card.name}}</h2>
+                <h2 class="card-title fw-bolder" (click)="this.toggleEditCardName()"><i class="bi bi-window"></i> {{this.svOpenCard._card?.name}}</h2>
 
                 <input *ngIf="this.isEditingCardName" type="text" class="form-control" [(ngModel)]="this.cardName">
                 <button *ngIf="this.isEditingCardName" (click)="this.saveNameCard()" class="btn btn-primary mt-2">Save</button>
 
-                <h4 class="card-title">in list {{ this.svOpenCard._list.name }}</h4>
+                <h4 class="card-title">in list {{ this.svOpenCard._list?.name }}</h4>
                 <h4 class="card-title fw-bolder">Notifications</h4>
                 <button class="btn btn-light"><i class="bi bi-eye"></i> Watch</button>
 
@@ -137,7 +137,7 @@
                         <button class="btn btn-light w-100 mt-3" type="button" id="createLabelDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             Create a new label
                         </button>
-                        <app-label-creation [boardId]="this.boardId" [cardId]="this.svOpenCard._card.id" [listId]="this.svOpenCard._list.id"></app-label-creation>
+                        <app-label-creation [boardId]="this.boardId" [cardId]="this.svOpenCard._card?.id" [listId]="this.svOpenCard._list?.id"></app-label-creation>
                     </div>
                 </div>
             </div>

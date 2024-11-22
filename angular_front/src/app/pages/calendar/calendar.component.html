@@ -1,0 +1,22 @@
+<div class="container-fluid" style="background-image: url(https://images.unsplash.com/photo-1486728297118-82a07bc48a28?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dHJlbGxvfGVufDB8fDB8fHww);">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 d-none d-md-block" >
+            <app-board-sidebar></app-board-sidebar>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-10">
+
+            <!-- Board navbar -->
+            <app-board-navbar></app-board-navbar>
+
+            <div class="board-content">
+                <full-calendar style="background-color: white;" [options]="calendarOptions"></full-calendar>
+            </div>
+        </main>
+    </div>
+</div>
+
+<app-open-card *ngIf="this.isOpenCard" [boardId]="this.boardId" [lists]="this.lists"></app-open-card>
