@@ -43,6 +43,13 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
             const idList = info.event.extendedProps['idList'];
             this.openCardPanel(idCard, idList);
         },
+        eventDrop: (info) => {
+            const movedEvent = info.event;
+            const newStart = movedEvent.start;
+            const idCard = info.event.extendedProps['idCard'];
+            const idList = info.event.extendedProps['idList'];
+            this.updateCardDate(idCard, idList, newStart);
+        },
     };
 
     constructor(
@@ -98,5 +105,10 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
                 }
             );
         }
+    }
+
+    updateCardDate(cardId: string, listId: string, newDate: Date | null) {
+        if (this.boardId)
+            this.svCard.addDateToCard(this.boardId, listId, cardId, newDate);
     }
 }
