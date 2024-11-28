@@ -30,6 +30,20 @@
                 <div *ngFor="let workspace of this.workspaces">
                     <app-workspaces [workspace]="workspace" ></app-workspaces>
                 </div>
+                <div class="dropdown d-block w-195 dropend">
+                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Create new workspace
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><h3 class="dropdown-header">Create workspace</h3></li>
+                        <li><a class="dropdown-item">
+                            <input type="text" class="form-control me-2" placeholder="Workspace name" [(ngModel)]="this.workspaceNameToAdd">
+                        </a></li>
+                        <li><a class="dropdown-item">
+                            <button [disabled]="this.workspaceNameToAdd==''" (click)="this.createWorkspace()" class="btn btn-primary w-100">Create</button>
+                        </a></li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Closed Boards Button -->

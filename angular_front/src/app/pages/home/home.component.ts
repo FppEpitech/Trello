@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth/auth.service';
 import { Component } from '@angular/core';
 import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/firebase-workspaces.service';
 
@@ -9,17 +10,31 @@ import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/fi
 export class HomeComponent {
 
     constructor(
-        private svWorkspaces:FirebaseWorkspacesService
+        private svWorkspaces:FirebaseWorkspacesService,
+        private authService:AuthService
     ) {}
 
     workspaces: any[] = [];
     boards: any[] = [];
-    boardNameToAdd: string = "";
+    workspaceNameToAdd: string = "";
 
     refreshWorkspaces() {
-        this.svWorkspaces.getWorkspaces().subscribe((data)=>{
-            this.workspaces = data;
-        })
+        this.authService.authState$.subscribe(user => {
+            if (user) {
+              this.svWorkspaces.getWorkspaces(user.uid).subscribe((data)=>{
+                  this.workspaces = data;
+              })
+            }
+        });
+    }
+
+    createWorkspace() {
+        if (this.workspaceNameToAdd != "")
+            this.authService.authState$.subscribe(user => {
+                if (user) {
+                  this.svWorkspaces.addWorkspace(this.workspaceNameToAdd, user.uid);
+                }
+              });
     }
 
     ngOnInit() {
