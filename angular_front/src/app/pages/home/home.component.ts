@@ -1,6 +1,6 @@
-import { Router } from '@angular/router';
-import { FirebaseBoardsService } from './../../services/firebase-boards/firebase-boards.service';
+import { AuthService } from './../../services/auth/auth.service';
 import { Component } from '@angular/core';
+import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/firebase-workspaces.service';
 
 @Component({
   selector: 'app-home',
@@ -9,33 +9,35 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
-    constructor(private svBoards:FirebaseBoardsService, private router:Router) {}
+    constructor(
+        private svWorkspaces:FirebaseWorkspacesService,
+        private authService:AuthService
+    ) {}
 
+    workspaces: any[] = [];
     boards: any[] = [];
-    boardNameToAdd: string = "";
+    workspaceNameToAdd: string = "";
 
-    refreshBoards() {
-        this.svBoards.getBoards().subscribe((data)=>{
-            this.boards = data;
-        })
+    refreshWorkspaces() {
+        this.authService.authState$.subscribe(user => {
+            if (user) {
+              this.svWorkspaces.getWorkspaces(user.uid).subscribe((data)=>{
+                  this.workspaces = data;
+              })
+            }
+        });
     }
 
-    createBoard() {
-        if (this.boardNameToAdd.trim()) {
-            this.svBoards.addBoard(this.boardNameToAdd);
-            this.boardNameToAdd = "";
-        }
-    }
-
-    deleteBoard() {
-        this.svBoards.deleteBoard(this.boards[0].id);
-    }
-
-    goToBoard(boardId:string) {
-        this.router.navigateByUrl(`/board/${boardId}`)
+    createWorkspace() {
+        if (this.workspaceNameToAdd != "")
+            this.authService.authState$.subscribe(user => {
+                if (user) {
+                  this.svWorkspaces.addWorkspace(this.workspaceNameToAdd, user.uid);
+                }
+              });
     }
 
     ngOnInit() {
-        this.refreshBoards()
+        this.refreshWorkspaces();
     }
 }

@@ -17,6 +17,7 @@ export class BoardComponent {
         private svOpenCard: OpenCardService
     ) { }
 
+    workspaceId: string | null = null;
     boardId: string | null = null;
     lists: any[] = [];
     isCreatingList: boolean = false;
@@ -36,8 +37,8 @@ export class BoardComponent {
     }
 
     createList() {
-        if (this.listNameToAdd.trim() && this.boardId) {
-            this.svLists.addList(this.boardId, this.listNameToAdd).then((data)=>{
+        if (this.listNameToAdd.trim() && this.boardId && this.workspaceId) {
+            this.svLists.addList(this.workspaceId, this.boardId, this.listNameToAdd).then((data)=>{
                 this.closeCreationListPanel();
                 this.refreshLists();
             })
@@ -45,8 +46,8 @@ export class BoardComponent {
     }
 
     refreshLists() {
-        if (this.boardId) {
-            this.svLists.getLists(this.boardId).subscribe((data)=>{
+        if (this.boardId && this.workspaceId) {
+            this.svLists.getLists(this.workspaceId, this.boardId).subscribe((data)=>{
                 this.lists = data;
                 this.connectedLists = this.lists.map(list => `list-${list.id}`);
             })
@@ -54,7 +55,8 @@ export class BoardComponent {
     }
 
     ngOnInit() {
-        this.boardId = this.route.snapshot.paramMap.get('id')
+        this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+        this.boardId = this.route.snapshot.paramMap.get('boardId');
         this.refreshLists();
         this.subscription = this.svOpenCard.isOpenCard$.subscribe(open => {
             this.isOpenCard = open;

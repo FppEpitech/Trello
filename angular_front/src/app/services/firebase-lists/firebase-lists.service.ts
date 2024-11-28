@@ -7,31 +7,41 @@ import { map, Observable } from 'rxjs';
 })
 export class FirebaseListsService {
 
-    constructor(private fs:AngularFirestore) { }
+    private workspaceCollection = 'workspaces';
 
-    getLists(boardId: string): Observable<any[]> {
-        return this.fs.collection(`boards/${boardId}/lists`).snapshotChanges().pipe(
-        map(lists => lists.map(list => ({
-            id: list.payload.doc.id,
-            ...list.payload.doc.data() as object
-        })))
-        );
+    constructor(private fs: AngularFirestore) {}
+
+    getLists(workspaceId: string, boardId: string): Observable<any[]> {
+        return this.fs.collection(`${this.workspaceCollection}/${workspaceId}/boards/${boardId}/lists`)
+            .snapshotChanges()
+            .pipe(
+                map(lists => lists.map(list => ({
+                    id: list.payload.doc.id,
+                    ...list.payload.doc.data() as object
+                })))
+            );
     }
 
-    getListById(boardId: string, listId: string): Observable<any> {
-        return this.fs.collection(`boards/${boardId}/lists`).doc(listId).snapshotChanges().pipe(
-            map(snapshot => {
-                const data = snapshot.payload.data();
-                return data ? { id: snapshot.payload.id, ...data as object } : null;
-            })
-        );
+    getListById(workspaceId: string, boardId: string, listId: string): Observable<any> {
+        return this.fs.collection(`${this.workspaceCollection}/${workspaceId}/boards/${boardId}/lists`)
+            .doc(listId)
+            .snapshotChanges()
+            .pipe(
+                map(snapshot => {
+                    const data = snapshot.payload.data();
+                    return data ? { id: snapshot.payload.id, ...data as object } : null;
+                })
+            );
     }
 
-    addList(boardId: string, name:string) {
-        return this.fs.collection(`boards/${boardId}/lists`).add({name:name});
+    addList(workspaceId: string, boardId: string, name: string): Promise<any> {
+        return this.fs.collection(`${this.workspaceCollection}/${workspaceId}/boards/${boardId}/lists`)
+            .add({ name: name, createdAt: new Date() });
     }
 
-    deleteList(boardId: string, listId: string) {
-        return this.fs.collection(`boards/${boardId}/lists`).doc(listId).delete();
+    deleteList(workspaceId: string, boardId: string, listId: string): Promise<void> {
+        return this.fs.collection(`${this.workspaceCollection}/${workspaceId}/boards/${boardId}/lists`)
+            .doc(listId)
+            .delete();
     }
 }

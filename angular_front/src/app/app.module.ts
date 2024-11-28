@@ -28,6 +28,7 @@ import { LabelCreationComponent } from './components/board/open-card/label-creat
 import { HttpClientModule } from "@angular/common/http";
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { FullCalendarModule } from "@fullcalendar/angular";
+import { WorkspacesComponent } from './components/home/workspaces/workspaces.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { FullCalendarModule } from "@fullcalendar/angular";
     CardComponent,
     OpenCardComponent,
     LabelCreationComponent,
-    CalendarComponent
+    CalendarComponent,
+    WorkspacesComponent
   ],
   imports: [
     FormsModule,

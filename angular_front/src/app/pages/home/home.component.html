@@ -27,44 +27,22 @@
             <!-- Your Workspaces Section -->
             <div class="mt-5">
                 <h2 class="fst-italic">Your Workspaces</h2>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="fw-bold">Trello Workspace</h3>
-
-                    <!-- Button group -->
-                    <div>
-                        <button class="btn btn-light"><i class="bi bi-trello"></i> Boards</button>
-                        <button class="btn btn-light"><i class="bi bi-columns-gap"></i> Views</button>
-                        <button class="btn btn-light"><i class="bi bi-person"></i> Members (1)</button>
-                        <button class="btn btn-light"><i class="bi bi-gear-wide"></i> Settings</button>
-                    </div>
+                <div *ngFor="let workspace of this.workspaces">
+                    <app-workspaces [workspace]="workspace" ></app-workspaces>
                 </div>
-
-                <div class="container text-center">
-
-                    <div class="row row-cols-auto col gap-2"> <!-- Ajout d'un espacement entre les lignes -->
-                        <div *ngFor="let board of this.boards" class="d-flex justify-content-center align-items-center mb-3"> <!-- Ajout de mb-3 -->
-                            <button (click)="this.goToBoard(board.id)" class="btn btn-light" style="height: 7rem; width: 13rem;">
-                                {{ board.name }}
-                            </button>
-                        </div>
-
-                        <div class="d-flex justify-content-center align-items-center col mb-3"> <!-- Ajout de mb-3 -->
-                            <div class="dropdown d-block w-195 h-100 text-start dropend">
-                                <button class="btn btn-light" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Create new board
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><h3 class="dropdown-header">Create board</h3></li>
-                                    <li><a class="dropdown-item">
-                                        <input type="text" class="form-control me-2" placeholder="Board name" [(ngModel)]="this.boardNameToAdd">
-                                    </a></li>
-                                    <li><a class="dropdown-item">
-                                        <button [disabled]="this.boardNameToAdd==''" (click)="this.createBoard()" class="btn btn-primary w-100">Create</button>
-                                    </a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                <div class="dropdown d-block w-195 dropend">
+                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Create new workspace
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><h3 class="dropdown-header">Create workspace</h3></li>
+                        <li><a class="dropdown-item">
+                            <input type="text" class="form-control me-2" placeholder="Workspace name" [(ngModel)]="this.workspaceNameToAdd">
+                        </a></li>
+                        <li><a class="dropdown-item">
+                            <button [disabled]="this.workspaceNameToAdd==''" (click)="this.createWorkspace()" class="btn btn-primary w-100">Create</button>
+                        </a></li>
+                    </ul>
                 </div>
             </div>
 

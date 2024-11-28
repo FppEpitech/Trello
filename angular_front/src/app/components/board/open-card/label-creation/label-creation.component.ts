@@ -11,6 +11,7 @@ declare var bootstrap: any;
 })
 export class LabelCreationComponent {
 
+    @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
     @Input() listId:string | null = null;
     @Input() cardId:string | null = null;
@@ -46,9 +47,9 @@ export class LabelCreationComponent {
     }
 
     createLabel() {
-        if (this.boardId && this.title !== "" && this.colorPreview !== "" && this.listId && this.cardId) {
+        if (this.boardId && this.title !== "" && this.colorPreview !== "" && this.listId && this.cardId && this.workspaceId) {
             const newId = uuidv4();
-            this.svCard.addLabelToCard(this.boardId, this.listId, this.cardId, {
+            this.svCard.addLabelToCard(this.workspaceId, this.boardId, this.listId, this.cardId, {
                 id: newId,
                 name: this.title,
                 color: this.colorPreview,

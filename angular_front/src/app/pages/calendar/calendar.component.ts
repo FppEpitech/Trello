@@ -17,6 +17,7 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
   })
   export class CalendarComponent {
 
+    workspaceId: string | null = null;
     boardId: string | null = null;
     list: any | null = null;
     card: any | null = null;
@@ -60,9 +61,10 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
     ) { }
 
     ngOnInit() {
-        this.boardId = this.route.snapshot.paramMap.get('id');
-        if (this.boardId) {
-            this.svCard.getAllDueDates(this.boardId).subscribe(dueDates => {
+        this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+        this.boardId = this.route.snapshot.paramMap.get('calendarId');
+        if (this.boardId && this.workspaceId) {
+            this.svCard.getAllDueDates(this.workspaceId, this.boardId).subscribe(dueDates => {
                 const events = dueDates.map(due => {
                     return {
                         title: `${due.cardName}`,
@@ -75,7 +77,7 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
                 });
                 this.calendarOptions.events = events;
             });
-            this.svList.getLists(this.boardId).subscribe(lists => {
+            this.svList.getLists(this.workspaceId, this.boardId).subscribe(lists => {
                 this.lists = lists;
             });
         }
@@ -88,9 +90,9 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
         this.list = null;
         this.card = null;
 
-        if (this.boardId) {
-            const listObservable = this.svList.getListById(this.boardId, listId).pipe(distinctUntilChanged());
-            const cardObservable = this.svCard.getCardById(this.boardId, listId, cardId).pipe(distinctUntilChanged());
+        if (this.boardId && this.workspaceId) {
+            const listObservable = this.svList.getListById(this.workspaceId, this.boardId, listId).pipe(distinctUntilChanged());
+            const cardObservable = this.svCard.getCardById(this.workspaceId, this.boardId, listId, cardId).pipe(distinctUntilChanged());
 
             combineLatest([listObservable, cardObservable])
                 .pipe(take(1))
@@ -108,7 +110,7 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
     }
 
     updateCardDate(cardId: string, listId: string, newDate: Date | null) {
-        if (this.boardId)
-            this.svCard.addDateToCard(this.boardId, listId, cardId, newDate);
+        if (this.boardId && this.workspaceId)
+            this.svCard.addDateToCard(this.workspaceId, this.boardId, listId, cardId, newDate);
     }
 }
