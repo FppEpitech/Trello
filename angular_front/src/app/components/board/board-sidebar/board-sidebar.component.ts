@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class BoardSidebarComponent {
 
+    workspaceId: string | null = null;
     boardId: string | null = null;
 
     constructor(
@@ -16,11 +17,12 @@ export class BoardSidebarComponent {
     ) {}
 
     ngOnInit() {
-        this.boardId = this.route.snapshot.paramMap.get('id');
+        this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
+        this.boardId = this.route.snapshot.paramMap.get('boardId');
     }
 
     goToCalendar() {
-        if (this.boardId)
-            this.router.navigateByUrl(`/calendar/${this.boardId}`);
+        if (this.boardId && this.workspaceId)
+            this.router.navigate([`/workspace/${this.workspaceId}/calendar/${this.boardId}`]);
     }
 }

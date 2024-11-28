@@ -64,8 +64,8 @@ export class FirebaseCardsService {
 
     constructor(private fs:AngularFirestore) { }
 
-    getCards(boardId: string, listId: string): Observable<any[]> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).snapshotChanges().pipe(
+    getCards(workspaceId: string, boardId: string, listId: string): Observable<any[]> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).snapshotChanges().pipe(
             map(actions => actions.map(card => {
                 const cardData = card.payload.doc.data() as Omit<Card, 'id'>;
                 return {
@@ -76,8 +76,8 @@ export class FirebaseCardsService {
         );
     }
 
-    getCardById(boardId: string, listId: string, cardId: string): Observable<Card | null> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getCardById(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Card | null> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Omit<Card, 'id'> | undefined;
                 if (data) {
@@ -88,7 +88,7 @@ export class FirebaseCardsService {
         );
     }
 
-    async addCardToList(boardId: string, listId: string, card: Card): Promise<void> {
+    async addCardToList(workspaceId: string, boardId: string, listId: string, card: Card): Promise<void> {
         const cardData = {
             name: card.name,
             description: card.description,
@@ -100,7 +100,7 @@ export class FirebaseCardsService {
             attachment: card.attachment || [],
             cover: card.cover || null
         };
-        const docRef = await this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).add(cardData);
+        const docRef = await this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).add(cardData);
         if (card.date) {
             if (cardData?.date) {
                 let firestoreDate: firebase.firestore.Timestamp;
@@ -111,7 +111,7 @@ export class FirebaseCardsService {
                     const date = cardData.date instanceof Date ? cardData.date : new Date(cardData.date);
                     firestoreDate = firebase.firestore.Timestamp.fromDate(date);
                 }
-                await this.fs.collection(`boards/${boardId}/dates`).doc(docRef.id).set({
+                await this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/dates`).doc(docRef.id).set({
                     date: firestoreDate,
                     cardName: card.name,
                     listId: listId
@@ -120,14 +120,14 @@ export class FirebaseCardsService {
         }
     }
 
-    async deleteCardFromList(boardId: string, listId: string, cardId: string): Promise<void> {
+    async deleteCardFromList(workspaceId: string, boardId: string, listId: string, cardId: string): Promise<void> {
         try {
-            const cardRef = this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId);
+            const cardRef = this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId);
             const cardSnapshot = await firstValueFrom(cardRef.get());
             if (cardSnapshot.exists) {
                 const cardData = cardSnapshot.data() as Card;
                 if (cardData?.date) {
-                    await this.fs.collection(`boards/${boardId}/dates`).doc(cardId).delete();
+                    await this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/dates`).doc(cardId).delete();
                 }
                 await cardRef.delete();
             } else {
@@ -139,16 +139,16 @@ export class FirebaseCardsService {
         }
     }
 
-    addName(boardId: string, listId: string, cardId: string, name: string) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ name });
+    addName(workspaceId: string, boardId: string, listId: string, cardId: string, name: string) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ name });
     }
 
-    addDescription(boardId: string, listId: string, cardId: string, description: string) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ description });
+    addDescription(workspaceId: string, boardId: string, listId: string, cardId: string, description: string) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({ description });
     }
 
-    getDescription(boardId: string, listId: string, cardId: string): Observable<string | null> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getDescription(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<string | null> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as { description?: string };
                 return data ? data.description ?? null : null;
@@ -156,20 +156,20 @@ export class FirebaseCardsService {
         );
     }
 
-    addMemberToCard(boardId: string, listId: string, cardId: string, newMember: Member) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    addMemberToCard(workspaceId: string, boardId: string, listId: string, cardId: string, newMember: Member) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             members: firebase.firestore.FieldValue.arrayUnion(newMember)
         });
     }
 
-    deleteMemberFromCard(boardId: string, listId: string, cardId: string, memberToRemove: Member) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    deleteMemberFromCard(workspaceId: string, boardId: string, listId: string, cardId: string, memberToRemove: Member) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             members: firebase.firestore.FieldValue.arrayRemove(memberToRemove)
         });
     }
 
-    getCardMembers(boardId: string, listId: string, cardId: string): Observable<Member[]> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getCardMembers(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Member[]> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Card | undefined;
                 return data?.members || [];
@@ -177,19 +177,19 @@ export class FirebaseCardsService {
         );
     }
 
-    addLabelToCard(boardId: string, listId: string, cardId: string, newLabel: Label) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    addLabelToCard(workspaceId: string, boardId: string, listId: string, cardId: string, newLabel: Label) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             labels: firebase.firestore.FieldValue.arrayUnion(newLabel)
         });
     }
 
-    deleteLabelFromCard(boardId: string, listId: string, cardId: string, labelId: string) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    deleteLabelFromCard(workspaceId: string, boardId: string, listId: string, cardId: string, labelId: string) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.labels) {
                     const updatedLabels = data.labels.filter(label => label.id !== labelId);
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         labels: updatedLabels
                     });
                 }
@@ -200,8 +200,8 @@ export class FirebaseCardsService {
         });
     }
 
-    getCardLabels(boardId: string, listId: string, cardId: string): Observable<Label[]> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getCardLabels(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Label[]> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Card | undefined;
                 return data?.labels || [];
@@ -209,8 +209,8 @@ export class FirebaseCardsService {
         );
     }
 
-    updateLabelIsCheck(boardId: string, listId: string, cardId: string, labelId: string, newIsCheckValue: boolean) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    updateLabelIsCheck(workspaceId: string, boardId: string, listId: string, cardId: string, labelId: string, newIsCheckValue: boolean) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.labels) {
@@ -220,7 +220,7 @@ export class FirebaseCardsService {
                         }
                         return label;
                     });
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         labels: updatedLabels
                     });
                 }
@@ -231,19 +231,19 @@ export class FirebaseCardsService {
         });
     }
 
-    addCheckListToCard(boardId: string, listId: string, cardId: string, newChecklist: Checklists) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    addCheckListToCard(workspaceId: string, boardId: string, listId: string, cardId: string, newChecklist: Checklists) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             checklists: firebase.firestore.FieldValue.arrayUnion(newChecklist)
         });
     }
 
-    deleteCheckListFromCard(boardId: string, listId: string, cardId: string, checkListId: string) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    deleteCheckListFromCard(workspaceId: string, boardId: string, listId: string, cardId: string, checkListId: string) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.checklists) {
                     const updatedChecklists = data.checklists.filter(checklists => checklists.id !== checkListId);
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         checklists: updatedChecklists
                     });
                 }
@@ -254,8 +254,8 @@ export class FirebaseCardsService {
         });
     }
 
-    getCardCheckLists(boardId: string, listId: string, cardId: string): Observable<Checklists[]> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getCardCheckLists(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Checklists[]> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Card | undefined;
                 return data?.checklists || [];
@@ -263,8 +263,8 @@ export class FirebaseCardsService {
         );
     }
 
-    addCheckToCheckList(boardId: string, listId: string, cardId: string, checklistId: string, newCheck: Check) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    addCheckToCheckList(workspaceId: string, boardId: string, listId: string, cardId: string, checklistId: string, newCheck: Check) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.checklists) {
@@ -274,7 +274,7 @@ export class FirebaseCardsService {
                         }
                         return checklist;
                     });
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         checklists: updatedChecklists
                     });
                 }
@@ -285,8 +285,8 @@ export class FirebaseCardsService {
         });
     }
 
-    deleteCheckFromCheckList(boardId: string, listId: string, cardId: string, checklistId: string, checkId: string) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    deleteCheckFromCheckList(workspaceId: string, boardId: string, listId: string, cardId: string, checklistId: string, checkId: string) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.checklists) {
@@ -296,7 +296,7 @@ export class FirebaseCardsService {
                         }
                         return checklist;
                     });
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         checklists: updatedChecklists
                     });
                 }
@@ -307,8 +307,8 @@ export class FirebaseCardsService {
         });
     }
 
-    updateCheckInCheckList(boardId: string, listId: string, cardId: string, checklistId: string, updatedCheck: Check) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    updateCheckInCheckList(workspaceId: string, boardId: string, listId: string, cardId: string, checklistId: string, updatedCheck: Check) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.checklists) {
@@ -320,7 +320,7 @@ export class FirebaseCardsService {
                         }
                         return checklist;
                     });
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         checklists: updatedChecklists
                     });
                 }
@@ -331,8 +331,8 @@ export class FirebaseCardsService {
         });
     }
 
-    getDateOfCard(boardId: string, listId: string, cardId: string): Observable<Date | null> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getDateOfCard(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Date | null> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Card | undefined;
                 if (data?.date instanceof firebase.firestore.Timestamp) {
@@ -343,10 +343,10 @@ export class FirebaseCardsService {
         );
     }
 
-    addDateToCard(boardId: string, listId: string, cardId: string, date: Date | null) {
+    addDateToCard(workspaceId: string, boardId: string, listId: string, cardId: string, date: Date | null) {
         const firestoreDate = date ? firebase.firestore.Timestamp.fromDate(date) : null;
-        const cardRef = this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId);
-        const dateRef = this.fs.collection(`boards/${boardId}/dates`).doc(cardId);
+        const cardRef = this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId);
+        const dateRef = this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/dates`).doc(cardId);
         return this.fs.firestore.runTransaction(async (transaction) => {
             const cardDoc = await transaction.get(cardRef.ref);
             if (!cardDoc.exists) {
@@ -366,9 +366,9 @@ export class FirebaseCardsService {
         });
     }
 
-    deleteDateFromCard(boardId: string, listId: string, cardId: string) {
-        const cardRef = this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId);
-        const dateRef = this.fs.collection(`boards/${boardId}/dates`).doc(cardId);
+    deleteDateFromCard(workspaceId: string, boardId: string, listId: string, cardId: string) {
+        const cardRef = this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId);
+        const dateRef = this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/dates`).doc(cardId);
         return this.fs.firestore.runTransaction(async (transaction) => {
             transaction.update(cardRef.ref, {
                 date: null
@@ -378,8 +378,8 @@ export class FirebaseCardsService {
         });
     }
 
-    getAllDueDates(boardId: string): Observable<{ cardId: string; listId: string; dueDate: Date | null; cardName: string }[]> {
-    return this.fs.collection(`boards/${boardId}/dates`).snapshotChanges().pipe(
+    getAllDueDates(workspaceId: string, boardId: string): Observable<{ cardId: string; listId: string; dueDate: Date | null; cardName: string }[]> {
+    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/dates`).snapshotChanges().pipe(
         map(snapshot =>
             snapshot.map(doc => {
                 const data = doc.payload.doc.data() as DueDate;
@@ -392,20 +392,20 @@ export class FirebaseCardsService {
         ));
     }
 
-    addOrUpdateCover(boardId: string, listId: string, cardId: string, cover: Cover) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    addOrUpdateCover(workspaceId: string, boardId: string, listId: string, cardId: string, cover: Cover) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             cover: cover
         });
     }
 
-    deleteCoverFromCard(boardId: string, listId: string, cardId: string) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    deleteCoverFromCard(workspaceId: string, boardId: string, listId: string, cardId: string) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             cover: null
         });
     }
 
-    getCardCover(boardId: string, listId: string, cardId: string): Observable<Cover | null> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getCardCover(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Cover | null> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Card | undefined;
                 return data?.cover || null;
@@ -413,19 +413,19 @@ export class FirebaseCardsService {
         );
     }
 
-    addAttachmentToCard(boardId: string, listId: string, cardId: string, newAttachment: Attachment) {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+    addAttachmentToCard(workspaceId: string, boardId: string, listId: string, cardId: string, newAttachment: Attachment) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
             attachment: firebase.firestore.FieldValue.arrayUnion(newAttachment)
         });
     }
 
-    deleteAttachmentFromCard(boardId: string, listId: string, cardId: string, attachmentId: string) {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    deleteAttachmentFromCard(workspaceId: string, boardId: string, listId: string, cardId: string, attachmentId: string) {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as Card;
                 if (data && data.attachment) {
                     const updatedAttachments = data.attachment.filter(att => att.id !== attachmentId);
-                    return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+                    return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
                         attachment: updatedAttachments
                     });
                 }
@@ -436,8 +436,8 @@ export class FirebaseCardsService {
         });
     }
 
-    getCardAttachments(boardId: string, listId: string, cardId: string): Observable<Attachment[]> {
-        return this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+    getCardAttachments(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Attachment[]> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
             map(action => {
                 const data = action.payload.data() as Card | undefined;
                 return data?.attachment || [];
@@ -445,8 +445,8 @@ export class FirebaseCardsService {
         );
     }
 
-    downloadAttachment(boardId: string, listId: string, cardId: string, attachmentId: string): void {
-        this.fs.collection(`boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
+    downloadAttachment(workspaceId: string, boardId: string, listId: string, cardId: string, attachmentId: string): void {
+        this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).get().toPromise().then(doc => {
             if (doc && doc.exists) {
                 const data = doc.data() as { attachment: Attachment[] };
                 const attachment = data?.attachment?.find(att => att.id === attachmentId);

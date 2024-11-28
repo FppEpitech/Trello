@@ -14,6 +14,7 @@ declare var bootstrap: any;
 export class OpenCardComponent {
 
     @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
+    @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
     @Input() lists: any[] = [];
 
@@ -77,33 +78,33 @@ export class OpenCardComponent {
             this.userProfile = profile;
         });
 
-        if (this.boardId) {
-            this.svCard.getDescription(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe((data)=>{
+        if (this.boardId && this.workspaceId) {
+            this.svCard.getDescription(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe((data)=>{
                 if (data) {
                     this.initialDescription = data;
                     this.description = data;
                 }
             });
-            this.svCard.getCardMembers(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(members => {
+            this.svCard.getCardMembers(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(members => {
                 this.memberslist = members;
                 this.isMember = this.memberslist.some(member => member.name === this.userEmail);
             });
-            this.svCard.getCardLabels(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(labels => {
+            this.svCard.getCardLabels(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(labels => {
                 this.labelsList = labels;
                 this.labelsListChecked = this.labelsList.filter(label => label.isCheck);
             });
-            this.svCard.getCardCheckLists(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(checkLists => {
+            this.svCard.getCardCheckLists(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(checkLists => {
                 this.checkLists = checkLists;
             });
-            this.svCard.getDateOfCard(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(date => {
+            this.svCard.getDateOfCard(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(date => {
                 this.date = date;
                 if (this.date)
                     this.stringDate = this.date.toLocaleDateString();
             });
-            this.svCard.getCardCover(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(cover => {
+            this.svCard.getCardCover(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(cover => {
                 this.cover = cover;
             });
-            this.svCard.getCardAttachments(this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(attachment => {
+            this.svCard.getCardAttachments(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(attachment => {
                 this.attachments = attachment;
             });
         }
@@ -114,16 +115,16 @@ export class OpenCardComponent {
     }
 
     saveNameCard() {
-        if (this.cardName != this.svOpenCard._card.name && this.cardName != "" && this.boardId) {
-            this.svCard.addName(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.cardName);
+        if (this.cardName != this.svOpenCard._card.name && this.cardName != "" && this.boardId && this.workspaceId) {
+            this.svCard.addName(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.cardName);
             this.svOpenCard._card.name = this.cardName;
         }
         this.isEditingCardName = false;
     }
 
     saveDescription() {
-        if (this.boardId) {
-            this.svCard.addDescription(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.description);
+        if (this.boardId && this.workspaceId) {
+            this.svCard.addDescription(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.description);
             this.initialDescription = this.description;
         }
     }
@@ -133,20 +134,20 @@ export class OpenCardComponent {
     }
 
     join() {
-        if (this.boardId && this.userEmail && this.userProfile) {
-            this.svCard.addMemberToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+        if (this.boardId && this.userEmail && this.userProfile && this.workspaceId) {
+            this.svCard.addMemberToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
         }
     }
 
     leave() {
-        if (this.boardId && this.userEmail && this.userProfile) {
-            this.svCard.deleteMemberFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+        if (this.boardId && this.userEmail && this.userProfile && this.workspaceId) {
+            this.svCard.deleteMemberFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
         }
     }
 
     removeMember(member : Member) {
-        if (this.boardId && this.userEmail && member) {
-            this.svCard.deleteMemberFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: member.name, profile: member.profile})
+        if (this.boardId && this.userEmail && member && this.workspaceId) {
+            this.svCard.deleteMemberFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: member.name, profile: member.profile})
         }
     }
 
@@ -159,21 +160,21 @@ export class OpenCardComponent {
     }
 
     updateLabel(labelItem: Label) {
-        if (this.boardId && labelItem) {
-            this.svCard.updateLabelIsCheck(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id, !labelItem.isCheck);
+        if (this.boardId && labelItem && this.workspaceId) {
+            this.svCard.updateLabelIsCheck(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id, !labelItem.isCheck);
         }
     }
 
     deleteLabel(labelItem: Label) {
-        if (this.boardId && labelItem) {
-            this.svCard.deleteLabelFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id);
+        if (this.boardId && labelItem && this.workspaceId) {
+            this.svCard.deleteLabelFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, labelItem.id);
         }
     }
 
     createCheckList() {
-        if (this.boardId && this.checklistName != "") {
+        if (this.boardId && this.checklistName != "" && this.workspaceId) {
             const newId = uuidv4();
-            this.svCard.addCheckListToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {
+            this.svCard.addCheckListToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {
                 id: newId,
                 name: this.checklistName,
                 checks: []
@@ -182,42 +183,42 @@ export class OpenCardComponent {
     }
 
     deleteCheckList(checklist: Checklists) {
-        if (this.boardId && checklist) {
-            this.svCard.deleteCheckListFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checklist.id);
+        if (this.boardId && checklist && this.workspaceId) {
+            this.svCard.deleteCheckListFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checklist.id);
         }
     }
 
     addItemToCheckList(checklist: Checklists) {
-        if (this.boardId && this.checklistItemName != "") {
+        if (this.boardId && this.checklistItemName != "" && this.workspaceId) {
             const newId = uuidv4();
             const check: Check = {id: newId, name: this.checklistItemName, state: false};
-            this.svCard.addCheckToCheckList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checklist.id, check);
+            this.svCard.addCheckToCheckList(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checklist.id, check);
             this.checklistItemName = "";
         }
     }
 
     deleteItemChecklist(checkList: Checklists, item: Check) {
-        if (this.boardId && checkList && item) {
-            this.svCard.deleteCheckFromCheckList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checkList.id, item.id);
+        if (this.boardId && checkList && item && this.workspaceId) {
+            this.svCard.deleteCheckFromCheckList(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checkList.id, item.id);
         }
     }
 
     updateItemCheckList(checkList: Checklists, item: Check) {
-        if (this.boardId && checkList && item) {
+        if (this.boardId && checkList && item && this.workspaceId) {
             item.state = !item.state;
-            this.svCard.updateCheckInCheckList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checkList.id, item);
+            this.svCard.updateCheckInCheckList(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, checkList.id, item);
         }
     }
 
     saveDate() {
-        if (this.boardId) {
-            this.svCard.addDateToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.selected());
+        if (this.boardId && this.workspaceId) {
+            this.svCard.addDateToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.selected());
         }
     }
 
     removeDate() {
-        if (this.boardId) {
-            this.svCard.deleteDateFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
+        if (this.boardId && this.workspaceId) {
+            this.svCard.deleteDateFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
         }
     }
 
@@ -238,8 +239,8 @@ export class OpenCardComponent {
                         content: fileContent
                     }
 
-                    if (this.boardId)
-                        this.svCard.addAttachmentToCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment);
+                    if (this.boardId && this.workspaceId)
+                        this.svCard.addAttachmentToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment);
                 };
                 reader.readAsDataURL(file);
             }
@@ -247,13 +248,13 @@ export class OpenCardComponent {
     }
 
     deleteAttachment(attachment: Attachment) {
-        if (this.boardId)
-            this.svCard.deleteAttachmentFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment.id);
+        if (this.boardId && this.workspaceId)
+            this.svCard.deleteAttachmentFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment.id);
     }
 
     downloadAttachment(attachment: Attachment) {
-        if (this.boardId)
-            this.svCard.downloadAttachment(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment.id);
+        if (this.boardId && this.workspaceId)
+            this.svCard.downloadAttachment(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment.id);
     }
 
     onCoverSelected(event: Event) {
@@ -272,8 +273,8 @@ export class OpenCardComponent {
                         color: this.colorCoverPreview
                     };
 
-                    if (this.boardId)
-                        this.svCard.addOrUpdateCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, cover)
+                    if (this.boardId && this.workspaceId)
+                        this.svCard.addOrUpdateCover(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, cover)
                 };
 
                 reader.readAsDataURL(file);
@@ -291,13 +292,13 @@ export class OpenCardComponent {
             image: this.imageCoverSrc,
             color: this.colorCoverPreview
         };
-        if (this.boardId)
-            this.svCard.addOrUpdateCover(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, cover)
+        if (this.boardId && this.workspaceId)
+            this.svCard.addOrUpdateCover(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, cover)
     }
 
     removeCover() {
-        if (this.boardId)
-            this.svCard.deleteCoverFromCard(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
+        if (this.boardId && this.workspaceId)
+            this.svCard.deleteCoverFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
         this.imageCoverSrc = null;
         this.colorCoverPreview = null;
     }
@@ -307,8 +308,8 @@ export class OpenCardComponent {
     }
 
     moveCard() {
-        if (this.boardId && this.listToMoveTo) {
-            this.svCard.addCardToList(this.boardId, this.listToMoveTo.id, this.svOpenCard._card);
+        if (this.boardId && this.listToMoveTo && this.workspaceId) {
+            this.svCard.addCardToList(this.workspaceId, this.boardId, this.listToMoveTo.id, this.svOpenCard._card);
             this.delete();
         }
     }
@@ -318,10 +319,10 @@ export class OpenCardComponent {
     }
 
     copyCard() {
-        if (this.boardId && this.listToCopyTo && this.copyName !== "") {
+        if (this.boardId && this.listToCopyTo && this.copyName !== "" && this.workspaceId) {
             const copyCard: Card = { ...this.svOpenCard._card };
             copyCard.name = this.copyName;
-            this.svCard.addCardToList(this.boardId, this.listToCopyTo.id, copyCard);
+            this.svCard.addCardToList(this.workspaceId, this.boardId, this.listToCopyTo.id, copyCard);
         }
     }
 
@@ -334,8 +335,8 @@ export class OpenCardComponent {
     }
 
     delete() {
-        if (this.boardId) {
-            this.svCard.deleteCardFromList(this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
+        if (this.boardId && this.workspaceId) {
+            this.svCard.deleteCardFromList(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id);
             this.closeOpenCard();
         }
     }

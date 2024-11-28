@@ -25,6 +25,7 @@ const newCard: Card = {
 export class CardComponent {
 
     @Input() list:any;
+    @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
     @Input() connectedLists: string[] = [];
 
@@ -48,27 +49,27 @@ export class CardComponent {
     }
 
     createCard() {
-        if (this.cardNameToAdd.trim() && this.boardId) {
+        if (this.cardNameToAdd.trim() && this.boardId && this.workspaceId) {
             newCard.name = this.cardNameToAdd;
-            this.svCards.addCardToList(this.boardId, this.list.id, newCard).then((data)=>{
+            this.svCards.addCardToList(this.workspaceId, this.boardId, this.list.id, newCard).then((data)=>{
                 this.closeCreationCardPanel();
             })
         }
     }
 
     deleteList() {
-        if (this.boardId)
-            this.svLists.deleteList(this.boardId, this.list.id);
+        if (this.boardId && this.workspaceId)
+            this.svLists.deleteList(this.workspaceId, this.boardId, this.list.id);
     }
 
     deleteCard(card: any) {
-        if (this.boardId)
-            this.svCards.deleteCardFromList(this.boardId, this.list.id, card.id)
+        if (this.boardId && this.workspaceId)
+            this.svCards.deleteCardFromList(this.workspaceId, this.boardId, this.list.id, card.id)
     }
 
     ngOnInit() {
-        if (this.boardId) {
-            this.svCards.getCards(this.boardId, this.list.id).subscribe(
+        if (this.boardId && this.workspaceId) {
+            this.svCards.getCards(this.workspaceId, this.boardId, this.list.id).subscribe(
                 cards => this.cards = cards,
                 error => console.error('Error fetching cards:', error)
             );
@@ -88,9 +89,9 @@ export class CardComponent {
                 event.currentIndex,
             );
 
-            if (this.boardId) {
-                this.svCards.deleteCardFromList(this.boardId, event.previousContainer.id.substring(5), movedCard.id)
-                this.svCards.addCardToList(this.boardId, event.container.id.substring(5), movedCard)
+            if (this.boardId && this.workspaceId) {
+                this.svCards.deleteCardFromList(this.workspaceId, this.boardId, event.previousContainer.id.substring(5), movedCard.id)
+                this.svCards.addCardToList(this.workspaceId, this.boardId, event.container.id.substring(5), movedCard)
             }
         }
     }

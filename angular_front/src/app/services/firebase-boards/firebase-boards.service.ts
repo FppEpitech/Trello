@@ -7,21 +7,35 @@ import { map, Observable } from 'rxjs';
 })
 export class FirebaseBoardsService {
 
-    constructor(private fs:AngularFirestore) { }
+    private workspaceCollection = 'workspaces';
 
-    getBoards(): Observable<any[]> {
-        return this.fs.collection('boards').snapshotChanges().pipe(
-        map(boards => boards.map(board => ({
-            id: board.payload.doc.id,
-            ...board.payload.doc.data() as object
-        }))));
+    constructor(private fs: AngularFirestore) { }
+
+    getBoards(workspaceId: string): Observable<any[]> {
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .snapshotChanges()
+            .pipe(
+                map(boards => boards.map(board => ({
+                    id: board.payload.doc.id,
+                    ...board.payload.doc.data() as object
+                })))
+            );
     }
 
-    addBoard(name:string) {
-        return this.fs.collection('boards').add({name:name});
+    addBoard(workspaceId: string, name: string) {
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .add({ name: name, createdAt: new Date() });
     }
 
-    deleteBoard(boardId: string) {
-        return this.fs.collection('boards').doc(boardId).delete();
+    deleteBoard(workspaceId: string, boardId: string) {
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .doc(boardId)
+            .delete();
     }
 }
