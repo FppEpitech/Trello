@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
+import firebase from 'firebase/compat/app'; // Import from compat
+
+export interface Background {
+    picture: string | null;
+    color: string | null;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +43,20 @@ export class FirebaseBoardsService {
             .collection('boards')
             .doc(boardId)
             .delete();
+    }
+
+    getBoardBackground(workspaceId: string, boardId: string): Observable<Background> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards`)
+            .doc(boardId)
+            .valueChanges() as Observable<Background>;
+    }
+
+    addBackgroundToBoard(workspaceId: string, boardId: string, newBackground: Background) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards`)
+            .doc(boardId)
+            .update({
+                picture: newBackground.picture,
+                color: newBackground.color,
+            });
     }
 }
