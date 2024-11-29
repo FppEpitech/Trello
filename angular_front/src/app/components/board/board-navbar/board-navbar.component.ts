@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { FirebaseBoardsService } from '../../../services/firebase-boards/firebase-boards.service';
+import { Picture, UnsplashService } from '../../../services/unsplash/unsplash.service';
+
+
 
 @Component({
   selector: 'app-board-navbar',
@@ -12,7 +15,8 @@ export class BoardNavbarComponent {
     @Input() boardId:string | null = null;
 
     constructor(
-        private svBoard: FirebaseBoardsService
+        private svBoard: FirebaseBoardsService,
+        private svUnsplash: UnsplashService
     ) {}
 
     backgroundColors: string[] = [
@@ -23,6 +27,8 @@ export class BoardNavbarComponent {
         "#579dff", "#6cc3df", "#94c748", "#e773ba", "#8590a2",
         "#0c65e3", "#227d9a", "#5b7f25", "#ad4788", "#636f87"
     ];
+
+    backgroundPictures: Picture[] = [];
 
     changeBackgroundColor(color: string) {
         if (this.workspaceId && this.boardId)
@@ -54,5 +60,11 @@ export class BoardNavbarComponent {
                 alert('Only PNG and JPG files are allowed.');
             }
         }
+    }
+
+    openPanelPictureBackground() {
+        this.svUnsplash.getRandomPhotos().subscribe(data => {
+            this.backgroundPictures = data;
+        })
     }
 }

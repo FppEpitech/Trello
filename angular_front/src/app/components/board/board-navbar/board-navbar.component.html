@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top" style="border-bottom: 1px solid #ccc; background-color: #fff;">
+<nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top" style="border-bottom: 1px solid #ccc; background-color: rgb(255, 255, 255, 0.9);">
     <div class="container-fluid">
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -73,7 +73,7 @@
     </div>
     <hr>
     <div class="offcanvas-body">
-        <button class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundPicture" aria-controls="offcanvasBackgroundPicture">
+        <button (click)="this.openPanelPictureBackground()" class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundPicture" aria-controls="offcanvasBackgroundPicture">
             <img src="../../../../assets/ChangeBackgroundButton.png" class="w-100 h-100">
         </button>
         <button class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundColor" aria-controls="offcanvasBackgroundColor">
@@ -101,7 +101,13 @@
     <hr>
     <div class="offcanvas-body">
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-auto-rows: minmax(80px, auto);">
-            <!-- <button *ngFor="let color of this.backgroundColors" [style.background-color]="color" class="btn btn-light" style="box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"></button> -->
+            <button *ngFor="let picture of this.backgroundPictures"
+                    class="btn btn-light hover-button"
+                    (click)="this.changeBackgroundPicture(picture.url)"
+                    style="box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px; position: relative;">
+                <img [src]="picture.url" class="w-100 h-100">
+                <a [href]="picture.authorProfileUrl" class="author-link">{{ picture.author }}</a>
+            </button>
         </div>
     </div>
 </div>

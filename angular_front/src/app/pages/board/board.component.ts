@@ -69,7 +69,6 @@ export class BoardComponent {
 
         if (this.workspaceId && this.boardId)
             this.svBoard.getBoardBackground(this.workspaceId, this.boardId).subscribe(background => {
-                console.log(background)
                 this.boardColorBackground = background.color;
                 this.boardPictureBackground = background.picture;
             })
