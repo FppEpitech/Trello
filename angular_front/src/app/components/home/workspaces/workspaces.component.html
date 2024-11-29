@@ -13,8 +13,13 @@
 
     <div class="row row-cols-auto col gap-2">
         <div *ngFor="let board of this.boards" class="d-flex justify-content-center align-items-center mb-3">
-            <button (click)="this.goToBoard(board.id)" class="btn btn-light" style="height: 7rem; width: 13rem;">
-                {{ board.name }}
+            <button
+                (click)="this.goToBoard(board.id)"
+                class="btn btn-light board-button"
+                style="height: 7rem; width: 13rem;"
+                [style.background-color]="board.color">
+                <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                <p>{{ board.name }}</p>
             </button>
         </div>
 
