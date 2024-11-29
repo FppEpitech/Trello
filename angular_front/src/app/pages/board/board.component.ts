@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FirebaseListsService } from '../../services/firebase-lists/firebase-lists.service';
 import { OpenCardService } from '../../services/open-card/open-card.service';
 import { Subscription } from 'rxjs';
+import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-boards.service';
 
 @Component({
   selector: 'app-board',
@@ -14,7 +15,8 @@ export class BoardComponent {
     constructor(
         private svLists:FirebaseListsService,
         private route: ActivatedRoute,
-        private svOpenCard: OpenCardService
+        private svOpenCard: OpenCardService,
+        private svBoard: FirebaseBoardsService
     ) { }
 
     workspaceId: string | null = null;
@@ -26,6 +28,9 @@ export class BoardComponent {
 
     subscription: Subscription = new Subscription();
     isOpenCard: boolean = false;
+
+    boardColorBackground: string | null = null;
+    boardPictureBackground: string | null = null;
 
     openCreationListPanel() {
         this.isCreatingList = !this.isCreatingList;
@@ -61,6 +66,12 @@ export class BoardComponent {
         this.subscription = this.svOpenCard.isOpenCard$.subscribe(open => {
             this.isOpenCard = open;
         });
+
+        if (this.workspaceId && this.boardId)
+            this.svBoard.getBoardBackground(this.workspaceId, this.boardId).subscribe(background => {
+                this.boardColorBackground = background.color;
+                this.boardPictureBackground = background.picture;
+            })
     }
 
     ngOnDestroy(): void {
