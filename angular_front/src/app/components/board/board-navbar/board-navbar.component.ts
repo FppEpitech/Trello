@@ -34,29 +34,25 @@ export class BoardNavbarComponent {
             this.svBoard.addBackgroundToBoard(this.workspaceId, this.boardId, {color: null, picture: picture});
     }
 
-    onAttachmentSelected(event: Event) {
+    removeBackground() {
+        if (this.workspaceId && this.boardId)
+            this.svBoard.addBackgroundToBoard(this.workspaceId, this.boardId, {color: null, picture: null});
+    }
+
+    onBackgroundSelected(event: Event) {
         const input = event.target as HTMLInputElement;
-        if (input.files) {
-            for (let i = 0; i < input.files.length; i++) {
-                const file = input.files[i];
-
-                // const reader = new FileReader();
-                // reader.onload = () => {
-                //     const fileContent = reader.result as string;
-                //     const newId = uuidv4();
-
-                //     const attachment: Attachment = {
-                //         id: newId,
-                //         name: file.name,
-                //         content: fileContent
-                //     }
-
-                //     if (this.boardId && this.workspaceId)
-                //         this.svCard.addAttachmentToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, attachment);
-                // };
-                // reader.readAsDataURL(file);
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const pictureSrc = reader.result as string;
+                    this.changeBackgroundPicture(pictureSrc);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Only PNG and JPG files are allowed.');
             }
         }
     }
-
 }

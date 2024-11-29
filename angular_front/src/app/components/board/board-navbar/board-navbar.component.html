@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top" style="border-bottom: 1px solid #ccc;">
+<nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top" style="border-bottom: 1px solid #ccc; background-color: #fff;">
     <div class="container-fluid">
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -85,7 +85,10 @@
         </div>
         <hr>
         <h2 class="title">Custom</h2>
-        <input class="mb-3 form-control" type="file" id="formFile" (change)="onAttachmentSelected($event)">
+        <input class="mb-3 form-control" type="file" id="formFile" accept="image/png" (change)="onBackgroundSelected($event)">
+        <button class="btn btn-light w-100 p-1" type="button" (click)="this.removeBackground()">
+            <i class="bi bi-trash"></i> Remove background
+        </button>
     </div>
 </div>
 
