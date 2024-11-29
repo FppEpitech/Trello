@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FirebaseListsService } from '../../services/firebase-lists/firebase-lists.service';
 import { FirebaseCardsService } from '../../services/firebase-cards/firebase-cards.service';
 import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } from 'rxjs';
+import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-boards.service';
 
 @Component({
     selector: 'app-calendar',
@@ -25,6 +26,9 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
 
     isOpenCard: boolean = false;
     subscription: Subscription = new Subscription();
+
+    boardColorBackground: string | null = null;
+    boardPictureBackground: string | null = null;
 
     calendarOptions: CalendarOptions = {
         plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
@@ -57,12 +61,18 @@ import { combineLatest, distinctUntilChanged, forkJoin, Subscription, take } fro
         private route: ActivatedRoute,
         public svOpenCard: OpenCardService,
         private svCard: FirebaseCardsService,
-        private svList: FirebaseListsService
+        private svList: FirebaseListsService,
+        private svBoard: FirebaseBoardsService
     ) { }
 
     ngOnInit() {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.boardId = this.route.snapshot.paramMap.get('calendarId');
+        if (this.workspaceId && this.boardId)
+            this.svBoard.getBoardBackground(this.workspaceId, this.boardId).subscribe(background => {
+                this.boardColorBackground = background.color;
+                this.boardPictureBackground = background.picture;
+            })
         if (this.boardId && this.workspaceId) {
             this.svCard.getAllDueDates(this.workspaceId, this.boardId).subscribe(dueDates => {
                 const events = dueDates.map(due => {
