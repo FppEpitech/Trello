@@ -29,6 +29,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { FullCalendarModule } from "@fullcalendar/angular";
 import { WorkspacesComponent } from './components/home/workspaces/workspaces.component';
+import { NotificationCardComponent } from './components/navbar/notification-card/notification-card.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { WorkspacesComponent } from './components/home/workspaces/workspaces.com
     OpenCardComponent,
     LabelCreationComponent,
     CalendarComponent,
-    WorkspacesComponent
+    WorkspacesComponent,
+    NotificationCardComponent
   ],
   imports: [
     FormsModule,

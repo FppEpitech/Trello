@@ -1,5 +1,3 @@
-<!-- <div class="container-fluid" style="background-image: url(https://images.unsplash.com/photo-1486728297118-82a07bc48a28?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dHJlbGxvfGVufDB8fDB8fHww);"> -->
-
 <div class="container-fluid"
     [style.background-image]="'url(' + this.boardPictureBackground + ')'"
     [style.background-color]="this.boardColorBackground"
@@ -20,7 +18,7 @@
             <app-board-navbar [workspaceId]="this.workspaceId" [boardId]="this.boardId"></app-board-navbar>
 
             <div class="board-content">
-                <full-calendar style="background-color: white;" [options]="calendarOptions"></full-calendar>
+                <full-calendar style="background-color: rgb(255, 255, 255, 0.8);" [options]="calendarOptions"></full-calendar>
             </div>
         </main>
     </div>
