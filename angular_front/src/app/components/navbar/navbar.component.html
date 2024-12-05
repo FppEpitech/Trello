@@ -102,7 +102,11 @@
     <hr>
     <div class="offcanvas-body">
 
-        <app-notification-card></app-notification-card>
+        <app-notification-card
+            *ngFor="let notif of this.notifications"
+            [senderEmail]="notif.senderEmail"
+            [timestamp]="notif.timestamp.toDate().toLocaleDateString()"
+        ></app-notification-card>
 
     </div>
 </div>

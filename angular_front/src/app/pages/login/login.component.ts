@@ -8,5 +8,11 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
   styleUrl: "./login.component.scss",
 })
 export class LoginComponent {
-    constructor(public _auth:AuthService) {}
+    constructor(private _auth:AuthService) {}
+
+    login() {
+        this._auth.GoogleAuth().then(() => {
+            this._auth.syncUserToFirestore();
+          });
+    }
 }

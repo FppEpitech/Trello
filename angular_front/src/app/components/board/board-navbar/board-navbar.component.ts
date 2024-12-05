@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { FirebaseBoardsService } from '../../../services/firebase-boards/firebase-boards.service';
 import { Picture, UnsplashService } from '../../../services/unsplash/unsplash.service';
+import { FirebaseNotificationsService, Notification } from '../../../services/firebase-notifications/firebase-notifications.service';
+import { AuthService } from '../../../services/auth/auth.service';
+import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
 
 
 
@@ -14,9 +17,14 @@ export class BoardNavbarComponent {
     @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
 
+    emailToAdd: string = "mathrobert492.0@gmail.com";
+
     constructor(
         private svBoard: FirebaseBoardsService,
-        private svUnsplash: UnsplashService
+        private svUnsplash: UnsplashService,
+        private svNotifications: FirebaseNotificationsService,
+        private svAUth: AuthService,
+        private svWorkspace: FirebaseWorkspacesService
     ) {}
 
     backgroundColors: string[] = [
@@ -66,5 +74,31 @@ export class BoardNavbarComponent {
         this.svUnsplash.getRandomPhotos().subscribe(data => {
             this.backgroundPictures = data;
         })
+    }
+
+    async addNewUser() {
+        if (this.emailToAdd == '')
+            return;
+        this.svAUth.getUserEmail().subscribe(senderEmail => {
+            if (!senderEmail) {
+                return;
+            }
+            const notification: Omit<Notification, 'id'> = {
+                senderEmail: senderEmail,
+                recipientEmail: this.emailToAdd,
+                message: "petit message",
+                timestamp: new Date(),
+                status: 'unread',
+            };
+            this.svNotifications.sendNotification(notification);
+            this.svAUth.getUserIdByEmail(this.emailToAdd).then((userId) => {
+                if (userId && this.workspaceId) {
+                    this.svWorkspace.addMemberToWorkspace(this.workspaceId, userId);
+                } else {
+                    console.error('User not found');
+                }
+            })
+            this.emailToAdd = '';
+        });
     }
 }

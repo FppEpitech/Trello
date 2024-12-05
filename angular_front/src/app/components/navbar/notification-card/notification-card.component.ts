@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-notification-card',
@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class NotificationCardComponent {
 
+    @Input() senderEmail:string | null = null;
+    @Input() timestamp: string | null = null;
 }
