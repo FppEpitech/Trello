@@ -91,14 +91,28 @@ export class BoardNavbarComponent {
                 status: 'unread',
             };
             this.svNotifications.sendNotification(notification);
-            this.svAUth.getUserIdByEmail(this.emailToAdd).then((userId) => {
-                if (userId && this.workspaceId) {
-                    this.svWorkspace.addMemberToWorkspace(this.workspaceId, userId);
-                } else {
-                    console.error('User not found');
-                }
-            })
+            this.addMember(this.emailToAdd);
             this.emailToAdd = '';
         });
+    }
+
+    async addMember(emailToAdd: string) {
+        try {
+            if (!emailToAdd || !this.workspaceId) {
+                console.error('Email or workspace ID is missing.');
+                return;
+            }
+
+            const userId = await this.svAUth.getUserIdByEmail(emailToAdd);
+            const userPicture = await this.svAUth.getUserPictureByEmail(emailToAdd);
+
+            if (userId && userPicture) {
+                await this.svWorkspace.addMemberToWorkspace(this.workspaceId, userId, userPicture, emailToAdd);
+            } else {
+                console.error('User not found or missing details.');
+            }
+        } catch (error) {
+            console.error('Error adding member:', error);
+        }
     }
 }

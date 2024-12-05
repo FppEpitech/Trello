@@ -76,7 +76,7 @@
                 <input type="text" class="form-control me-2" placeholder="Search">
                 <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotifications" aria-controls="offcanvasNotifications">
                     <i class="bi bi-bell"></i>
-                    <span class="position-absolute top-100 start- translate-middle badge rounded-pill text-bg-secondary">+99</span>
+                    <span *ngIf="this.notifications.length != 0" class="position-absolute top-100 start- translate-middle badge rounded-pill text-bg-secondary">{{ this.notifications.length }}</span>
                 </button>
                 <button class="btn btn-light">
                     <i class="bi bi-question-circle text-secondary"></i>

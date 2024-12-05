@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UnsplashService } from './unsplash/unsplash.service';
+import { UnsplashService } from './unsplash.service';
 
 describe('UnsplashService', () => {
   let service: UnsplashService;

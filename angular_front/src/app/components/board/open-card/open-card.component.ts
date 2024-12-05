@@ -3,6 +3,7 @@ import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@a
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { v4 as uuidv4 } from 'uuid';
+import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
 
 declare var bootstrap: any;
 
@@ -56,10 +57,13 @@ export class OpenCardComponent {
     listToCopyTo: any | null = null;
     copyName: string = "";
 
+    workspaceMembers: any[] = [];
+
     constructor (
         public svOpenCard: OpenCardService,
         private svCard: FirebaseCardsService,
-        private svAuth: AuthService
+        private svAuth: AuthService,
+        private svWorkspace: FirebaseWorkspacesService
     ) {}
 
     closeOpenCard() {
@@ -107,6 +111,9 @@ export class OpenCardComponent {
             this.svCard.getCardAttachments(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(attachment => {
                 this.attachments = attachment;
             });
+            this.svWorkspace.getMemberOfWorkspace(this.workspaceId).subscribe(members => {
+                this.workspaceMembers = members;
+            })
         }
     }
 

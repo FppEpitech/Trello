@@ -7,6 +7,7 @@ import { map, Observable } from 'rxjs';
 
 interface User {
     id: string;
+    picture: string;
 }
 
 @Injectable({
@@ -75,25 +76,12 @@ export class AuthService {
         this.auth.authState.subscribe((user) => {
           if (user && user.email) {
             const email: string = user.email;
-            this.fs.collection('users').doc(email).set({ id: user.uid, email: email, displayName: user.displayName || 'Anonymous', createdAt: new Date() });
+            this.fs.collection('users').doc(email).set({ id: user.uid, email: email, displayName: user.displayName, picture: user.photoURL || 'Anonymous', createdAt: new Date() });
           } else {
             console.log('No user logged in or email is null');
           }
         });
     }
-
-    // async getUserIdByEmail(email: string): Promise<string | null> {
-    //     try {
-    //         const snapshot = await this.fs.collection('users', ref => ref.where('email', '==', email)).get().toPromise();
-    //         if (snapshot && !snapshot.empty) {
-    //             return snapshot.docs[0].id;
-    //         }
-    //         return null;
-    //     } catch (error) {
-    //         console.error('Error fetching user by email:', error);
-    //         return null;
-    //     }
-    // }
 
     async getUserIdByEmail(email: string): Promise<string | null> {
         try {
@@ -103,12 +91,25 @@ export class AuthService {
                 const userData = snapshot.docs[0].data() as User;
                 return userData['id'] || null;
             }
-            return null; // If no user with the email is found
+            return null;
         } catch (error) {
             console.error('Error fetching user by email:', error);
             return null;
         }
     }
 
+    async getUserPictureByEmail(email: string): Promise<string | null> {
+        try {
+            const snapshot = await this.fs.collection('users', ref => ref.where('email', '==', email)).get().toPromise();
 
+            if (snapshot && !snapshot.empty) {
+                const userData = snapshot.docs[0].data() as User;
+                return userData['picture'] || null;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching user by email:', error);
+            return null;
+        }
+    }
 }
