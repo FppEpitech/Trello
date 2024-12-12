@@ -1,9 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/compat/auth";
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { Auth, GoogleAuthProvider } from "@firebase/auth";
 import { map, Observable } from 'rxjs';
 
+interface User {
+    id: string;
+    picture: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +18,9 @@ export class AuthService {
     private auth: AngularFireAuth = inject(AngularFireAuth);
     authState$ = this.auth.authState;
 
-    constructor(private angularFireAuth: AngularFireAuth, private router:Router) {}
+    constructor(private angularFireAuth: AngularFireAuth,
+        private fs: AngularFirestore,
+        private router:Router) {}
 
     async GoogleAuth() {
         const creds = await this.angularFireAuth.signInWithPopup(
@@ -63,5 +70,46 @@ export class AuthService {
         return this.angularFireAuth.authState.pipe(
           map(user => user?.photoURL || null)
         );
+    }
+
+    syncUserToFirestore() {
+        this.auth.authState.subscribe((user) => {
+          if (user && user.email) {
+            const email: string = user.email;
+            this.fs.collection('users').doc(email).set({ id: user.uid, email: email, displayName: user.displayName, picture: user.photoURL || 'Anonymous', createdAt: new Date() });
+          } else {
+            console.log('No user logged in or email is null');
+          }
+        });
+    }
+
+    async getUserIdByEmail(email: string): Promise<string | null> {
+        try {
+            const snapshot = await this.fs.collection('users', ref => ref.where('email', '==', email)).get().toPromise();
+
+            if (snapshot && !snapshot.empty) {
+                const userData = snapshot.docs[0].data() as User;
+                return userData['id'] || null;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching user by email:', error);
+            return null;
+        }
+    }
+
+    async getUserPictureByEmail(email: string): Promise<string | null> {
+        try {
+            const snapshot = await this.fs.collection('users', ref => ref.where('email', '==', email)).get().toPromise();
+
+            if (snapshot && !snapshot.empty) {
+                const userData = snapshot.docs[0].data() as User;
+                return userData['picture'] || null;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching user by email:', error);
+            return null;
+        }
     }
 }

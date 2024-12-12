@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { FirebaseBoardsService } from '../../../services/firebase-boards/firebase-boards.service';
 import { Picture, UnsplashService } from '../../../services/unsplash/unsplash.service';
+import { FirebaseNotificationsService, Notification } from '../../../services/firebase-notifications/firebase-notifications.service';
+import { AuthService } from '../../../services/auth/auth.service';
+import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
 
 
 
@@ -14,9 +17,16 @@ export class BoardNavbarComponent {
     @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
 
+    boardName: string | null = null;
+
+    emailToAdd: string = "";
+
     constructor(
         private svBoard: FirebaseBoardsService,
-        private svUnsplash: UnsplashService
+        private svUnsplash: UnsplashService,
+        private svNotifications: FirebaseNotificationsService,
+        private svAUth: AuthService,
+        private svWorkspace: FirebaseWorkspacesService
     ) {}
 
     backgroundColors: string[] = [
@@ -29,6 +39,13 @@ export class BoardNavbarComponent {
     ];
 
     backgroundPictures: Picture[] = [];
+
+    ngOnInit() {
+        if (this.workspaceId && this.boardId)
+            this.svBoard.getBoardName(this.workspaceId, this.boardId).subscribe(bName => {
+                this.boardName = bName.name;
+            })
+    }
 
     changeBackgroundColor(color: string) {
         if (this.workspaceId && this.boardId)
@@ -66,5 +83,47 @@ export class BoardNavbarComponent {
         this.svUnsplash.getRandomPhotos().subscribe(data => {
             this.backgroundPictures = data;
         })
+    }
+
+    async addNewUser() {
+        if (this.emailToAdd == '')
+            return;
+        this.svAUth.getUserEmail().subscribe(senderEmail => {
+            if (!senderEmail) {
+                return;
+            }
+            const notification: Omit<Notification, 'id'> = {
+                senderEmail: senderEmail,
+                recipientEmail: this.emailToAdd,
+                message: "add you to a board/workspace",
+                timestamp: new Date(),
+                status: 'unread',
+                type: 'workspace',
+                texts: [this.boardName || ""]
+            };
+            this.svNotifications.sendNotification(notification);
+            this.addMember(this.emailToAdd);
+            this.emailToAdd = '';
+        });
+    }
+
+    async addMember(emailToAdd: string) {
+        try {
+            if (!emailToAdd || !this.workspaceId) {
+                console.error('Email or workspace ID is missing.');
+                return;
+            }
+
+            const userId = await this.svAUth.getUserIdByEmail(emailToAdd);
+            const userPicture = await this.svAUth.getUserPictureByEmail(emailToAdd);
+
+            if (userId && userPicture) {
+                await this.svWorkspace.addMemberToWorkspace(this.workspaceId, userId, userPicture, emailToAdd);
+            } else {
+                console.error('User not found or missing details.');
+            }
+        } catch (error) {
+            console.error('Error adding member:', error);
+        }
     }
 }

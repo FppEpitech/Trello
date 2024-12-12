@@ -3,6 +3,10 @@ import { Component, ElementRef, HostListener, Input, model, ViewChild } from '@a
 import { OpenCardService } from '../../../services/open-card/open-card.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { v4 as uuidv4 } from 'uuid';
+import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
+import { co } from '@fullcalendar/core/internal-common';
+import { FirebaseNotificationsService, Notification } from '../../../services/firebase-notifications/firebase-notifications.service';
+import { FirebaseBoardsService } from '../../../services/firebase-boards/firebase-boards.service';
 
 declare var bootstrap: any;
 
@@ -17,6 +21,7 @@ export class OpenCardComponent {
     @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
     @Input() lists: any[] = [];
+    boardName: string | null = null;
 
     description: string = "";
     initialDescription: string = "";
@@ -56,10 +61,15 @@ export class OpenCardComponent {
     listToCopyTo: any | null = null;
     copyName: string = "";
 
+    workspaceMembers: any[] = [];
+
     constructor (
         public svOpenCard: OpenCardService,
         private svCard: FirebaseCardsService,
-        private svAuth: AuthService
+        private svAuth: AuthService,
+        private svWorkspace: FirebaseWorkspacesService,
+        private svNotif: FirebaseNotificationsService,
+        private svBoard: FirebaseBoardsService
     ) {}
 
     closeOpenCard() {
@@ -107,6 +117,12 @@ export class OpenCardComponent {
             this.svCard.getCardAttachments(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(attachment => {
                 this.attachments = attachment;
             });
+            this.svWorkspace.getMemberOfWorkspace(this.workspaceId).subscribe(members => {
+                this.workspaceMembers = members;
+            })
+            this.svBoard.getBoardName(this.workspaceId, this.boardId).subscribe(bName => {
+                this.boardName = bName.name;
+            })
         }
     }
 
@@ -142,6 +158,31 @@ export class OpenCardComponent {
     leave() {
         if (this.boardId && this.userEmail && this.userProfile && this.workspaceId) {
             this.svCard.deleteMemberFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+        }
+    }
+
+    addMember(member : any) {
+        if (this.memberslist && this.memberslist.some(m => m.name === member.email)) {
+            return;
+        }
+        if (this.workspaceId && this.boardId) {
+            this.svCard.addMemberToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: member.email, profile: member.picture})
+
+            this.svAuth.getUserEmail().subscribe(senderEmail => {
+                if (!senderEmail || senderEmail === member.email) {
+                    return;
+                }
+                const notification: Omit<Notification, 'id'> = {
+                    senderEmail: senderEmail,
+                    recipientEmail: member.email,
+                    message: "add you to a card",
+                    timestamp: new Date(),
+                    status: 'unread',
+                    type: 'card',
+                    texts: [this.cardName, this.svOpenCard._list?.name, this.cover?.image, this.cover?.color, this.boardName]
+                };
+                this.svNotif.sendNotification(notification);
+            });
         }
     }
 
