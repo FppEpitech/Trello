@@ -1,20 +1,38 @@
-<div class="card">
+<div *ngIf="this.type === 'card'" class="card">
     <div class="card"
-        [style.background-image]="'url(../../../../assets/login_background.png)'"
+        [style.background-image]="'url(' + this.texts[2] + ')'"
+        [style.background-color]="this.texts[3]"
         [style.background-size]="'cover'"
         [style.background-position]="'center center'"
         [style.background-repeat]="'no-repeat'">
 
         <div class="card shadow w-75 mx-auto d-flex align-items-center justify-content-center" style="height: 40px;">
             <div class="card-body text-center">
-                <h3 class="m-0">Card name</h3>
+                <h3 class="m-0">{{ this.texts[0] }}</h3>
             </div>
         </div>
         <p class="text-center mt-3">
-            <span class="fw-bold">Vamos a la playa :</span> list name
+            <span class="fw-bold">{{this.texts[4]}} :</span> {{ this.texts[1] }}
         </p>
     </div>
     <div class="card-body">
-        <p class="card-text">{{this.senderEmail}} added you <span class="card-text">{{this.timestamp}}</span></p>
+        <p class="card-text">{{this.senderEmail}} {{ this.message}} <span class="card-text">{{this.timestamp}}</span></p>
+    </div>
+</div>
+
+<div *ngIf="this.type === 'workspace'" class="card">
+    <div class="card"
+        [style.background-size]="'cover'"
+        [style.background-position]="'center center'"
+        [style.background-repeat]="'no-repeat'">
+
+        <div class="card shadow w-75 mx-auto d-flex align-items-center justify-content-center" style="height: 40px;">
+            <div class="card-body text-center">
+                <h3 class="m-0">{{ this.texts[0] }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-text">{{this.senderEmail}} {{ this.message}} <span class="card-text">{{this.timestamp}}</span></p>
     </div>
 </div>

@@ -17,7 +17,9 @@ export class BoardNavbarComponent {
     @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
 
-    emailToAdd: string = "mathrobert492.0@gmail.com";
+    boardName: string | null = null;
+
+    emailToAdd: string = "";
 
     constructor(
         private svBoard: FirebaseBoardsService,
@@ -37,6 +39,13 @@ export class BoardNavbarComponent {
     ];
 
     backgroundPictures: Picture[] = [];
+
+    ngOnInit() {
+        if (this.workspaceId && this.boardId)
+            this.svBoard.getBoardName(this.workspaceId, this.boardId).subscribe(bName => {
+                this.boardName = bName.name;
+            })
+    }
 
     changeBackgroundColor(color: string) {
         if (this.workspaceId && this.boardId)
@@ -86,9 +95,11 @@ export class BoardNavbarComponent {
             const notification: Omit<Notification, 'id'> = {
                 senderEmail: senderEmail,
                 recipientEmail: this.emailToAdd,
-                message: "petit message",
+                message: "add you to a board/workspace",
                 timestamp: new Date(),
                 status: 'unread',
+                type: 'workspace',
+                texts: [this.boardName || ""]
             };
             this.svNotifications.sendNotification(notification);
             this.addMember(this.emailToAdd);

@@ -8,6 +8,10 @@ export interface Background {
     color: string | null;
 }
 
+export interface NameBoard {
+    name: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -58,5 +62,11 @@ export class FirebaseBoardsService {
                 picture: newBackground.picture,
                 color: newBackground.color,
             });
+    }
+
+    getBoardName(workspaceId: string, boardId: string): Observable<NameBoard> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards`)
+            .doc(boardId)
+            .valueChanges() as Observable<NameBoard>;
     }
 }

@@ -111,13 +111,13 @@
                     <div *ngFor="let member of memberslist" class="d-flex align-items-center p-2 border rounded">
                         <img [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
                         <span class="ms-2">{{member.name}}</span>
-                        <button (click)="this.removeMember(member)" class="btn btn-light mb-2 text-start w-100 text-danger" type="button" id="membersDropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-x-lg"></i></button>
+                        <button (click)="this.removeMember(member)" class="btn btn-light mb-2 text-start w-100 text-danger" type="button"><i class="bi bi-x-lg"></i></button>
                     </div>
                     <hr>
                     <div *ngFor="let workspaceMember of workspaceMembers" class="d-flex align-items-center p-2 border rounded">
                         <img [attr.src]="workspaceMember.picture" alt="Member profile image" class="profile-image m-1">
                         <span class="ms-2">{{workspaceMember.email}}</span>
-                        <!-- <button (click)="this.removeMember(member)" class="btn btn-light mb-2 text-start w-100 text-danger" type="button" id="membersDropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-x-lg"></i></button> -->
+                        <button (click)="this.addMember(workspaceMember)" class="btn btn-light mb-2 text-start w-100 text-success" type="button"><i class="bi bi-plus"></i></button>
                     </div>
                 </div>
             </div>

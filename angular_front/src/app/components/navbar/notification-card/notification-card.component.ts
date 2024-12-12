@@ -9,4 +9,7 @@ export class NotificationCardComponent {
 
     @Input() senderEmail:string | null = null;
     @Input() timestamp: string | null = null;
+    @Input() message: string | null = null;
+    @Input() texts: string [] = [];
+    @Input() type: string | null = null;
 }

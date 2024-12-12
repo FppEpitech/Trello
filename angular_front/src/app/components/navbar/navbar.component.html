@@ -106,6 +106,9 @@
             *ngFor="let notif of this.notifications"
             [senderEmail]="notif.senderEmail"
             [timestamp]="notif.timestamp.toDate().toLocaleDateString()"
+            [message]="notif.message"
+            [texts]="notif.texts"
+            [type]="notif.type"
         ></app-notification-card>
 
     </div>

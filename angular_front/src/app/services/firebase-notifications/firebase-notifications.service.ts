@@ -10,6 +10,8 @@ export interface Notification {
   message: string;
   timestamp: Date;
   status: 'unread' | 'read';
+  type: string;
+  texts: string[];
 }
 
 @Injectable({
