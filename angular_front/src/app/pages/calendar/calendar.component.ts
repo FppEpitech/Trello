@@ -67,7 +67,7 @@ import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-b
 
     ngOnInit() {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
-        this.boardId = this.route.snapshot.paramMap.get('calendarId');
+        this.boardId = this.route.snapshot.paramMap.get('boardId');
         if (this.workspaceId && this.boardId)
             this.svBoard.getBoardBackground(this.workspaceId, this.boardId).subscribe(background => {
                 this.boardColorBackground = background.color;
