@@ -30,6 +30,10 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
 import { FullCalendarModule } from "@fullcalendar/angular";
 import { WorkspacesComponent } from './components/home/workspaces/workspaces.component';
 import { NotificationCardComponent } from './components/navbar/notification-card/notification-card.component';
+import { TableComponent } from './pages/table/table.component';
+import { MatTableModule } from '@angular/material/table';
+
+
 
 @NgModule({
   declarations: [
@@ -45,7 +49,8 @@ import { NotificationCardComponent } from './components/navbar/notification-card
     LabelCreationComponent,
     CalendarComponent,
     WorkspacesComponent,
-    NotificationCardComponent
+    NotificationCardComponent,
+    TableComponent
   ],
   imports: [
     FormsModule,
@@ -61,6 +66,7 @@ import { NotificationCardComponent } from './components/navbar/notification-card
     MatFormFieldModule,
     MatCardModule,
     MatDatepickerModule,
+    MatTableModule,
     HttpClientModule,
     FullCalendarModule
   ],

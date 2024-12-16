@@ -25,4 +25,14 @@ export class BoardSidebarComponent {
         if (this.boardId && this.workspaceId)
             this.router.navigate([`/workspace/${this.workspaceId}/calendar/${this.boardId}`]);
     }
+
+    goToTable() {
+        if (this.boardId && this.workspaceId)
+            this.router.navigate([`/workspace/${this.workspaceId}/table/${this.boardId}`]);
+    }
+
+    goToBoard() {
+        if (this.boardId && this.workspaceId)
+            this.router.navigate([`/workspace/${this.workspaceId}/board/${this.boardId}`]);
+    }
 }
