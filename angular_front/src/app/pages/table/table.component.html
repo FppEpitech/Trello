@@ -1,1 +1,66 @@
-<p>table works!</p>
+<div class="container-fluid"
+    [style.background-image]="'url(' + this.boardPictureBackground + ')'"
+    [style.background-color]="this.boardColorBackground"
+    [style.background-size]="'cover'"
+    [style.background-position]="'center center'"
+    [style.background-repeat]="'no-repeat'">
+    <div class="row">
+
+        <div class="col-md-2 d-none d-md-block" >
+            <app-board-sidebar></app-board-sidebar>
+        </div>
+
+        <main class="col-md-10">
+
+            <app-board-navbar [workspaceId]="this.workspaceId" [boardId]="this.boardId"></app-board-navbar>
+
+            <div class="board-content m-4">
+                <table mat-table [dataSource]="this.dataSource" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="card">
+                      <th mat-header-cell *matHeaderCellDef> Card </th>
+                      <td mat-cell *matCellDef="let data"> {{data.card.name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="list">
+                      <th mat-header-cell *matHeaderCellDef> List </th>
+                      <td mat-cell *matCellDef="let data"> {{data.list}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="labels">
+                      <th mat-header-cell *matHeaderCellDef> Labels </th>
+                      <td mat-cell *matCellDef="let data">
+                        <div
+                            *ngFor="let label of data.card.labels">
+                            <div
+                            *ngIf="label.isCheck"
+                            class="btn rounded m-1"
+                            style="height: 30px; cursor: pointer; display: inline-block; padding: 0 10px;"
+                            [style.background-color]="label.color">
+                            {{ label.name }}
+                            </div>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="members">
+                      <th mat-header-cell *matHeaderCellDef> Members </th>
+                      <td mat-cell *matCellDef="let data">
+                            <img *ngFor="let member of data.card.members" [attr.src]="member.profile" alt="Member profile image" class="profile-image m-1">
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dueDate">
+                        <th mat-header-cell *matHeaderCellDef> Due date </th>
+                        <td mat-cell *matCellDef="let data"> {{data.date}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="this.openCardPanel(row)"></tr>
+                  </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<app-open-card *ngIf="this.isOpenCard" [boardId]="this.boardId" [lists]="this.lists" [workspaceId]="this.workspaceId"></app-open-card>

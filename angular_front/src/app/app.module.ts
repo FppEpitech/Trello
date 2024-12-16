@@ -31,6 +31,9 @@ import { FullCalendarModule } from "@fullcalendar/angular";
 import { WorkspacesComponent } from './components/home/workspaces/workspaces.component';
 import { NotificationCardComponent } from './components/navbar/notification-card/notification-card.component';
 import { TableComponent } from './pages/table/table.component';
+import { MatTableModule } from '@angular/material/table';
+
+
 
 @NgModule({
   declarations: [
@@ -63,6 +66,7 @@ import { TableComponent } from './pages/table/table.component';
     MatFormFieldModule,
     MatCardModule,
     MatDatepickerModule,
+    MatTableModule,
     HttpClientModule,
     FullCalendarModule
   ],
