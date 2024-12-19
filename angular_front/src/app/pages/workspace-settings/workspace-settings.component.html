@@ -16,13 +16,13 @@
                     <img src="https://trello-logos.s3.amazonaws.com/887a6f7d6b26055c0e9efae82aca63b8/170.png" alt="Tacos" class="rounded" style="width: 50px; height: 50px;">
                     <div class="ms-3">
                         <input type="text" class="form-control custom-input" placeholder="Workspace Name" [(ngModel)]="this.workspaceName">
-                        <p class="mb-0 text-muted">{{this.workspace?.description}}</p>
+                        <input type="text" class="form-control custom-input-description" placeholder="Workspace Description" [(ngModel)]="this.workspaceDescription">
                     </div>
                     <span class="ms-1"><i class="bi bi-pencil"></i></span>
-                    <button *ngIf="this.workspaceName !== this.workspace?.name" (click)="this.saveName()" class="btn btn-primary mx-3">
+                    <button *ngIf="this.workspaceName !== this.workspace?.name || this.workspaceDescription !== this.workspace?.description" (click)="this.saveWorkspace()" class="btn btn-primary mx-3">
                         Save
                     </button>
-                    <button *ngIf="this.workspaceName !== this.workspace?.name" (click)="this.cancelName()" class="btn btn-light">
+                    <button *ngIf="this.workspaceName !== this.workspace?.name || this.workspaceDescription !== this.workspace?.description" (click)="this.cancelWorkspace()" class="btn btn-light">
                         Cancel
                     </button>
                   </div>

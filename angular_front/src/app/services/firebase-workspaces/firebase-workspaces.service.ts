@@ -84,4 +84,8 @@ export class FirebaseWorkspacesService {
     updateWorkspaceName(workspaceId: string, name: string) {
         return this.fs.collection('workspaces').doc(workspaceId).update({ name: name });
     }
+
+    updateWorkspaceDescription(workspaceId: string, description: string) {
+        return this.fs.collection('workspaces').doc(workspaceId).update({ description: description });
+    }
 }

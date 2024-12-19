@@ -19,6 +19,7 @@ export class WorkspaceSettingsComponent {
     workspaceId: string | null = null;
     workspace: any;
     workspaceName: string = '';
+    workspaceDescription: string = '';
     boards: any[] = [];
 
     ngOnInit() {
@@ -27,6 +28,7 @@ export class WorkspaceSettingsComponent {
             this.svWorkspaces.getWorkspace(this.workspaceId).subscribe((data) => {
                 this.workspace = data;
                 this.workspaceName = this.workspace.name;
+                this.workspaceDescription = this.workspace.description;
             });
             this.svBoards.getBoards(this.workspaceId).subscribe((data)=>{
                 this.boards = data;
@@ -34,12 +36,15 @@ export class WorkspaceSettingsComponent {
         }
     }
 
-    saveName() {
-        if (this.workspaceId && this.workspaceName !== "")
+    saveWorkspace() {
+        if (this.workspaceId && this.workspaceName !== "") {
             this.svWorkspaces.updateWorkspaceName(this.workspaceId, this.workspaceName);
+            this.svWorkspaces.updateWorkspaceDescription(this.workspaceId, this.workspaceDescription);
+        }
     }
 
-    cancelName() {
+    cancelWorkspace() {
         this.workspaceName = this.workspace.name;
+        this.workspaceDescription = this.workspace.description;
     }
 }
