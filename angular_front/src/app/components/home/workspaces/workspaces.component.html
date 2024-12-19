@@ -1,5 +1,15 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="fw-bold">{{ this.workspace.name }}</h3>
+    <div class="d-flex justify-content-center">
+        <img
+            [style.background-image]="'url(' + this.workspace?.picture + ')'"
+            [style.background-color]="this.workspace?.color"
+            [style.background-size]="'cover'"
+            class="rounded mx-2"
+            style="width: 40px; height: 40px;"
+            data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="offcanvasBackground"
+            >
+        <h3 class="fw-bold">{{ this.workspace?.name }}</h3>
+    </div>
 
     <div>
         <button class="btn btn-light"><i class="bi bi-trello"></i> Boards</button>
