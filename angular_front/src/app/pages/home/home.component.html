@@ -40,6 +40,9 @@
                             <input type="text" class="form-control me-2" placeholder="Workspace name" [(ngModel)]="this.workspaceNameToAdd">
                         </a></li>
                         <li><a class="dropdown-item">
+                            <input type="text" class="form-control me-2" placeholder="Description" [(ngModel)]="this.workspaceDescriptionToAdd">
+                        </a></li>
+                        <li><a class="dropdown-item">
                             <button [disabled]="this.workspaceNameToAdd==''" (click)="this.createWorkspace()" class="btn btn-primary w-100">Create</button>
                         </a></li>
                     </ul>

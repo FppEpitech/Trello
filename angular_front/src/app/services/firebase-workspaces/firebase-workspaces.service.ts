@@ -37,12 +37,13 @@ export class FirebaseWorkspacesService {
         return this.fs.collection('workspaces').doc(workspaceId).valueChanges();
     }
 
-    async addWorkspace(name: string, userId: string) {
+    async addWorkspace(name: string, description: string, userId: string) {
         try {
             const userPicture = await firstValueFrom(this.svAuth.getUserProfileImage());
             const userEmail = await firstValueFrom(this.svAuth.getUserEmail());
             await this.fs.collection('workspaces').add({
                 name: name,
+                description: description,
                 owner: userId,
                 members: [{ id: userId, picture: userPicture, email: userEmail }], // Add creator as a member
                 memberIds: [userId] // Add creator's ID to memberIds

@@ -17,6 +17,7 @@ export class HomeComponent {
     workspaces: any[] = [];
     boards: any[] = [];
     workspaceNameToAdd: string = "";
+    workspaceDescriptionToAdd: string = "";
 
     refreshWorkspaces() {
         this.authService.authState$.subscribe(user => {
@@ -32,7 +33,9 @@ export class HomeComponent {
         if (this.workspaceNameToAdd != "")
             this.authService.authState$.subscribe(user => {
                 if (user) {
-                  this.svWorkspaces.addWorkspace(this.workspaceNameToAdd, user.uid);
+                  this.svWorkspaces.addWorkspace(this.workspaceNameToAdd, this.workspaceDescriptionToAdd, user.uid);
+                  this.workspaceNameToAdd = "";
+                  this.workspaceDescriptionToAdd
                 }
               });
     }
