@@ -41,7 +41,6 @@ export class WorkspacesComponent {
     }
 
     goToWorkspaceSettings() {
-        console.log("ok")
         this.router.navigate([`/workspace/${this.workspace.id}/settings`]);
     }
 

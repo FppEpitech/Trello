@@ -37,13 +37,15 @@ export class FirebaseWorkspacesService {
         return this.fs.collection('workspaces').doc(workspaceId).valueChanges();
     }
 
-    async addWorkspace(name: string, description: string, userId: string) {
+    async addWorkspace(name: string, description: string, color: string, picture: string, userId: string) {
         try {
             const userPicture = await firstValueFrom(this.svAuth.getUserProfileImage());
             const userEmail = await firstValueFrom(this.svAuth.getUserEmail());
             await this.fs.collection('workspaces').add({
                 name: name,
                 description: description,
+                color: color,
+                picture: picture,
                 owner: userId,
                 members: [{ id: userId, picture: userPicture, email: userEmail }], // Add creator as a member
                 memberIds: [userId] // Add creator's ID to memberIds
@@ -87,5 +89,13 @@ export class FirebaseWorkspacesService {
 
     updateWorkspaceDescription(workspaceId: string, description: string) {
         return this.fs.collection('workspaces').doc(workspaceId).update({ description: description });
+    }
+
+    updateWorkspacePicture(workspaceId: string, picture: string) {
+        return this.fs.collection('workspaces').doc(workspaceId).update({ picture: picture });
+    }
+
+    updateWorkspaceColor(workspaceId: string, color: string) {
+        return this.fs.collection('workspaces').doc(workspaceId).update({ color: color });
     }
 }
