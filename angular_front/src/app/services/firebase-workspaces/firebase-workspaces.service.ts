@@ -33,6 +33,10 @@ export class FirebaseWorkspacesService {
           .valueChanges({ idField: 'id' });
       }
 
+    getWorkspace(workspaceId: string) {
+        return this.fs.collection('workspaces').doc(workspaceId).valueChanges();
+    }
+
     async addWorkspace(name: string, userId: string) {
         try {
             const userPicture = await firstValueFrom(this.svAuth.getUserProfileImage());
@@ -74,5 +78,9 @@ export class FirebaseWorkspacesService {
         return this.fs.collection('workspaces').doc(workspaceId).valueChanges().pipe(
             map((workspace: any) => workspace?.members || [])
         );
+    }
+
+    updateWorkspaceName(workspaceId: string, name: string) {
+        return this.fs.collection('workspaces').doc(workspaceId).update({ name: name });
     }
 }

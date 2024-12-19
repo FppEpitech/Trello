@@ -32,6 +32,7 @@ import { WorkspacesComponent } from './components/home/workspaces/workspaces.com
 import { NotificationCardComponent } from './components/navbar/notification-card/notification-card.component';
 import { TableComponent } from './pages/table/table.component';
 import { MatTableModule } from '@angular/material/table';
+import { WorkspaceSettingsComponent } from './pages/workspace-settings/workspace-settings.component';
 
 
 
@@ -50,7 +51,8 @@ import { MatTableModule } from '@angular/material/table';
     CalendarComponent,
     WorkspacesComponent,
     NotificationCardComponent,
-    TableComponent
+    TableComponent,
+    WorkspaceSettingsComponent
   ],
   imports: [
     FormsModule,

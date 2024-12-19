@@ -1,0 +1,56 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 d-none d-md-block" >
+            <app-board-sidebar></app-board-sidebar>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-10">
+
+            <div class="container mt-4">
+                <div class="d-flex align-items-center justify-content-between">
+
+                  <div class="d-flex align-items-center">
+                    <img src="https://trello-logos.s3.amazonaws.com/887a6f7d6b26055c0e9efae82aca63b8/170.png" alt="Tacos" class="rounded" style="width: 50px; height: 50px;">
+                    <div class="ms-3">
+                        <input type="text" class="form-control custom-input" placeholder="Workspace Name" [(ngModel)]="this.workspaceName">
+                        <p class="mb-0 text-muted">{{this.workspace?.description}}</p>
+                    </div>
+                    <span class="ms-1"><i class="bi bi-pencil"></i></span>
+                    <button *ngIf="this.workspaceName !== this.workspace?.name" (click)="this.saveName()" class="btn btn-primary mx-3">
+                        Save
+                    </button>
+                    <button *ngIf="this.workspaceName !== this.workspace?.name" (click)="this.cancelName()" class="btn btn-light">
+                        Cancel
+                    </button>
+                  </div>
+                  <button class="btn btn-primary">
+                    <i class="bi bi-person-plus"></i> Invite Workspace members
+                  </button>
+                </div>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between">
+                    <h2>Workspace Settings</h2>
+                </div>
+
+                <div class="row row-cols-auto col gap-2">
+                    <div *ngFor="let board of this.boards" class="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                        class="btn btn-light board-button"
+                        style="height: 7rem; width: 13rem;"
+                        [style.background-color]="board.color"
+                        (mouseover)="board.isHovered = true"
+                        (mouseout)="board.isHovered = false">
+                        <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                        <p *ngIf="!board.isHovered">{{ board.name }}</p>
+                        <p *ngIf="board.isHovered">Delete?</p>
+                        </button>
+                    </div>
+                </div>
+                <p><a class="link-opacity-100 text-danger" href="#">Delete this workspace?</a></p>
+            </div>
+        </main>
+    </div>
+</div>
