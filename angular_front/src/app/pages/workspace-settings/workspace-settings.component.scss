@@ -36,3 +36,33 @@
     font-size: 1.5rem;
     color: #aaa;
 }
+
+
+.hover-button {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.author-link {
+    background-color: rgb(0, 0, 0, 0.289);
+    position: absolute;
+    bottom: 10px;
+    left: 52%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hover-button:hover .author-link {
+    opacity: 1;
+}
