@@ -3,8 +3,15 @@
         <ul class="nav flex-column text-white">
             <li class="nav-item">
                 <a class="nav-link active">
-                    <img src="https://via.placeholder.com/32" alt="workspace" class="rounded-circle me-2">
-                    Trello Workspace <span class="badge bg-secondary">Free</span>
+                    <img
+                        [style.background-image]="'url(' + this.workspace?.picture + ')'"
+                        [style.background-color]="this.workspace?.color"
+                        [style.background-size]="'cover'"
+                        class="rounded-circle me-2"
+                        style="width: 40px; height: 40px;"
+                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="offcanvasBackground"
+                        >
+                    {{ this.workspace?.name }} <span class="badge bg-secondary">Free</span>
                 </a>
             </li>
             <hr>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
 
 @Component({
   selector: 'app-board-sidebar',
@@ -11,14 +12,23 @@ export class BoardSidebarComponent {
     workspaceId: string | null = null;
     boardId: string | null = null;
 
+    workspace: any;
+
     constructor(
         private router:Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private svWorkspace: FirebaseWorkspacesService
     ) {}
 
     ngOnInit() {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.boardId = this.route.snapshot.paramMap.get('boardId');
+
+        if (this.workspaceId) {
+            this.svWorkspace.getWorkspace(this.workspaceId).subscribe((workspace) => {
+                this.workspace = workspace;
+            });
+        }
     }
 
     goToCalendar() {
