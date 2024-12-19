@@ -41,9 +41,21 @@
                             Cancel
                         </button>
                     </div>
-                    <button class="btn btn-primary">
-                        <i class="bi bi-person-plus"></i> Invite Workspace members
-                    </button>
+
+                    <div class="dropdown d-block w-195 h-100 text-start">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-plus"></i> Invite Workspace members
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><h3 class="dropdown-header">Share board</h3></li>
+                            <li><a class="dropdown-item">
+                                <input type="text" class="form-control me-2" placeholder="Email" [(ngModel)]="this.emailToAdd">
+                            </a></li>
+                            <li><a class="dropdown-item">
+                                <button [disabled]="this.emailToAdd==''" class="btn btn-primary w-100" (click)="this.addNewUser()">Share</button>
+                            </a></li>
+                        </ul>
+                    </div>
                 </div>
                 <hr>
                 <div class="d-flex align-items-center justify-content-between">

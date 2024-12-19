@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/firebase-workspaces.service';
 import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-boards.service';
 import { Picture, UnsplashService } from '../../services/unsplash/unsplash.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { FirebaseNotificationsService, Notification } from '../../services/firebase-notifications/firebase-notifications.service';
 
 @Component({
   selector: 'app-workspace-settings',
@@ -16,7 +18,9 @@ export class WorkspaceSettingsComponent {
         private router: Router,
         private svWorkspaces: FirebaseWorkspacesService,
         private svBoards:FirebaseBoardsService,
-        private svUnsplash: UnsplashService
+        private svUnsplash: UnsplashService,
+        private svAuth: AuthService,
+        private svNotifications: FirebaseNotificationsService
     ) { }
 
     workspaceId: string | null = null;
@@ -26,6 +30,8 @@ export class WorkspaceSettingsComponent {
     workspacePicture: string = '';
     workspaceColor: string = '';
     boards: any[] = [];
+
+    emailToAdd: string = '';
 
     backgroundColors: string[] = [
         "#b9f3db", "#f8e5a0", "#fedec9", "#fed5d1", "#ded8fc",
@@ -116,5 +122,47 @@ export class WorkspaceSettingsComponent {
     removeBackground() {
         this.workspaceColor = "";
         this.workspacePicture = "";
+    }
+
+    async addNewUser() {
+        if (this.emailToAdd == '')
+            return;
+        this.svAuth.getUserEmail().subscribe(senderEmail => {
+            if (!senderEmail) {
+                return;
+            }
+            const notification: Omit<Notification, 'id'> = {
+                senderEmail: senderEmail,
+                recipientEmail: this.emailToAdd,
+                message: "add you to a board/workspace",
+                timestamp: new Date(),
+                status: 'unread',
+                type: 'workspace',
+                texts: [this.workspace?.name || ""]
+            };
+            this.svNotifications.sendNotification(notification);
+            this.addMember(this.emailToAdd);
+            this.emailToAdd = '';
+        });
+    }
+
+    async addMember(emailToAdd: string) {
+        try {
+            if (!emailToAdd || !this.workspaceId) {
+                console.error('Email or workspace ID is missing.');
+                return;
+            }
+
+            const userId = await this.svAuth.getUserIdByEmail(emailToAdd);
+            const userPicture = await this.svAuth.getUserPictureByEmail(emailToAdd);
+
+            if (userId && userPicture) {
+                await this.svWorkspaces.addMemberToWorkspace(this.workspaceId, userId, userPicture, emailToAdd);
+            } else {
+                console.error('User not found or missing details.');
+            }
+        } catch (error) {
+            console.error('Error adding member:', error);
+        }
     }
 }
