@@ -40,6 +40,10 @@ export class WorkspacesComponent {
         this.router.navigate([`/workspace/${this.workspace.id}/board/${boardId}`]);
     }
 
+    goToWorkspaceSettings() {
+        this.router.navigate([`/workspace/${this.workspace.id}/settings`]);
+    }
+
     ngOnInit() {
         this.refreshBoards();
     }

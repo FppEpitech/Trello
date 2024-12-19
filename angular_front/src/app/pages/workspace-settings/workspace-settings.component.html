@@ -1,0 +1,150 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 d-none d-md-block" >
+            <app-board-sidebar></app-board-sidebar>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-10">
+
+            <div class="container mt-4">
+                <div class="d-flex align-items-center justify-content-between">
+
+                    <div class="d-flex align-items-center">
+                        <img
+                            [style.background-image]="'url(' + this.workspacePicture + ')'"
+                            [style.background-color]="this.workspaceColor"
+                            [style.background-size]="'cover'"
+                            class="rounded"
+                            style="width: 80px; height: 80px;"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="offcanvasBackground"
+                            >
+                        <div class="ms-3">
+                            <input type="text" class="form-control custom-input" placeholder="Workspace Name" [(ngModel)]="this.workspaceName">
+                            <input type="text" class="form-control custom-input-description" placeholder="Workspace Description" [(ngModel)]="this.workspaceDescription">
+                        </div>
+                        <span class="ms-1"><i class="bi bi-pencil"></i></span>
+                        <button *ngIf="
+                            this.workspaceName !== this.workspace?.name ||
+                            this.workspaceDescription !== this.workspace?.description ||
+                            this.workspaceColor !== this.workspace?.color ||
+                            this.workspacePicture !== this.workspace?.picture" (click)="this.saveWorkspace()" class="btn btn-primary mx-3">
+                            Save
+                        </button>
+                        <button *ngIf="
+                            this.workspaceName !== this.workspace?.name ||
+                            this.workspaceDescription !== this.workspace?.description ||
+                            this.workspaceColor !== this.workspace?.color ||
+                            this.workspacePicture !== this.workspace?.picture" (click)="this.cancelWorkspace()" class="btn btn-light">
+                            Cancel
+                        </button>
+                    </div>
+
+                    <div class="dropdown d-block w-195 h-100 text-start">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-plus"></i> Invite Workspace members
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><h3 class="dropdown-header">Share board</h3></li>
+                            <li><a class="dropdown-item">
+                                <input type="text" class="form-control me-2" placeholder="Email" [(ngModel)]="this.emailToAdd">
+                            </a></li>
+                            <li><a class="dropdown-item">
+                                <button [disabled]="this.emailToAdd==''" class="btn btn-primary w-100" (click)="this.addNewUser()">Share</button>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between">
+                    <h2>Workspace Settings</h2>
+                </div>
+
+                <div class="row row-cols-auto col gap-2">
+                    <div *ngFor="let board of this.boards" class="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                        class="btn btn-light board-button"
+                        style="height: 7rem; width: 13rem;"
+                        [style.background-color]="board.color"
+                        (click)="this.deleteBoard(board.id)"
+                        (mouseover)="board.isHovered = true"
+                        (mouseout)="board.isHovered = false">
+                            <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                            <p *ngIf="!board.isHovered">{{ board.name }}</p>
+                            <p *ngIf="board.isHovered">Delete?</p>
+                        </button>
+                    </div>
+                </div>
+                <p><a class="link-opacity-100 text-danger" (click)="this.deleteWorkspace()">Delete this workspace?</a></p>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBackground" aria-labelledby="offcanvasBackgroundLabel">
+    <div class="offcanvas-header">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasParameters" aria-controls="offcanvasParameters"><i class="bi bi-arrow-left"></i></button>
+            <h2 class="title" id="offcanvasBackgroundLabel">Change Background</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+    <div class="offcanvas-body">
+        <button (click)="this.openPanelPictureBackground()" class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundPicture" aria-controls="offcanvasBackgroundPicture">
+            <img src="../../../../assets/ChangeBackgroundButton.png" class="w-100 h-100">
+        </button>
+        <button class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundColor" aria-controls="offcanvasBackgroundColor">
+            <img src="../../../../assets/ChangeBackgroundColorsButton.webp" class="w-100 h-100">
+        </button>
+        <div style="display: flex; justify-content: space-around;">
+            <p class="">Photos</p>
+            <p class="">Colors</p>
+        </div>
+        <hr>
+        <h2 class="title">Custom</h2>
+        <input class="mb-3 form-control" type="file" id="formFile" accept="image/png" (change)="onBackgroundSelected($event)">
+        <button class="btn btn-light w-100 p-1" type="button" (click)="this.removeBackground()">
+            <i class="bi bi-trash"></i> Remove background
+        </button>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBackgroundPicture" aria-labelledby="offcanvasBackgroundPictureLabel">
+    <div class="offcanvas-header">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="#offcanvasBackground"><i class="bi bi-arrow-left"></i></button>
+            <h2 class="title" id="offcanvasBackgroundPictureLabel">Photos from <a href="https://unsplash.com/">Unsplash</a></h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+    <div class="offcanvas-body">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-auto-rows: minmax(80px, auto);">
+            <button *ngFor="let picture of this.backgroundPictures"
+                    class="btn btn-light hover-button"
+                    (click)="this.changeBackgroundPicture(picture.url)"
+                    style="box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px; position: relative;">
+                <img [src]="picture.url" class="w-100 h-100">
+                <a [href]="picture.authorProfileUrl" class="author-link">{{ picture.author }}</a>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBackgroundColor" aria-labelledby="offcanvasBackgroundColorLabel">
+    <div class="offcanvas-header">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="#offcanvasBackground"><i class="bi bi-arrow-left"></i></button>
+            <h2 class="title" id="offcanvasBackgroundColorLabel">Colors</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+    <div class="offcanvas-body">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-auto-rows: minmax(80px, auto);">
+            <button
+                *ngFor="let color of this.backgroundColors"
+                (click)="this.changeBackgroundColor(color)"
+                [style.background-color]="color"
+                class="btn btn-light"
+                style="box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"></button>
+        </div>
+    </div>
+</div>

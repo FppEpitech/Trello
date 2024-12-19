@@ -6,6 +6,7 @@ import { HomeComponent } from "./pages/home/home.component";
 import { BoardComponent } from "./pages/board/board.component";
 import { CalendarComponent } from "./pages/calendar/calendar.component";
 import { TableComponent } from "./pages/table/table.component";
+import { WorkspaceSettingsComponent } from "./pages/workspace-settings/workspace-settings.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [authGuard] },
@@ -14,8 +15,10 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'workspace/:workspaceId/board/:boardId', component: BoardComponent, canActivate: [authGuard] },
   { path: 'workspace/:workspaceId/calendar/:boardId', component: CalendarComponent, canActivate: [authGuard] },
-  { path: 'workspace/:workspaceId/table/:boardId', component: TableComponent, canActivate: [authGuard] }
+  { path: 'workspace/:workspaceId/table/:boardId', component: TableComponent, canActivate: [authGuard] },
+  { path: 'workspace/:workspaceId/settings', component: WorkspaceSettingsComponent, canActivate: [authGuard] },
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
