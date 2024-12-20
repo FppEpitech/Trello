@@ -1,7 +1,9 @@
 import { AuthService } from './../../services/auth/auth.service';
-import { Component, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/firebase-workspaces.service';
 import { Picture, UnsplashService } from '../../services/unsplash/unsplash.service';
+import { Router } from '@angular/router';
+import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-boards.service';
 
 @Component({
   selector: 'app-home',
@@ -14,15 +16,17 @@ export class HomeComponent {
         private svWorkspaces:FirebaseWorkspacesService,
         private authService:AuthService,
         private svUnsplash: UnsplashService,
-        private renderer: Renderer2
+        private router: Router,
+        private svBoards: FirebaseBoardsService
     ) {}
 
     workspaces: any[] = [];
-    boards: any[] = [];
     workspaceNameToAdd: string = "";
     workspaceDescriptionToAdd: string = "";
     workspaceColorToAdd: string = "";
     workspacePictureToAdd: string = "";
+
+    starredBoards: any[] = [];
 
     backgroundColors: string[] = [
         "#b9f3db", "#f8e5a0", "#fedec9", "#fed5d1", "#ded8fc",
@@ -39,12 +43,38 @@ export class HomeComponent {
     refreshWorkspaces() {
         this.authService.authState$.subscribe(user => {
             if (user) {
-              this.svWorkspaces.getWorkspaces(user.uid).subscribe((data)=>{
-                  this.workspaces = data;
-              })
+                this.svWorkspaces.getWorkspaces(user.uid).subscribe((workspaces) => {
+                    this.workspaces = workspaces;
+                    this.starredBoards = []; // Initialize the starredBoards list
+
+                    workspaces.forEach(workspace => {
+                        this.svBoards.getBoards(workspace.id).subscribe((boards) => {
+                            // Store boards for the workspace
+                            workspace.boards = boards;
+
+                            boards.forEach(board => {
+                                // Check if board is starred by the user
+                                if (board.stars && board.stars.includes(user.email)) {
+                                    // Avoid duplicates by checking both board.id and workspaceId
+                                    if (!this.starredBoards.some(starredBoard =>
+                                        starredBoard.id === board.id && starredBoard.workspaceId === workspace.id
+                                    )) {
+                                        // Add board with the workspaceId
+                                        this.starredBoards.push({
+                                            ...board,
+                                            workspaceId: workspace.id
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
+                });
             }
         });
     }
+
+
 
     createWorkspace() {
         if (this.workspaceNameToAdd != "")
@@ -60,7 +90,6 @@ export class HomeComponent {
                     this.workspaceDescriptionToAdd
                 }
             });
-
     }
 
     ngOnInit() {
@@ -101,5 +130,9 @@ export class HomeComponent {
     removeBackground() {
         this.workspaceColorToAdd = "";
         this.workspacePictureToAdd = "";
+    }
+
+    goToBoard(workspaceId: string, boardId:string) {
+        this.router.navigate([`/workspace/${workspaceId}/board/${boardId}`]);
     }
 }
