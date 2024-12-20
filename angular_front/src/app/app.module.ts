@@ -33,8 +33,8 @@ import { NotificationCardComponent } from './components/navbar/notification-card
 import { TableComponent } from './pages/table/table.component';
 import { MatTableModule } from '@angular/material/table';
 import { WorkspaceSettingsComponent } from './pages/workspace-settings/workspace-settings.component';
-
-
+import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
+import { NgWhiteboardModule } from 'ng-whiteboard';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,8 @@ import { WorkspaceSettingsComponent } from './pages/workspace-settings/workspace
     WorkspacesComponent,
     NotificationCardComponent,
     TableComponent,
-    WorkspaceSettingsComponent
+    WorkspaceSettingsComponent,
+    WhiteboardComponent
   ],
   imports: [
     FormsModule,
@@ -70,7 +71,8 @@ import { WorkspaceSettingsComponent } from './pages/workspace-settings/workspace
     MatDatepickerModule,
     MatTableModule,
     HttpClientModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgWhiteboardModule
   ],
   providers: [
     provideAnimationsAsync(),

@@ -45,4 +45,9 @@ export class BoardSidebarComponent {
         if (this.boardId && this.workspaceId)
             this.router.navigate([`/workspace/${this.workspaceId}/board/${this.boardId}`]);
     }
+
+    goToWhiteBoard() {
+        if (this.boardId && this.workspaceId)
+            this.router.navigate([`/workspace/${this.workspaceId}/whiteboard/${this.boardId}`]);
+    }
 }

@@ -1,0 +1,24 @@
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  ng-whiteboard {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ddd;
+  }

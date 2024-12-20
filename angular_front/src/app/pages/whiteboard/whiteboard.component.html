@@ -1,0 +1,39 @@
+<div class="container-fluid"
+    [style.background-image]="'url(' + this.boardPictureBackground + ')'"
+    [style.background-color]="this.boardColorBackground"
+    [style.background-size]="'cover'"
+    [style.background-position]="'center center'"
+    [style.background-repeat]="'no-repeat'">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 d-none d-md-block" >
+            <app-board-sidebar></app-board-sidebar>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-10">
+
+            <!-- Board navbar -->
+            <app-board-navbar [workspaceId]="this.workspaceId" [boardId]="this.boardId"></app-board-navbar>
+
+            <div class="toolbar">
+                <button (click)="setTool('pen')">Pen</button>
+                <button (click)="setTool('square')">Square</button>
+              </div>
+
+              <ng-whiteboard
+                #whiteboard
+                [options]="options"
+                (onClear)="clearBoard()"
+                (onSave)="saveBoard()"
+                (onRedo)="redoAction()"
+                (onUndo)="undoAction()"
+                (mousedown)="startDrawing($event)"
+                (mousemove)="draw($event)"
+                (mouseup)="stopDrawing($event)">
+              </ng-whiteboard>
+
+        </main>
+    </div>
+</div>

@@ -7,6 +7,7 @@ import { BoardComponent } from "./pages/board/board.component";
 import { CalendarComponent } from "./pages/calendar/calendar.component";
 import { TableComponent } from "./pages/table/table.component";
 import { WorkspaceSettingsComponent } from "./pages/workspace-settings/workspace-settings.component";
+import { WhiteboardComponent } from "./pages/whiteboard/whiteboard.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [authGuard] },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'workspace/:workspaceId/board/:boardId', component: BoardComponent, canActivate: [authGuard] },
   { path: 'workspace/:workspaceId/calendar/:boardId', component: CalendarComponent, canActivate: [authGuard] },
   { path: 'workspace/:workspaceId/table/:boardId', component: TableComponent, canActivate: [authGuard] },
+  { path: 'workspace/:workspaceId/whiteboard/:boardId', component: WhiteboardComponent, canActivate: [authGuard] },
   { path: 'workspace/:workspaceId/settings', component: WorkspaceSettingsComponent, canActivate: [authGuard] },
 ];
 
