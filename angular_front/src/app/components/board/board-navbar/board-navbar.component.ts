@@ -4,6 +4,7 @@ import { Picture, UnsplashService } from '../../../services/unsplash/unsplash.se
 import { FirebaseNotificationsService, Notification } from '../../../services/firebase-notifications/firebase-notifications.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
+import { map, switchMap } from 'rxjs';
 
 
 
@@ -18,6 +19,9 @@ export class BoardNavbarComponent {
     @Input() boardId:string | null = null;
 
     boardName: string | null = null;
+    board: any;
+
+    isStarred: boolean = false;
 
     emailToAdd: string = "";
 
@@ -41,10 +45,25 @@ export class BoardNavbarComponent {
     backgroundPictures: Picture[] = [];
 
     ngOnInit() {
-        if (this.workspaceId && this.boardId)
+        if (this.workspaceId && this.boardId) {
             this.svBoard.getBoardName(this.workspaceId, this.boardId).subscribe(bName => {
                 this.boardName = bName.name;
             })
+            this.svBoard.getBoardById(this.workspaceId, this.boardId).pipe(
+                switchMap(board => {
+                  this.board = board; // Save the board data
+                  return this.svAUth.getUserEmail().pipe(
+                    map(userEmail => ({ board, userEmail }))
+                  );
+                })
+              ).subscribe(({ board, userEmail }) => {
+                if (userEmail) {
+                  this.isStarred = board.stars.includes(userEmail);
+                } else {
+                  this.isStarred = false; // Handle null case if necessary
+                }
+              });
+        }
     }
 
     changeBackgroundColor(color: string) {
@@ -126,4 +145,12 @@ export class BoardNavbarComponent {
             console.error('Error adding member:', error);
         }
     }
+
+    async starBoard() {
+        this.svAUth.getUserEmail().subscribe((userMail) => {
+            if (this.workspaceId && this.boardId && userMail && !this.isStarred)
+                this.svBoard.starBoard(this.workspaceId, this.boardId, userMail);
+            else if (this.workspaceId && this.boardId && userMail && this.isStarred)
+                this.svBoard.unstarBoard(this.workspaceId, this.boardId, userMail);
+    });}
 }

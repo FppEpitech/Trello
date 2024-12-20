@@ -13,8 +13,9 @@
                 </li>
 
                 <li class="nav-item">
-                    <button class="btn">
-                        <i class="bi bi-star"></i>
+                    <button class="btn" (click)="this.starBoard()">
+                        <i *ngIf="!this.isStarred" class="bi bi-star"></i>
+                        <i *ngIf="this.isStarred" class="bi bi-star-fill"></i>
                     </button>
                 </li>
 
