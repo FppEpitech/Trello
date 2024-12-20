@@ -45,21 +45,17 @@ export class HomeComponent {
             if (user) {
                 this.svWorkspaces.getWorkspaces(user.uid).subscribe((workspaces) => {
                     this.workspaces = workspaces;
-                    this.starredBoards = []; // Initialize the starredBoards list
+                    this.starredBoards = [];
 
                     workspaces.forEach(workspace => {
                         this.svBoards.getBoards(workspace.id).subscribe((boards) => {
-                            // Store boards for the workspace
                             workspace.boards = boards;
 
                             boards.forEach(board => {
-                                // Check if board is starred by the user
                                 if (board.stars && board.stars.includes(user.email)) {
-                                    // Avoid duplicates by checking both board.id and workspaceId
                                     if (!this.starredBoards.some(starredBoard =>
                                         starredBoard.id === board.id && starredBoard.workspaceId === workspace.id
                                     )) {
-                                        // Add board with the workspaceId
                                         this.starredBoards.push({
                                             ...board,
                                             workspaceId: workspace.id

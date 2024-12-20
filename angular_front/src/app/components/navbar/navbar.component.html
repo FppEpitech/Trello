@@ -45,9 +45,19 @@
                             Starred
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li *ngFor="let board of this.starredBoards">
+                                <button class="dropdown-item" (click)="goToBoard(board.workspaceId, board.id)">
+                                    <img
+                                        [style.background-image]="'url(' + board.picture + ')'"
+                                        [style.background-color]="board.color"
+                                        [style.background-size]="'cover'"
+                                        class="rounded"
+                                        style="width: 30px; height: 30px;"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="offcanvasBackground"
+                                    >
+                                    {{ board.name }}
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </li>
