@@ -53,11 +53,11 @@
                                         [style.background-size]="'cover'"
                                         class="rounded"
                                         style="width: 30px; height: 30px;"
-                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="offcanvasBackground"
                                     >
                                     {{ board.name }}
                                 </button>
                             </li>
+                            <li *ngIf="this.starredBoards.length == 0"><a class="dropdown-item">No starred boards</a></li>
                         </ul>
                     </div>
                 </li>
