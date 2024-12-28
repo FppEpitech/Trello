@@ -27,6 +27,9 @@ export class NavbarComponent {
 
     notifications: any[] = [];
 
+    boardNameToAdd: string = '';
+    WorkspaceToAddBoard: any = null;
+
     logout() {
         this.svAuth.logout();
     }
@@ -71,5 +74,17 @@ export class NavbarComponent {
 
     goToWorkspaceSettings(workspaceId: string) {
         this.router.navigate([`/workspace/${workspaceId}/settings`]);
+    }
+
+    createBoard() {
+        if (this.WorkspaceToAddBoard && this.boardNameToAdd.trim()) {
+            this.svBoards.addBoard(this.WorkspaceToAddBoard.id, this.boardNameToAdd);
+            this.boardNameToAdd = '';
+            this.WorkspaceToAddBoard = null;
+        }
+    }
+
+    onRadioChangeCopy(workpsace: any) {
+        this.WorkspaceToAddBoard = workpsace;
     }
 }

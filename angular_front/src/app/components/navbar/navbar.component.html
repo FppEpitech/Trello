@@ -86,7 +86,35 @@
                     </div>
                 </li>
 
-                <button class="btn btn-primary">Create</button>
+                <div class="dropdown d-block text-start dropend">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false">
+                        Create
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><h3 class="dropdown-header">Create board</h3></li>
+                        <li><a class="dropdown-item">
+                            <input type="text" class="form-control me-2" placeholder="Board name" [(ngModel)]="this.boardNameToAdd">
+                        </a></li>
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn btn-light mb-2 text-start w-100 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Workspace
+                                </button>
+                                <ul class="dropdown-menu dropdown-scroll" aria-labelledby="dropdownMenuButton1" (click)="$event.stopPropagation()">
+                                    <li *ngFor="let workspace of this.workspaces" class="dropdown-item">
+                                        <label class="form-check-label">
+                                            <input type="radio" (click)="this.onRadioChangeCopy(workspace)" class="form-check-input" />
+                                            {{ workspace.name }}
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a class="dropdown-item">
+                            <button [disabled]="this.boardNameToAdd==''" (click)="this.createBoard()" class="btn btn-primary w-100">Create</button>
+                        </a></li>
+                    </ul>
+                </div>
             </ul>
 
             <!-- Nav items on the right -->
