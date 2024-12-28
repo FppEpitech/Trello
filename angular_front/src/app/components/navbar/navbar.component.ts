@@ -68,4 +68,8 @@ export class NavbarComponent {
     goToBoard(workspaceId: string, boardId:string) {
         this.router.navigate([`/workspace/${workspaceId}/board/${boardId}`]);
     }
+
+    goToWorkspaceSettings(workspaceId: string) {
+        this.router.navigate([`/workspace/${workspaceId}/settings`]);
+    }
 }

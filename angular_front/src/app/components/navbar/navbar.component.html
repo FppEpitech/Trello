@@ -20,8 +20,19 @@
                             Workspaces
                         </button>
                         <ul class="dropdown-menu">
-                            <li><h1 class="dropdown-header">Your Workspaces</h1></li>
-                            <li><h1 class="dropdown-header">Shared Workspaces</h1></li>
+                            <li *ngFor="let workspace of this.workspaces">
+                                <button class="dropdown-item" (click)="goToWorkspaceSettings(workspace.id)">
+                                    <img
+                                        [style.background-image]="'url(' + workspace.picture + ')'"
+                                        [style.background-color]="workspace.color"
+                                        [style.background-size]="'cover'"
+                                        class="rounded"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ workspace.name }}
+                                </button>
+                            </li>
+                            <li *ngIf="this.workspaces.length == 0"><a class="dropdown-item">No workspaces</a></li>
                         </ul>
                     </div>
                 </li>
