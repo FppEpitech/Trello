@@ -24,11 +24,15 @@ export class NavbarComponent {
 
     workspaces: any[] = [];
     starredBoards: any[] = [];
+    boards: any[] = [];
 
     notifications: any[] = [];
 
     boardNameToAdd: string = '';
     WorkspaceToAddBoard: any = null;
+
+    searchValue: string = '';
+    boardSearchResults: any[] = [];
 
     logout() {
         this.svAuth.logout();
@@ -60,6 +64,10 @@ export class NavbarComponent {
                                         });
                                     }
                                 }
+                                if (!this.boards.some(b => b.id === board.id && b.workspaceId === workspace.id)) {
+                                    this.boards.push({...board, workspaceId: workspace.id});
+                                    this.boardSearchResults.push({...board, workspaceId: workspace.id});
+                                }
                             });
                         });
                     });
@@ -86,5 +94,16 @@ export class NavbarComponent {
 
     onRadioChangeCopy(workpsace: any) {
         this.WorkspaceToAddBoard = workpsace;
+    }
+
+    search() {
+        if (this.searchValue == '')
+            this.boardSearchResults = this.boards;
+
+        if (this.searchValue.trim()) {
+            this.boardSearchResults = this.boards.filter(board =>
+                board.name.toLowerCase().includes(this.searchValue.toLowerCase())
+            );
+        }
     }
 }

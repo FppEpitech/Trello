@@ -115,10 +115,26 @@
 
             <!-- Nav items on the right -->
             <div class="d-flex align-items-center">
-                <button class="btn btn-light">
-                    <i class="bi bi-search mx-2 text-secondary"></i>
-                </button>
-                <input type="text" class="form-control me-2" placeholder="Search">
+                <div class="dropdown">
+                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" (click)="search()">
+                        <i class="bi bi-search mx-2 text-secondary"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li *ngFor="let board of this.boardSearchResults">
+                            <button class="dropdown-item" (click)="goToBoard(board.workspaceId, board.id)">
+                                <img
+                                    [style.background-image]="'url(' + board.picture + ')'"
+                                    [style.background-color]="board.color"
+                                    [style.background-size]="'cover'"
+                                    class="rounded"
+                                    style="width: 30px; height: 30px;"
+                                >
+                                {{ board.name }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <input type="text" class="form-control me-2" placeholder="Search" [(ngModel)]="this.searchValue">
                 <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotifications" aria-controls="offcanvasNotifications">
                     <i class="bi bi-bell"></i>
                     <span *ngIf="this.notifications.length != 0" class="position-absolute top-100 start- translate-middle badge rounded-pill text-bg-secondary">{{ this.notifications.length }}</span>
