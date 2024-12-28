@@ -34,6 +34,14 @@ export class FirebaseBoardsService {
             );
     }
 
+    getBoardById(workspaceId: string, boardId: string): Observable<any> {
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .doc(boardId)
+            .valueChanges();
+    }
+
     addBoard(workspaceId: string, name: string) {
         return this.fs.collection(this.workspaceCollection)
             .doc(workspaceId)
@@ -68,5 +76,21 @@ export class FirebaseBoardsService {
         return this.fs.collection(`workspaces/${workspaceId}/boards`)
             .doc(boardId)
             .valueChanges() as Observable<NameBoard>;
+    }
+
+    starBoard(workspaceId: string, boardId: string, userId: string) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards`)
+            .doc(boardId)
+            .update({
+                stars: firebase.firestore.FieldValue.arrayUnion(userId)
+            });
+    }
+
+    unstarBoard(workspaceId: string, boardId: string, userId: string) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards`)
+            .doc(boardId)
+            .update({
+                stars: firebase.firestore.FieldValue.arrayRemove(userId)
+            });
     }
 }

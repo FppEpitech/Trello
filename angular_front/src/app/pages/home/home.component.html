@@ -18,6 +18,24 @@
 
         <!-- Main Content -->
         <div class="col-md-9">
+
+            <!-- Starred boards -->
+            <div *ngIf="this.starredBoards.length !== 0" class="mb-5">
+                <h2 class="fw-bold"><i class="bi bi-star"></i> Starred boards</h2>
+                <div class="row row-cols-auto col gap-2">
+                    <div *ngFor="let board of this.starredBoards" class="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                            (click)="this.goToBoard(board.workspaceId, board.id)"
+                            class="btn btn-light board-button"
+                            style="height: 7rem; width: 13rem;"
+                            [style.background-color]="board.color">
+                            <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                            <p>{{ board.name }}</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Recently Viewed Section -->
             <div>
                 <h2 class="fw-bold"><i class="bi bi-clock"></i> Recently viewed</h2>
