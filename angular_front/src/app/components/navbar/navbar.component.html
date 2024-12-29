@@ -147,14 +147,71 @@
                         <li><a class="dropdown-item" href="https://github.com/FppEpitech/Trello/pulls"><i class="bi bi-github"></i>Need help? Ask question on github</a></li>
                     </ul>
                 </div>
-                <div class="dropdown">
-                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                <div class="dropdown d-block text-start">
+                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                         <i class="bi bi-person-circle text-secondary"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" (click)="this.logout()"><i class="bi bi-box-arrow-left"></i> Logout</a></li>
+                        <li><h3 class="dropdown-header">Account</h3></li>
+                        <li>
+                            <div class="dropdown-item">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span>{{ this.userEmail }}</span>
+                            </div>
+                        </li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Manage account</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h3 class="dropdown-header">Tr3llo</h3></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i> Profile and visibility</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-card-list me-2"></i> Activity</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text me-2"></i> Cards</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-sliders me-2"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <div class="dropdown d-block w-195">
+                                <button class="btn btn-light workspace-creation" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                                    <i class="bi bi-plus-square me-2"></i>
+                                    Create new workspace
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="dropdown-header flex justify-content-between">
+                                            <h3>Create workspace</h3>
+                                            <img
+                                                [style.background-image]="'url(' + this.workspacePictureToAdd + ')'"
+                                                [style.background-size]="'cover'"
+                                                [style.background-color]="this.workspaceColorToAdd"
+                                                class="rounded"
+                                                style="width: 40px; height: 40px;">
+                                        </div>
+                                    </li>
+                                    <li><a class="dropdown-item">
+                                        <input type="text" class="form-control me-2" placeholder="Workspace name" [(ngModel)]="this.workspaceNameToAdd">
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <input type="text" class="form-control me-2" placeholder="Description" [(ngModel)]="this.workspaceDescriptionToAdd">
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <button class="btn btn-light w-100 text-start" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="offcanvasBackground">
+                                            <i class="bi bi-image"></i> Cover
+                                        </button>
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <button [disabled]="this.workspaceNameToAdd==''" (click)="this.createWorkspace()" class="btn btn-primary w-100">Create</button>
+                                    </a></li>
+                                </ul>
+                            </div>
+
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="https://github.com/FppEpitech/Trello/pulls"><i class="bi bi-question-circle me-2"></i> Help</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" (click)="this.logout()"><i class="bi bi-box-arrow-left me-2"></i> Logout</a></li>
                     </ul>
                 </div>
+
             </div>
         </div>
     </div>
@@ -177,5 +234,72 @@
             [type]="notif.type"
         ></app-notification-card>
 
+    </div>
+</div>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBackground" aria-labelledby="offcanvasBackgroundLabel">
+    <div class="offcanvas-header">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasParameters" aria-controls="offcanvasParameters"><i class="bi bi-arrow-left"></i></button>
+            <h2 class="title" id="offcanvasBackgroundLabel">Change Background</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+    <div class="offcanvas-body">
+        <button (click)="this.openPanelPictureBackground()" class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundPicture" aria-controls="offcanvasBackgroundPicture">
+            <img src="../../../../assets/ChangeBackgroundButton.png" class="w-100 h-100">
+        </button>
+        <button class="btn btn-light w-50 p-1" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackgroundColor" aria-controls="offcanvasBackgroundColor">
+            <img src="../../../../assets/ChangeBackgroundColorsButton.webp" class="w-100 h-100">
+        </button>
+        <div style="display: flex; justify-content: space-around;">
+            <p class="">Photos</p>
+            <p class="">Colors</p>
+        </div>
+        <hr>
+        <h2 class="title">Custom</h2>
+        <input class="mb-3 form-control" type="file" id="formFile" accept="image/png" (change)="onBackgroundSelected($event)">
+        <button class="btn btn-light w-100 p-1" type="button" (click)="this.removeBackground()">
+            <i class="bi bi-trash"></i> Remove background
+        </button>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBackgroundPicture" aria-labelledby="offcanvasBackgroundPictureLabel">
+    <div class="offcanvas-header">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="#offcanvasBackground"><i class="bi bi-arrow-left"></i></button>
+            <h2 class="title" id="offcanvasBackgroundPictureLabel">Photos from <a href="https://unsplash.com/">Unsplash</a></h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+    <div class="offcanvas-body">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-auto-rows: minmax(80px, auto);">
+            <button *ngFor="let picture of this.backgroundPictures"
+                    class="btn btn-light hover-button"
+                    (click)="this.changeBackgroundPicture(picture.url)"
+                    style="box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px; position: relative;">
+                <img [src]="picture.url" class="w-100 h-100">
+                <a [href]="picture.authorProfileUrl" class="author-link">{{ picture.author }}</a>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBackgroundColor" aria-labelledby="offcanvasBackgroundColorLabel">
+    <div class="offcanvas-header">
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBackground" aria-controls="#offcanvasBackground"><i class="bi bi-arrow-left"></i></button>
+            <h2 class="title" id="offcanvasBackgroundColorLabel">Colors</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+    <div class="offcanvas-body">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; grid-auto-rows: minmax(80px, auto);">
+            <button
+                *ngFor="let color of this.backgroundColors"
+                (click)="this.changeBackgroundColor(color)"
+                [style.background-color]="color"
+                class="btn btn-light"
+                style="box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"></button>
+        </div>
     </div>
 </div>
