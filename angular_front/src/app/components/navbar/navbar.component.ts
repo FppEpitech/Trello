@@ -180,4 +180,20 @@ export class NavbarComponent {
     changeBackgroundPicture(picture: string) {
         this.workspacePictureToAdd = picture;
     }
+
+    goToSettingsProfile() {
+        this.router.navigate(['settings/profile']);
+    }
+
+    goToSettingsActivity() {
+        this.router.navigate(['settings/activity']);
+    }
+
+    goToSettingsCards() {
+        this.router.navigate(['settings/cards']);
+    }
+
+    goToSettings() {
+        this.router.navigate(['settings/settings']);
+    }
 }

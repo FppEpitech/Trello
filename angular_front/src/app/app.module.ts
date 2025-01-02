@@ -33,6 +33,12 @@ import { NotificationCardComponent } from './components/navbar/notification-card
 import { TableComponent } from './pages/table/table.component';
 import { MatTableModule } from '@angular/material/table';
 import { WorkspaceSettingsComponent } from './pages/workspace-settings/workspace-settings.component';
+import { ProfileComponent } from './pages/settings/profile/profile.component';
+import { ActivityComponent } from './pages/settings/activity/activity.component';
+import { CardsComponent } from './pages/settings/cards/cards.component';
+import { SettingsComponent } from './pages/settings/settings/settings.component';
+import { SettingComponent } from './pages/settings/setting.component';
+import { SettingNavbarComponent } from './components/settings/setting-navbar/setting-navbar.component';
 
 
 
@@ -52,7 +58,13 @@ import { WorkspaceSettingsComponent } from './pages/workspace-settings/workspace
     WorkspacesComponent,
     NotificationCardComponent,
     TableComponent,
-    WorkspaceSettingsComponent
+    WorkspaceSettingsComponent,
+    ProfileComponent,
+    ActivityComponent,
+    CardsComponent,
+    SettingsComponent,
+    SettingNavbarComponent,
+    SettingComponent
   ],
   imports: [
     FormsModule,
