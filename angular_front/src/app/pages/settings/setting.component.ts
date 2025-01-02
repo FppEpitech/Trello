@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-setting',
@@ -10,10 +11,12 @@ export class SettingComponent {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router
+        private svAuth: AuthService
     ) { }
 
     page: string = '';
+
+    userName: string | null = null;
 
     ngOnInit() {
         this.page = this.route.snapshot.paramMap.get('page') || '';
