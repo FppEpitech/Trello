@@ -85,6 +85,12 @@ export class AuthService {
         );
     }
 
+    getUserId(): Observable<string | null> {
+        return this.auth.authState.pipe(
+            map(user => user?.uid || null)
+        );
+    }
+
     getUserBio(): Observable<string | null> {
         return this.auth.authState.pipe(
             switchMap((user) => {
