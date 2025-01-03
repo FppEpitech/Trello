@@ -3,6 +3,8 @@ import { Card, FirebaseCardsService } from '../../../services/firebase-cards/fir
 import { FirebaseListsService } from '../../../services/firebase-lists/firebase-lists.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
+import { FirebaseActivitiesService } from '../../../services/firebase-activities/firebase-activities.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 const newCard: Card = {
     id: '',
@@ -32,7 +34,9 @@ export class CardComponent {
     constructor(
         private svCards:FirebaseCardsService,
         private svLists:FirebaseListsService,
-        private svOpenCard: OpenCardService
+        private svOpenCard: OpenCardService,
+        private svActivities: FirebaseActivitiesService,
+        private svAuth: AuthService,
     ) { }
 
     isCreatingCard: boolean = false;
@@ -54,6 +58,11 @@ export class CardComponent {
             this.svCards.addCardToList(this.workspaceId, this.boardId, this.list.id, newCard).then((data)=>{
                 this.closeCreationCardPanel();
             })
+
+            this.svAuth.getUserId().subscribe(userId => {
+                if (userId)
+                    this.svActivities.setActivity(userId, `created the card \'${this.cardNameToAdd}\' in the list \'${this.list.name}\'`);
+            });
         }
     }
 
