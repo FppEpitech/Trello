@@ -39,6 +39,7 @@ import { CardsComponent } from './pages/settings/cards/cards.component';
 import { SettingsComponent } from './pages/settings/settings/settings.component';
 import { SettingComponent } from './pages/settings/setting.component';
 import { SettingNavbarComponent } from './components/settings/setting-navbar/setting-navbar.component';
+import { WorkspaceBoardsComponent } from './pages/workspace-boards/workspace-boards.component';
 
 
 
@@ -64,7 +65,8 @@ import { SettingNavbarComponent } from './components/settings/setting-navbar/set
     CardsComponent,
     SettingsComponent,
     SettingNavbarComponent,
-    SettingComponent
+    SettingComponent,
+    WorkspaceBoardsComponent
   ],
   imports: [
     FormsModule,

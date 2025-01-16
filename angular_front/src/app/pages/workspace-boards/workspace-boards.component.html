@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-2 d-none d-md-block" >
+            <app-board-sidebar></app-board-sidebar>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-10">
+
+            <div class="container mt-4">
+                <div class="d-flex align-items-center justify-content-between">
+
+                    <div class="d-flex align-items-center">
+                        <img
+                            [style.background-image]="'url(' + this.workspacePicture + ')'"
+                            [style.background-color]="this.workspaceColor"
+                            [style.background-size]="'cover'"
+                            class="rounded"
+                            style="width: 80px; height: 80px;"
+                            >
+                        <div class="ms-3">
+                            <h1 class="title">{{this.workspaceName}}</h1>
+                            <h2 class="title">{{this.workspaceDescription}}</h2>
+                        </div>
+                    </div>
+
+                    <div class="dropdown d-block w-195 h-100 text-start">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-plus"></i> Invite Workspace members
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><h3 class="dropdown-header">Share board</h3></li>
+                            <li><a class="dropdown-item">
+                                <input type="text" class="form-control me-2" placeholder="Email" [(ngModel)]="this.emailToAdd">
+                            </a></li>
+                            <li><a class="dropdown-item">
+                                <button [disabled]="this.emailToAdd==''" class="btn btn-primary w-100" (click)="this.addNewUser()">Share</button>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between">
+                    <h2>Workspace Boards</h2>
+                </div>
+
+                <div class="row row-cols-auto col gap-2">
+                    <div *ngFor="let board of this.boards" class="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                        class="btn btn-light board-button"
+                        style="height: 7rem; width: 13rem;"
+                        [style.background-color]="board.color"
+                        (click)="this.goToBoard(board.id)"
+                        >
+                            <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                            <p>{{ board.name }}</p>
+                        </button>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center col mb-3">
+                        <div class="dropdown d-block w-195 h-100 text-start dropend">
+                            <button class="btn btn-light" style="height: 7rem; width: 13rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Create new board
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><h3 class="dropdown-header">Create board</h3></li>
+                                <li><a class="dropdown-item">
+                                    <input type="text" class="form-control me-2" placeholder="Board name" [(ngModel)]="this.boardNameToAdd">
+                                </a></li>
+                                <li><a class="dropdown-item">
+                                    <button [disabled]="this.boardNameToAdd==''" (click)="this.createBoard()" class="btn btn-primary w-100">Create</button>
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

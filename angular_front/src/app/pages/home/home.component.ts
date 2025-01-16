@@ -161,6 +161,10 @@ export class HomeComponent {
         this.router.navigate([`/workspace/${workspaceId}/board/${boardId}`]);
     }
 
+    goToWorkspaceBoards(workspaceId: string) {
+        this.router.navigate([`/workspace/${workspaceId}/boards`]);
+    }
+
     setIsTemplateDisplayed(isDisplayed: boolean) {
         this.isTemplatesDisplayed = isDisplayed;
     }

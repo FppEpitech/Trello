@@ -9,8 +9,8 @@
             <hr>
             <div>
                 <h3>Workspaces</h3>
-                <div>
-                    <button class="btn btn-light d-block w-100 text-start">Trello Workspace</button>
+                <div *ngFor="let workspace of this.workspaces">
+                    <button class="btn btn-light d-block w-100 text-start" (click)="goToWorkspaceBoards(workspace.id)">{{workspace.name}}</button>
                 </div>
             </div>
         </div>
