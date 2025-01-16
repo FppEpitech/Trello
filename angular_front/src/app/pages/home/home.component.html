@@ -39,7 +39,18 @@
             <!-- Recently Viewed Section -->
             <div>
                 <h2 class="fw-bold"><i class="bi bi-clock"></i> Recently viewed</h2>
-                <img src="https://via.placeholder.com/195x100" alt="Trello Board Thumbnail">
+                <div class="row row-cols-auto col gap-2">
+                    <div *ngFor="let recent of this.recentBoards" class="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                            (click)="this.goToBoard(recent.workspaceId, recent.id)"
+                            class="btn btn-light board-button"
+                            style="height: 7rem; width: 13rem;"
+                            [style.background-color]="recent.color">
+                            <img *ngIf="recent.picture" [src]="recent.picture" class="w-100 h-100 board-image">
+                            <p>{{ recent.name }}</p>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Your Workspaces Section -->

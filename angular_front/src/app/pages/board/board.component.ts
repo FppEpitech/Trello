@@ -62,6 +62,9 @@ export class BoardComponent {
     ngOnInit() {
         this.workspaceId = this.route.snapshot.paramMap.get('workspaceId');
         this.boardId = this.route.snapshot.paramMap.get('boardId');
+        if (this.workspaceId && this.boardId) {
+            this.svBoard.setRecentOpen(this.workspaceId, this.boardId);
+        }
         this.refreshLists();
         this.subscription = this.svOpenCard.isOpenCard$.subscribe(open => {
             this.isOpenCard = open;
