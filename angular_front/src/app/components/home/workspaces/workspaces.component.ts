@@ -32,10 +32,6 @@ export class WorkspacesComponent {
         }
     }
 
-    deleteBoard() {
-        this.svBoards.deleteBoard(this.workspace.id, this.boards[0].id);
-    }
-
     goToBoard(boardId:string) {
         this.router.navigate([`/workspace/${this.workspace.id}/board/${boardId}`]);
     }

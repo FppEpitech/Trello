@@ -30,6 +30,7 @@ export class HomeComponent {
 
     starredBoards: any[] = [];
     recentBoards: any[] = [];
+    closedBoards: any[] = [];
 
     backgroundColors: string[] = [
         "#b9f3db", "#f8e5a0", "#fedec9", "#fed5d1", "#ded8fc",
@@ -43,7 +44,7 @@ export class HomeComponent {
 
     isCoverPanelOpen: boolean = false;
 
-    isTemplatesDisplayed: boolean = false;
+    toogleView: string = "boards";
 
     templates: any[] = [];
 
@@ -90,6 +91,18 @@ export class HomeComponent {
                                     if (this.recentBoards.length > 4) {
                                         this.recentBoards = this.recentBoards.slice(0, 4);
                                     }
+                                }
+                            });
+                        });
+                        this.svBoards.getBoardsWithClosed(workspace.id).subscribe((boards) => {
+                            boards.forEach(board => {
+                                if (!this.closedBoards.some(close =>
+                                    close.id === board.id && close.workspaceId === workspace.id
+                                )) {
+                                    this.closedBoards.push({
+                                        ...board,
+                                        workspaceId: workspace.id
+                                    });
                                 }
                             });
                         });
@@ -165,8 +178,8 @@ export class HomeComponent {
         this.router.navigate([`/workspace/${workspaceId}/boards`]);
     }
 
-    setIsTemplateDisplayed(isDisplayed: boolean) {
-        this.isTemplatesDisplayed = isDisplayed;
+    setToogle(toogleValue: string) {
+        this.toogleView = toogleValue;
     }
 
     onRadioChangeCopy(workpsace: any) {
@@ -177,5 +190,15 @@ export class HomeComponent {
         this.svBoards.createFromTemplate(this.WorkspaceToAddBoard.id, template.id, this.boardNameToAdd);
         this.boardNameToAdd = '';
         this.WorkspaceToAddBoard = null;
+    }
+
+    reopenBoard(workpsaceId: string, boardId: string) {
+        this.svBoards.setBoardClosed(workpsaceId, boardId, false);
+        this.closedBoards = this.closedBoards.filter(board => board.id !== boardId);
+    }
+
+    deleteBoard(workpsaceId: string, boardId: string) {
+        this.svBoards.deleteBoard(workpsaceId, boardId);
+        this.closedBoards = this.closedBoards.filter(board => board.id !== boardId);
     }
 }

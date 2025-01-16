@@ -82,7 +82,7 @@ export class WorkspaceSettingsComponent {
 
     deleteBoard(boardId: string) {
         if (this.workspaceId && boardId) {
-            this.svBoards.deleteBoard(this.workspaceId, boardId);
+            this.svBoards.setBoardClosed(this.workspaceId, boardId, true);
         }
     }
 

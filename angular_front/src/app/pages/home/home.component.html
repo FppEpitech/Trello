@@ -3,8 +3,8 @@
         <!-- Sidebar Menu -->
         <div class="col-md-3">
             <div class="menu-links">
-                <button class="btn btn-light d-block w-100 text-start" (click)="this.setIsTemplateDisplayed(false)"><i class="bi bi-trello"></i> Boards</button>
-                <button class="btn btn-light d-block w-100 text-start" (click)="this.setIsTemplateDisplayed(true)"><i class="bi bi-kanban-fill"></i> Templates</button>
+                <button class="btn btn-light d-block w-100 text-start" (click)="this.setToogle('boards')"><i class="bi bi-trello"></i> Boards</button>
+                <button class="btn btn-light d-block w-100 text-start" (click)="this.setToogle('templates')"><i class="bi bi-kanban-fill"></i> Templates</button>
             </div>
             <hr>
             <div>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Main Content -->
-        <div *ngIf="!this.isTemplatesDisplayed" class="col-md-9">
+        <div *ngIf="this.toogleView == 'boards'" class="col-md-9">
 
             <!-- Starred boards -->
             <div *ngIf="this.starredBoards.length !== 0" class="mb-5">
@@ -94,11 +94,11 @@
 
             <!-- Closed Boards Button -->
             <div class="mt-3">
-                <button class="btn btn-light w-195">View all closed boards</button>
+                <button class="btn btn-light w-195" (click)="setToogle('close')">View all closed boards</button>
             </div>
         </div>
 
-        <div *ngIf="this.isTemplatesDisplayed" class="col-md-9">
+        <div *ngIf="this.toogleView == 'templates'" class="col-md-9">
 
             <h1 class="fw-bold">Board templates</h1>
 
@@ -141,6 +141,33 @@
 
                 </div>
             </div>
+        </div>
+
+        <div *ngIf="this.toogleView == 'close'" class="col-md-9">
+
+            <h1 class="fw-bold">Board closed</h1>
+
+            <div class="row row-cols-auto col gap-2">
+                <div *ngFor="let board of this.closedBoards" class="d-flex justify-content-center align-items-center mb-3">
+                    <div class="dropdown d-block text-start dropend">
+                        <button
+                            class="btn btn-light board-button"
+                            style="height: 7rem; width: 13rem;"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false"
+                            [style.background-color]="board.color"
+                            (click)="this.goToBoard(board.workspaceId, board.id)"
+                            >
+                            <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                            <p>{{ board.name }}</p>
+                        </button>
+                        <div class="d-flex">
+                            <button class="btn btn-success w-100" (click)="this.reopenBoard(board.workspaceId, board.id)">Reopen</button>
+                            <button class="btn btn-danger w-100" (click)="this.deleteBoard(board.workspaceId, board.id)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

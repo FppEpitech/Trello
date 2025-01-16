@@ -29,8 +29,23 @@ export class FirebaseBoardsService {
             .pipe(
                 map(boards => boards.map(board => ({
                     id: board.payload.doc.id,
-                    ...board.payload.doc.data() as object
-                })))
+                    ...board.payload.doc.data() as any
+                }))),
+                map(boards => boards.filter(board => board.closed !== true))
+            );
+    }
+
+    getBoardsWithClosed(workspaceId: string): Observable<any[]> {
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .snapshotChanges()
+            .pipe(
+                map(boards => boards.map(board => ({
+                    id: board.payload.doc.id,
+                    ...board.payload.doc.data() as any
+                }))),
+                map(boards => boards.filter(board => board.closed && board.closed !== false))
             );
     }
 
@@ -76,6 +91,16 @@ export class FirebaseBoardsService {
             .collection('boards')
             .doc(boardId)
             .delete();
+    }
+
+    setBoardClosed(workspaceId: string, boardId: string, closed: boolean) {
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .doc(boardId)
+            .update({
+                closed: closed
+            });
     }
 
     getBoardBackground(workspaceId: string, boardId: string): Observable<Background> {
