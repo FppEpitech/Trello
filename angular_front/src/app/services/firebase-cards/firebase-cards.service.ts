@@ -38,6 +38,12 @@ export interface Attachment {
     content: string | null;
 }
 
+export interface Activity {
+    id: string;
+    activity: string;
+    emailPicture: string;
+}
+
 interface DueDate {
     date: firebase.firestore.Timestamp;
     cardName: string;
@@ -54,6 +60,7 @@ export interface Card {
     checklists: Checklists[];
     date: Date | null;
     attachment: Attachment[];
+    activities: Activity[];
     cover: Cover | null;
 }
 
@@ -98,7 +105,8 @@ export class FirebaseCardsService {
             checklists: card.checklists || [],
             date: card.date || null,
             attachment: card.attachment || [],
-            cover: card.cover || null
+            cover: card.cover || null,
+            activities: card.activities || []
         };
         const docRef = await this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).add(cardData);
         if (card.date) {
@@ -477,5 +485,20 @@ export class FirebaseCardsService {
         link.href = URL.createObjectURL(blob);
         link.download = fileName;
         link.click();
+    }
+
+    getActivities(workspaceId: string, boardId: string, listId: string, cardId: string): Observable<Activity[]> {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).snapshotChanges().pipe(
+            map(action => {
+                const data = action.payload.data() as Card | undefined;
+                return data?.activities || [];
+            })
+        );
+    }
+
+    addToActivity(workspaceId: string, boardId: string, listId: string, cardId: string, activity: string, emailPicture: string) {
+        return this.fs.collection(`workspaces/${workspaceId}/boards/${boardId}/lists/${listId}/cards`).doc(cardId).update({
+            activities: firebase.firestore.FieldValue.arrayUnion({ activity, emailPicture })
+        });
     }
 }

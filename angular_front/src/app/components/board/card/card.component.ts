@@ -16,6 +16,7 @@ const newCard: Card = {
     checklists: [],
     date: null,
     attachment: [],
+    activities: [],
     cover: null,
 };
 

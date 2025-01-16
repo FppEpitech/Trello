@@ -63,6 +63,8 @@ export class OpenCardComponent {
 
     workspaceMembers: any[] = [];
 
+    activities: any[] = [];
+
     constructor (
         public svOpenCard: OpenCardService,
         private svCard: FirebaseCardsService,
@@ -123,6 +125,9 @@ export class OpenCardComponent {
             this.svBoard.getBoardName(this.workspaceId, this.boardId).subscribe(bName => {
                 this.boardName = bName.name;
             })
+            this.svCard.getActivities(this.workspaceId, this.boardId, this.svOpenCard._list?.id, this.svOpenCard._card?.id).subscribe(activities => {
+                this.activities = activities;
+            })
         }
     }
 
@@ -133,6 +138,7 @@ export class OpenCardComponent {
     saveNameCard() {
         if (this.cardName != this.svOpenCard._card.name && this.cardName != "" && this.boardId && this.workspaceId) {
             this.svCard.addName(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.cardName);
+            this.svCard.addToActivity(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, `Change the name of the card \'${this.svOpenCard._card.name}\' by \'${this.cardName}\'`, this.userProfile || '');
             this.svOpenCard._card.name = this.cardName;
         }
         this.isEditingCardName = false;
@@ -141,6 +147,7 @@ export class OpenCardComponent {
     saveDescription() {
         if (this.boardId && this.workspaceId) {
             this.svCard.addDescription(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, this.description);
+            this.svCard.addToActivity(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, `Change the description of the card`, this.userProfile || '');
             this.initialDescription = this.description;
         }
     }
@@ -152,12 +159,15 @@ export class OpenCardComponent {
     join() {
         if (this.boardId && this.userEmail && this.userProfile && this.workspaceId) {
             this.svCard.addMemberToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+            this.svCard.addToActivity(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, `\'${this.userEmail}\' join the card`, this.userProfile || '');
         }
     }
 
     leave() {
         if (this.boardId && this.userEmail && this.userProfile && this.workspaceId) {
             this.svCard.deleteMemberFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: this.userEmail, profile: this.userProfile})
+            this.svCard.addToActivity(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, `\'${this.userEmail}\' leave the card`, this.userProfile || '');
+
         }
     }
 
@@ -167,6 +177,7 @@ export class OpenCardComponent {
         }
         if (this.workspaceId && this.boardId) {
             this.svCard.addMemberToCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: member.email, profile: member.picture})
+            this.svCard.addToActivity(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, `\'${this.userEmail}\' add \'${member.email}\' to the card`, this.userProfile || '');
 
             this.svAuth.getUserEmail().subscribe(senderEmail => {
                 if (!senderEmail || senderEmail === member.email) {
@@ -189,6 +200,7 @@ export class OpenCardComponent {
     removeMember(member : Member) {
         if (this.boardId && this.userEmail && member && this.workspaceId) {
             this.svCard.deleteMemberFromCard(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, {name: member.name, profile: member.profile})
+            this.svCard.addToActivity(this.workspaceId, this.boardId, this.svOpenCard._list.id, this.svOpenCard._card.id, `\'${this.userEmail}\' remove \'${member.name}\' to the card`, this.userProfile || '');
         }
     }
 
