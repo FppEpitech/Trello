@@ -4,6 +4,7 @@ import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/fi
 import { Picture, UnsplashService } from '../../services/unsplash/unsplash.service';
 import { Router } from '@angular/router';
 import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-boards.service';
+import { FirebaseTemplatesService } from '../../services/firebase-templates/firebase-templates.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent {
         private authService:AuthService,
         private svUnsplash: UnsplashService,
         private router: Router,
-        private svBoards: FirebaseBoardsService
+        private svBoards: FirebaseBoardsService,
+        private svTemplates: FirebaseTemplatesService
     ) {}
 
     workspaces: any[] = [];
@@ -41,7 +43,19 @@ export class HomeComponent {
 
     isCoverPanelOpen: boolean = false;
 
+    isTemplatesDisplayed: boolean = false;
+
+    templates: any[] = [];
+
+    boardNameToAdd: string = "";
+    WorkspaceToAddBoard: any = null;
+
     refreshWorkspaces() {
+
+        this.svTemplates.getTemplates().subscribe((templates) => {
+            this.templates = templates;
+        });
+
         this.authService.authState$.subscribe(user => {
             if (user) {
                 this.svWorkspaces.getWorkspaces(user.uid).subscribe((workspaces) => {
@@ -145,5 +159,19 @@ export class HomeComponent {
 
     goToBoard(workspaceId: string, boardId:string) {
         this.router.navigate([`/workspace/${workspaceId}/board/${boardId}`]);
+    }
+
+    setIsTemplateDisplayed(isDisplayed: boolean) {
+        this.isTemplatesDisplayed = isDisplayed;
+    }
+
+    onRadioChangeCopy(workpsace: any) {
+        this.WorkspaceToAddBoard = workpsace;
+    }
+
+    createBoardByTemplate(template: any) {
+        this.svBoards.createFromTemplate(this.WorkspaceToAddBoard.id, template.id, this.boardNameToAdd);
+        this.boardNameToAdd = '';
+        this.WorkspaceToAddBoard = null;
     }
 }

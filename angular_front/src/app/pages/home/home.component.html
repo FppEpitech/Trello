@@ -3,8 +3,8 @@
         <!-- Sidebar Menu -->
         <div class="col-md-3">
             <div class="menu-links">
-                <button class="btn btn-light d-block w-100 text-start"><i class="bi bi-trello"></i> Boards</button>
-                <button class="btn btn-light d-block w-100 text-start"><i class="bi bi-kanban-fill"></i> Templates</button>
+                <button class="btn btn-light d-block w-100 text-start" (click)="this.setIsTemplateDisplayed(false)"><i class="bi bi-trello"></i> Boards</button>
+                <button class="btn btn-light d-block w-100 text-start" (click)="this.setIsTemplateDisplayed(true)"><i class="bi bi-kanban-fill"></i> Templates</button>
             </div>
             <hr>
             <div>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9">
+        <div *ngIf="!this.isTemplatesDisplayed" class="col-md-9">
 
             <!-- Starred boards -->
             <div *ngIf="this.starredBoards.length !== 0" class="mb-5">
@@ -95,6 +95,51 @@
             <!-- Closed Boards Button -->
             <div class="mt-3">
                 <button class="btn btn-light w-195">View all closed boards</button>
+            </div>
+        </div>
+
+        <div *ngIf="this.isTemplatesDisplayed" class="col-md-9">
+
+            <h1 class="fw-bold">Board templates</h1>
+
+            <div class="row row-cols-auto col gap-2">
+                <div *ngFor="let board of this.templates" class="d-flex justify-content-center align-items-center mb-3">
+                    <div class="dropdown d-block text-start dropend">
+                        <button
+                            class="btn btn-light board-button"
+                            style="height: 7rem; width: 13rem;"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false"
+                            [style.background-color]="board.color">
+                            <img *ngIf="board.picture" [src]="board.picture" class="w-100 h-100 board-image">
+                            <p>{{ board.name }}</p>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><h3 class="dropdown-header">Create board</h3></li>
+                            <li><a class="dropdown-item">
+                                <input type="text" class="form-control me-2" placeholder="Board name" [(ngModel)]="this.boardNameToAdd">
+                            </a></li>
+                            <li>
+                                <div class="dropdown">
+                                    <button class="btn btn-light mb-2 text-start w-100 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Workspace
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-scroll" aria-labelledby="dropdownMenuButton1" (click)="$event.stopPropagation()">
+                                        <li *ngFor="let workspace of this.workspaces" class="dropdown-item">
+                                            <label class="form-check-label">
+                                                <input type="radio" (click)="this.onRadioChangeCopy(workspace)" class="form-check-input" />
+                                                {{ workspace.name }}
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a class="dropdown-item">
+                                <button [disabled]="this.boardNameToAdd==''" (click)="this.createBoardByTemplate(board)" class="btn btn-primary w-100">Create</button>
+                            </a></li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
