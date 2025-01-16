@@ -1,0 +1,6 @@
+<app-setting-navbar [(page)]="this.page"></app-setting-navbar>
+
+<app-profile *ngIf="this.page === 'profile'"></app-profile>
+<app-activity *ngIf="this.page === 'activity'"></app-activity>
+<app-cards *ngIf="this.page === 'cards'"></app-cards>
+<app-settings *ngIf="this.page === 'settings'"></app-settings>

@@ -1,0 +1,49 @@
+<div class="container mt-5" style="width: 100rem;">
+    <h2>Cards affected</h2>
+    <hr>
+    <div class="board-content m-4">
+        <table mat-table [dataSource]="this.dataSource" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="card">
+                <th mat-header-cell *matHeaderCellDef> Card </th>
+                <td mat-cell *matCellDef="let data"> {{data.card.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="list">
+                <th mat-header-cell *matHeaderCellDef> List </th>
+                <td mat-cell *matCellDef="let data"> {{data.list}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="labels">
+                <th mat-header-cell *matHeaderCellDef> Labels </th>
+                <td mat-cell *matCellDef="let data">
+                <div
+                    *ngFor="let label of data.card.labels">
+                    <div
+                    *ngIf="label.isCheck"
+                    class="btn rounded m-1"
+                    style="height: 30px; cursor: pointer; display: inline-block; padding: 0 10px;"
+                    [style.background-color]="label.color">
+                    {{ label.name }}
+                    </div>
+                </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dueDate">
+                <th mat-header-cell *matHeaderCellDef> Due date </th>
+                <td mat-cell *matCellDef="let data"> {{data.date}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="board">
+                <th mat-header-cell *matHeaderCellDef> Board </th>
+                <td mat-cell *matCellDef="let data"> {{data.board}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="this.openCardPanel(row)"></tr>
+            </table>
+    </div>
+</div>
+
+<!-- <app-open-card *ngIf="this.isOpenCard" [boardId]="this.boardId" [lists]="this.lists" [workspaceId]="this.workspaceId"></app-open-card> -->

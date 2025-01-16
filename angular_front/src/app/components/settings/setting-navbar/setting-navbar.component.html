@@ -1,0 +1,19 @@
+<div class="m-5 d-flex justify-content">
+    <img [attr.src]="this.emailPicture" alt="Profile image" class="rounded">
+    <h2 class="px-5 d-flex align-items-center">{{ this.emailName }}</h2>
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" [class.active]="this.page === 'profile'" (click)="goTo('profile')">Profile and visibility</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [class.active]="this.page === 'activity'" (click)="goTo('activity')">Activity</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [class.active]="this.page === 'cards'" (click)="goTo('cards')">Cards</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [class.active]="this.page === 'settings'" (click)="goTo('settings')">Settings</a>
+    </li>
+</ul>

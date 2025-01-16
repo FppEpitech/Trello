@@ -13,6 +13,9 @@ export interface TableRow {
     list: string;
     listId: string;
     date: string;
+    board: string;
+    boardId: string;
+    workspaceId: string;
   }
 
 @Component({
@@ -70,6 +73,9 @@ export class TableComponent {
                                         card: card,
                                         list: list.name,
                                         listId: list.id,
+                                        board: '',
+                                        boardId: '',
+                                        workspaceId: '',
                                         date: myCard.date ? (myCard.date instanceof Timestamp ? myCard.date.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : "") : "",
                                     };
                                     this.dataSource.data = [...this.dataSource.data, newCard];

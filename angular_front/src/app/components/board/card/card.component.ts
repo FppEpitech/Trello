@@ -3,6 +3,8 @@ import { Card, FirebaseCardsService } from '../../../services/firebase-cards/fir
 import { FirebaseListsService } from '../../../services/firebase-lists/firebase-lists.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { OpenCardService } from '../../../services/open-card/open-card.service';
+import { FirebaseActivitiesService } from '../../../services/firebase-activities/firebase-activities.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 const newCard: Card = {
     id: '',
@@ -32,7 +34,9 @@ export class CardComponent {
     constructor(
         private svCards:FirebaseCardsService,
         private svLists:FirebaseListsService,
-        private svOpenCard: OpenCardService
+        private svOpenCard: OpenCardService,
+        private svActivities: FirebaseActivitiesService,
+        private svAuth: AuthService,
     ) { }
 
     isCreatingCard: boolean = false;
@@ -54,12 +58,23 @@ export class CardComponent {
             this.svCards.addCardToList(this.workspaceId, this.boardId, this.list.id, newCard).then((data)=>{
                 this.closeCreationCardPanel();
             })
+
+            this.svAuth.getUserId().subscribe(userId => {
+                if (userId)
+                    this.svActivities.setActivity(userId, `created the card \'${this.cardNameToAdd}\' in the list \'${this.list.name}\'`);
+            });
         }
     }
 
     deleteList() {
-        if (this.boardId && this.workspaceId)
+        if (this.boardId && this.workspaceId) {
             this.svLists.deleteList(this.workspaceId, this.boardId, this.list.id);
+
+            this.svAuth.getUserId().subscribe(userId => {
+                if (userId)
+                    this.svActivities.setActivity(userId, `Delete the list \'${this.list.name}\'`);
+            });
+        }
     }
 
     deleteCard(card: any) {
@@ -88,6 +103,11 @@ export class CardComponent {
                 event.previousIndex,
                 event.currentIndex,
             );
+
+            this.svAuth.getUserId().subscribe(userId => {
+                if (userId)
+                    this.svActivities.setActivity(userId, `Move the card \'${movedCard.name}\'`);
+            });
 
             if (this.boardId && this.workspaceId) {
                 this.svCards.deleteCardFromList(this.workspaceId, this.boardId, event.previousContainer.id.substring(5), movedCard.id)

@@ -1,0 +1,20 @@
+<div class="container mt-5" style="width: 50rem;">
+    <h2>Notifications</h2>
+    <hr>
+    <div class="row d-flex align-items-center">
+        <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" [checked]="this.notificationWorkspace" (click)="this.changeWorkspaceNotif()">
+        <label class="btn btn-outline-success mb-2 col-3" for="btncheck1">Added to workspace</label>
+        <p class="mb-2 col-4">User add you to a workspace</p>
+    </div>
+    <div class="row d-flex align-items-center">
+        <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" [checked]="this.notificationCard" (click)="this.changeCardNotif()">
+        <label class="btn btn-outline-success mb-2 col-3" for="btncheck2">Added to card</label>
+        <p class="mb-2 col-4">User add you to a card</p>
+    </div>
+    <h2>Account Settings</h2>
+    <hr>
+    <div>
+        <button class="btn btn-light m-1" (click)="this.logout()">Logout</button>
+        <button class="btn btn-danger m-1" (click)="this.deleteAccount()">Delete Account</button>
+    </div>
+</div>

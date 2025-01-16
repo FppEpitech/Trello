@@ -1,9 +1,10 @@
+import { NotificationSettings } from './../firebase-notifications/firebase-notifications.service';
 import { inject, Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { Auth, GoogleAuthProvider } from "@firebase/auth";
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, switchMap, take } from 'rxjs';
 
 interface User {
     id: string;
@@ -27,6 +28,17 @@ export class AuthService {
             new GoogleAuthProvider(),
         );
         this.router.navigate(['/home']);
+    }
+
+    deleteAccount() {
+        this.auth.authState.pipe(take(1)).subscribe((user) => {
+            if (user && user.email) {
+                console.log("mama");
+                this.fs.collection('users').doc(user.email).delete();
+                this.logout();
+                console.log("pui");
+            }
+        });
     }
 
     logout() {
@@ -72,11 +84,74 @@ export class AuthService {
         );
     }
 
+    getUserName(): Observable<string | null> {
+        return this.auth.authState.pipe(
+            switchMap((user) => {
+                if (user?.email) {
+                    return this.fs.collection('users').doc(user.email).valueChanges().pipe(
+                        map((userDoc: any) => userDoc?.displayName || null)
+                    );
+                }
+                return of(null);
+            })
+        );
+    }
+
+    getUserId(): Observable<string | null> {
+        return this.auth.authState.pipe(
+            map(user => user?.uid || null)
+        );
+    }
+
+    getUserBio(): Observable<string | null> {
+        return this.auth.authState.pipe(
+            switchMap((user) => {
+                if (user?.email) {
+                    return this.fs.collection('users').doc(user.email).valueChanges().pipe(
+                        map((userDoc: any) => userDoc?.bio || null)
+                    );
+                }
+                return of(null);
+            })
+        );
+    }
+
+    setUserName(name: string) {
+        this.auth.authState.subscribe((user) => {
+            if (user && user.email) {
+                this.fs.collection('users').doc(user.email).update({
+                    displayName: name,
+                });
+            }
+        });
+    }
+
+    setUserBio(bio: string) {
+        this.auth.authState.subscribe((user) => {
+            if (user && user.email) {
+                this.fs.collection('users').doc(user.email).update({
+                    bio: bio,
+                });
+            }
+        });
+    }
+
     syncUserToFirestore() {
         this.auth.authState.subscribe((user) => {
           if (user && user.email) {
             const email: string = user.email;
-            this.fs.collection('users').doc(email).set({ id: user.uid, email: email, displayName: user.displayName, picture: user.photoURL || 'Anonymous', createdAt: new Date() });
+            this.fs.collection('users').doc(email).set({
+                id: user.uid,
+                email: email,
+                displayName: user.displayName,
+                picture: user.photoURL || 'Anonymous',
+                createdAt: new Date(),
+                bio: '',
+                notificationSettings: {
+                    workspace: true,
+                    card: true,
+                }
+            });
           } else {
             console.log('No user logged in or email is null');
           }
