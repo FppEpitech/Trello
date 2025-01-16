@@ -27,6 +27,7 @@ export class HomeComponent {
     workspacePictureToAdd: string = "";
 
     starredBoards: any[] = [];
+    recentBoards: any[] = [];
 
     backgroundColors: string[] = [
         "#b9f3db", "#f8e5a0", "#fedec9", "#fed5d1", "#ded8fc",
@@ -62,12 +63,27 @@ export class HomeComponent {
                                         });
                                     }
                                 }
+                                if (!this.recentBoards.some(recentBoard => recentBoard.id === board.id ) && board.lastOpen) {
+                                    this.recentBoards.push({
+                                        ...board,
+                                        workspaceId: workspace.id
+                                    });
+                                    this.recentBoards.sort((a, b) => {
+                                        const timeA = a.lastOpen.seconds * 1000 + a.lastOpen.nanoseconds / 1e6;
+                                        const timeB = b.lastOpen.seconds * 1000 + b.lastOpen.nanoseconds / 1e6;
+                                        return timeB - timeA;
+                                    });
+                                    if (this.recentBoards.length > 4) {
+                                        this.recentBoards = this.recentBoards.slice(0, 4);
+                                    }
+                                }
                             });
                         });
                     });
                 });
             }
         });
+        console.log(this.recentBoards);
     }
 
 

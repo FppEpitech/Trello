@@ -43,7 +43,19 @@
                             Recent
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">No recent board</a></li>
+                            <li *ngFor="let recent of this.recentBoards">
+                                <button class="dropdown-item" (click)="goToBoard(recent.workspaceId, recent.id)">
+                                    <img
+                                        [style.background-image]="'url(' + recent.picture + ')'"
+                                        [style.background-color]="recent.color"
+                                        [style.background-size]="'cover'"
+                                        class="rounded"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ recent.name }}
+                                </button>
+                            </li>
+                            <li *ngIf="this.recentBoards.length == 0"><a class="dropdown-item">No recent board</a></li>
                         </ul>
                     </div>
                 </li>

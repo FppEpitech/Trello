@@ -93,4 +93,15 @@ export class FirebaseBoardsService {
                 stars: firebase.firestore.FieldValue.arrayRemove(userId)
             });
     }
+
+    setRecentOpen(workspaceId: string, boardId: string) {
+        // Set the date of the last open board
+        return this.fs.collection(this.workspaceCollection)
+            .doc(workspaceId)
+            .collection('boards')
+            .doc(boardId)
+            .update({
+                lastOpen: new Date()
+            });
+    }
 }

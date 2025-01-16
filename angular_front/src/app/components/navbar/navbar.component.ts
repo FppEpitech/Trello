@@ -26,6 +26,7 @@ export class NavbarComponent {
 
     workspaces: any[] = [];
     starredBoards: any[] = [];
+    recentBoards: any[] = [];
     boards: any[] = [];
 
     notifications: any[] = [];
@@ -90,6 +91,20 @@ export class NavbarComponent {
                                 if (!this.boards.some(b => b.id === board.id && b.workspaceId === workspace.id)) {
                                     this.boards.push({...board, workspaceId: workspace.id});
                                     this.boardSearchResults.push({...board, workspaceId: workspace.id});
+                                }
+                                if (!this.recentBoards.some(recentBoard => recentBoard.id === board.id ) && board.lastOpen) {
+                                    this.recentBoards.push({
+                                        ...board,
+                                        workspaceId: workspace.id
+                                    });
+                                    this.recentBoards.sort((a, b) => {
+                                        const timeA = a.lastOpen.seconds * 1000 + a.lastOpen.nanoseconds / 1e6;
+                                        const timeB = b.lastOpen.seconds * 1000 + b.lastOpen.nanoseconds / 1e6;
+                                        return timeB - timeA;
+                                    });
+                                    if (this.recentBoards.length > 4) {
+                                        this.recentBoards = this.recentBoards.slice(0, 4);
+                                    }
                                 }
                             });
                         });
