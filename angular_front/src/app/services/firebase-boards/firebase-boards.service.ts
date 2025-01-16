@@ -49,6 +49,27 @@ export class FirebaseBoardsService {
             .add({ name: name, createdAt: new Date() });
     }
 
+    createFromTemplate(workspaceId: string, boardId: string, name: string) {
+        this.fs.collection('templates').doc(boardId).get().subscribe((boardSnapshot: any) => {
+            if (boardSnapshot.exists) {
+                const boardData = boardSnapshot.data();
+                const newBoardData = {
+                    ...boardData,
+                    name: name
+                };
+
+                this.fs
+                    .collection(this.workspaceCollection)
+                    .doc(workspaceId)
+                    .collection('boards')
+                    .add(newBoardData);
+            } else {
+                console.error('Board template not found.');
+            }
+        });
+    }
+
+
     deleteBoard(workspaceId: string, boardId: string) {
         return this.fs.collection(this.workspaceCollection)
             .doc(workspaceId)

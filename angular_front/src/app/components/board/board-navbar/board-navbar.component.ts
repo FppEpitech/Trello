@@ -5,6 +5,7 @@ import { FirebaseNotificationsService, Notification } from '../../../services/fi
 import { AuthService } from '../../../services/auth/auth.service';
 import { FirebaseWorkspacesService } from '../../../services/firebase-workspaces/firebase-workspaces.service';
 import { map, switchMap } from 'rxjs';
+import { FirebaseTemplatesService } from '../../../services/firebase-templates/firebase-templates.service';
 
 
 
@@ -30,7 +31,8 @@ export class BoardNavbarComponent {
         private svUnsplash: UnsplashService,
         private svNotifications: FirebaseNotificationsService,
         private svAUth: AuthService,
-        private svWorkspace: FirebaseWorkspacesService
+        private svWorkspace: FirebaseWorkspacesService,
+        private svTemplate: FirebaseTemplatesService
     ) {}
 
     backgroundColors: string[] = [
@@ -153,4 +155,9 @@ export class BoardNavbarComponent {
             else if (this.workspaceId && this.boardId && userMail && this.isStarred)
                 this.svBoard.unstarBoard(this.workspaceId, this.boardId, userMail);
     });}
+
+    createTemplate() {
+        if (this.workspaceId && this.boardId)
+            this.svTemplate.createTemplate(this.workspaceId, this.boardId);
+    }
 }

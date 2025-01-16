@@ -6,6 +6,7 @@ import { FirebaseNotificationsService } from '../../services/firebase-notificati
 import { FirebaseWorkspacesService } from '../../services/firebase-workspaces/firebase-workspaces.service';
 import { FirebaseBoardsService } from '../../services/firebase-boards/firebase-boards.service';
 import { Picture, UnsplashService } from '../../services/unsplash/unsplash.service';
+import { FirebaseTemplatesService } from '../../services/firebase-templates/firebase-templates.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,11 +23,13 @@ export class NavbarComponent {
         private svWorkspaces: FirebaseWorkspacesService,
         private svBoards: FirebaseBoardsService,
         private svUnsplash: UnsplashService,
+        private svTemplates: FirebaseTemplatesService
     ) {}
 
     workspaces: any[] = [];
     starredBoards: any[] = [];
     recentBoards: any[] = [];
+    templates: any[] = [];
     boards: any[] = [];
 
     notifications: any[] = [];
@@ -65,6 +68,10 @@ export class NavbarComponent {
         this.authService.getUserEmail().subscribe(email => {
             if (email)
                 this.userEmail = email;
+        });
+
+        this.svTemplates.getTemplates().subscribe(templates => {
+            this.templates = templates;
         });
 
         this.authService.authState$.subscribe(user => {
@@ -130,6 +137,12 @@ export class NavbarComponent {
         }
     }
 
+    createBoardByTemplate(template: any) {
+        this.svBoards.createFromTemplate(this.WorkspaceToAddBoard.id, template.id, this.boardNameToAdd);
+        this.boardNameToAdd = '';
+        this.WorkspaceToAddBoard = null;
+    }
+
     onRadioChangeCopy(workpsace: any) {
         this.WorkspaceToAddBoard = workpsace;
     }
@@ -146,7 +159,6 @@ export class NavbarComponent {
     }
 
     createWorkspace() {
-
         this.svAuth.getUserIdByEmail(this.userEmail).then(userId => {
             if (this.workspaceNameToAdd.trim() && userId) {
                 this.svWorkspaces.addWorkspace(this.workspaceNameToAdd, this.workspaceDescriptionToAdd, this.workspaceColorToAdd, this.workspacePictureToAdd, userId);
@@ -156,8 +168,6 @@ export class NavbarComponent {
                 this.workspacePictureToAdd = "";
             }
         });
-
-
     }
 
     openPanelPictureBackground() {
