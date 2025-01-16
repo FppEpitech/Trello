@@ -16,3 +16,10 @@
     font-weight: bold;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
 }
+
+img.profile-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}

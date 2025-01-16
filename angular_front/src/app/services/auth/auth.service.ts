@@ -33,10 +33,8 @@ export class AuthService {
     deleteAccount() {
         this.auth.authState.pipe(take(1)).subscribe((user) => {
             if (user && user.email) {
-                console.log("mama");
                 this.fs.collection('users').doc(user.email).delete();
                 this.logout();
-                console.log("pui");
             }
         });
     }

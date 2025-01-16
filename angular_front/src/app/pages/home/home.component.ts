@@ -83,7 +83,6 @@ export class HomeComponent {
                 });
             }
         });
-        console.log(this.recentBoards);
     }
 
 
