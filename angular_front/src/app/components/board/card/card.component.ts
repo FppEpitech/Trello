@@ -67,8 +67,14 @@ export class CardComponent {
     }
 
     deleteList() {
-        if (this.boardId && this.workspaceId)
+        if (this.boardId && this.workspaceId) {
             this.svLists.deleteList(this.workspaceId, this.boardId, this.list.id);
+
+            this.svAuth.getUserId().subscribe(userId => {
+                if (userId)
+                    this.svActivities.setActivity(userId, `Delete the list \'${this.list.name}\'`);
+            });
+        }
     }
 
     deleteCard(card: any) {
@@ -97,6 +103,11 @@ export class CardComponent {
                 event.previousIndex,
                 event.currentIndex,
             );
+
+            this.svAuth.getUserId().subscribe(userId => {
+                if (userId)
+                    this.svActivities.setActivity(userId, `Move the card \'${movedCard.name}\'`);
+            });
 
             if (this.boardId && this.workspaceId) {
                 this.svCards.deleteCardFromList(this.workspaceId, this.boardId, event.previousContainer.id.substring(5), movedCard.id)
