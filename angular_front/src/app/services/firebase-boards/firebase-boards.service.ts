@@ -77,12 +77,58 @@ export class FirebaseBoardsService {
                     .collection(this.workspaceCollection)
                     .doc(workspaceId)
                     .collection('boards')
-                    .add(newBoardData);
+                    .add(newBoardData)
+                    .then(newBoardRef => {
+                        const newBoardId = newBoardRef.id;
+
+                        this.fs
+                            .collection('templates')
+                            .doc(boardId)
+                            .collection('lists')
+                            .get()
+                            .subscribe(listsSnapshot => {
+                                listsSnapshot.forEach(listDoc => {
+                                    const listData = listDoc.data();
+                                    const listId = listDoc.id;
+
+                                    newBoardRef
+                                        .collection('lists')
+                                        .doc(listId)
+                                        .set(listData)
+                                        .then(() => {
+                                            this.fs
+                                                .collection('templates')
+                                                .doc(boardId)
+                                                .collection('lists')
+                                                .doc(listId)
+                                                .collection('cards')
+                                                .get()
+                                                .subscribe(cardsSnapshot => {
+                                                    cardsSnapshot.forEach(cardDoc => {
+                                                        const cardData = cardDoc.data();
+                                                        const cardId = cardDoc.id;
+
+                                                        newBoardRef
+                                                            .collection('lists')
+                                                            .doc(listId)
+                                                            .collection('cards')
+                                                            .doc(cardId)
+                                                            .set(cardData)
+                                                            .catch(error => console.error('Error adding card:', error));
+                                                    });
+                                                });
+                                        })
+                                        .catch(error => console.error('Error adding list:', error));
+                                });
+                            });
+                    })
+                    .catch(error => console.error('Error creating board:', error));
             } else {
                 console.error('Board template not found.');
             }
         });
     }
+
 
 
     deleteBoard(workspaceId: string, boardId: string) {
