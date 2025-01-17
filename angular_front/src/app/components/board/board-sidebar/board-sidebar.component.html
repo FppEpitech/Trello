@@ -107,8 +107,8 @@
                             {{ board.name }}
                         </button>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
+                            <button type="button" class="btn w-100" (click)="this.closeBoard(board)">
+                                <i class="bi bi-trash text-danger"></i>
                             </button>
                         </div>
                     </div>

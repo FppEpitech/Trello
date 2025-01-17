@@ -118,4 +118,10 @@ export class BoardSidebarComponent {
             console.error('Error adding member:', error);
         }
     }
+
+    closeBoard(board : any) {
+        if (this.workspaceId) {
+            this.svBoard.setBoardClosed(this.workspaceId, board.id, true);
+        }
+    }
 }
