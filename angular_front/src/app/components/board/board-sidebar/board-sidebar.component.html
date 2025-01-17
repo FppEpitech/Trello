@@ -61,7 +61,7 @@
             </li>
             <li class="nav-item">
                 <div class="btn-toolbar w-100 d-flex" role="toolbar">
-                    <button type="button" class="btn btn-default w-100 text-start">
+                    <button type="button" class="btn btn-default w-100 text-start" (click)="this.goToWorkspaceSettings()">
                         <i class="bi bi-gear-fill"></i>
                         Workspace settings
                     </button>
@@ -77,11 +77,6 @@
                             <i class="bi bi-table"></i>
                             Table
                         </button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </li>
@@ -92,11 +87,6 @@
                             <i class="bi bi-calendar-week"></i>
                             Calendar
                         </button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </li>
@@ -105,16 +95,17 @@
             </li>
             <li class="nav-item">
                 <div class="btn-toolbar w-100 d-flex" role="toolbar">
-                    <div class="btn-group w-100" role="group" aria-label="bouton1">
-                        <button type="button" class="btn btn-default w-100 text-start">
-                            <img src="https://via.placeholder.com/16" alt="workspace">
-                            My Trello board
+                    <div *ngFor="let board of this.workspaceBoards" class="btn-group w-100" role="group" aria-label="bouton1">
+                        <button type="button" class="btn btn-default w-100 text-start" (click)="this.goToOtherBoard(board.id)">
+                            <img
+                                [style.background-image]="'url(' + board.picture + ')'"
+                                [style.background-color]="board.color"
+                                [style.background-size]="'cover'"
+                                class="rounded"
+                                style="width: 30px; height: 30px;"
+                            >
+                            {{ board.name }}
                         </button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn w-100"aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-star"></i>
-                            </button>
-                        </div>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="bi bi-three-dots"></i>

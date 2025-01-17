@@ -20,6 +20,8 @@ export class BoardSidebarComponent {
 
     emailToAdd: string = '';
 
+    workspaceBoards: any[] = [];
+
     constructor(
         private router:Router,
         private route: ActivatedRoute,
@@ -43,6 +45,11 @@ export class BoardSidebarComponent {
                 this.board = board;
             });
         }
+        if (this.workspaceId) {
+            this.svBoard.getBoards(this.workspaceId).subscribe((boards) => {
+                this.workspaceBoards = boards;
+            });
+        }
     }
 
     goToCalendar() {
@@ -58,6 +65,16 @@ export class BoardSidebarComponent {
     goToBoard() {
         if (this.boardId && this.workspaceId)
             this.router.navigate([`/workspace/${this.workspaceId}/board/${this.boardId}`]);
+    }
+
+    goToOtherBoard(id: string) {
+        if (this.workspaceId)
+            window.location.href = `/workspace/${this.workspaceId}/board/${id}`;
+    }
+
+    goToWorkspaceSettings() {
+        if (this.workspaceId)
+            this.router.navigate([`/workspace/${this.workspaceId}/settings`]);
     }
 
     async addNewUser() {
