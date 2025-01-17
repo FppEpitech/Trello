@@ -26,14 +26,35 @@
             <li class="nav-item">
                 <div class="btn-toolbar w-100 d-flex" role="toolbar">
                     <div class="btn-group w-100" role="group" aria-label="bouton1">
-                        <button type="button" class="btn btn-default w-100 text-start">
-                            <i class="bi bi-person"></i>
-                            Members
-                        </button>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-plus"></i>
+                        <div class="dropdown dropend w-100">
+                            <button type="button" class="btn btn-default w-100 text-start" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person"></i>
+                                Members
                             </button>
+                            <div class="dropdown-menu" aria-labelledby="membersDropdown" style="min-width: 250px;">
+                                <h4 class="mb-2 px-3">Members</h4>
+                                <div *ngFor="let member of this.workspace.members" class="d-flex align-items-center p-2 rounded">
+                                    <img [attr.src]="member.picture" alt="Member profile image" class="profile-image m-1">
+                                    <span class="ms-2">{{member.email}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <div class="dropdown d-block w-195 h-100 text-start">
+                                <button type="button" class="btn w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><h3 class="dropdown-header">Share board</h3></li>
+                                    <li><a class="dropdown-item">
+                                        <input type="text" class="form-control me-2" placeholder="Email" [(ngModel)]="this.emailToAdd">
+                                    </a></li>
+                                    <li><a class="dropdown-item">
+                                        <button [disabled]="this.emailToAdd==''" class="btn btn-primary w-100" (click)="this.addNewUser()">Share</button>
+                                    </a></li>
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
                 </div>

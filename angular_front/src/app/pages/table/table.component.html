@@ -12,7 +12,7 @@
 
         <main class="col-md-10">
 
-            <app-board-navbar [workspaceId]="this.workspaceId" [boardId]="this.boardId"></app-board-navbar>
+            <app-board-navbar [workspaceId]="this.workspaceId" [boardId]="this.boardId" [type]="'Table'"></app-board-navbar>
 
             <div class="board-content m-4">
                 <table mat-table [dataSource]="this.dataSource" class="mat-elevation-z8">

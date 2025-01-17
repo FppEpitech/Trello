@@ -18,6 +18,7 @@ export class BoardNavbarComponent {
 
     @Input() workspaceId:string | null = null;
     @Input() boardId:string | null = null;
+    @Input() type:string = "";
 
     boardName: string | null = null;
     board: any;

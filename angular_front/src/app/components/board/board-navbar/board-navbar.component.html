@@ -8,7 +8,7 @@
 
                 <li class="nav-item">
                     <button class="btn">
-                        My Trello Board
+                        {{ this.boardName }}
                     </button>
                 </li>
 
@@ -29,21 +29,13 @@
                 <li class="nav-item">
                     <button class="btn btn-primary">
                         <i class="bi bi-trello"></i>
-                        Board
+                        {{ this.type }}
                     </button>
                 </li>
             </ul>
 
             <!-- Nav items on the right -->
             <div class="d-flex align-items-center">
-                <button class="btn">
-                    <i class="bi bi-lightning-charge-fill"></i>
-                    Automation
-                </button>
-                <button class="btn">
-                    <i class="bi bi-filter"></i>
-                    Filters
-                </button>
                 <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasParameters1" aria-controls="offcanvasParameters1">
                     <i class="bi bi-three-dots"></i>
                 </button>
